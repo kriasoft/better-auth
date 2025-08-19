@@ -1,0 +1,28 @@
+{
+  "name": "better-auth-connect",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "plugins/*"
+  ],
+  "scripts": {
+    "build": "bun run --filter '*' build",
+    "dev": "bun run --filter '*' dev",
+    "typecheck": "bun run --filter '*' typecheck",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
+    "docs:deploy": "gh-pages -d docs/.vitepress/dist"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "gh-pages": "^6.3.0",
+    "mermaid": "^11.10.0",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.2",
+    "vitepress": "^1.6.4",
+    "vitepress-plugin-mermaid": "^2.0.17"
+  }
+}

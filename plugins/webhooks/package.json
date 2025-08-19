@@ -1,0 +1,74 @@
+{
+  "name": "better-auth-webhooks",
+  "version": "0.0.1",
+  "description": "Webhooks plugin for Better Auth - Send real-time event notifications",
+  "keywords": [
+    "better-auth",
+    "auth",
+    "authentication",
+    "webhooks",
+    "events",
+    "notifications",
+    "real-time",
+    "integration"
+  ],
+  "author": "Kriasoft <hello@kriasoft.com>",
+  "contributors": [
+    "Konstantin Tarkus <koistya@kriasoft.com>"
+  ],
+  "homepage": "https://kriasoft.com/better-auth/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kriasoft/better-auth.git",
+    "directory": "better-auth-webhooks"
+  },
+  "bugs": {
+    "url": "https://github.com/kriasoft/better-auth/issues"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/koistya"
+  },
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "import": "./dist/client.mjs",
+      "require": "./dist/client.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "bun run build"
+  },
+  "peerDependencies": {
+    "better-auth": "^1.3.7"
+  },
+  "dependencies": {
+    "zod": "^4.0.17"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "better-auth": "^1.3.7",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

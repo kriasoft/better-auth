@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+*.tgz
+
+# Testing
+coverage/
+*.lcov
+
+# Logs
+logs/
+*.log
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Environment variables
+.env.local
+.env.*.local
+
+# TypeScript cache
+*.tsbuildinfo
+.eslintcache
+
+# VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Documentation
+docs/.vitepress/dist/
+docs/.vitepress/cache/
+**/*.local.md
+
+# Temporary files
+*.tmp
+*.swp
+*~

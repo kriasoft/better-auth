@@ -1,0 +1,68 @@
+{
+  "name": "better-auth-connect",
+  "version": "0.0.1",
+  "description": "Connect and sync data from various sources (Google Drive, Gmail, GitHub, etc.) with Better Auth",
+  "keywords": [
+    "better-auth",
+    "authentication",
+    "data-sync",
+    "google-drive",
+    "gmail",
+    "github",
+    "onedrive",
+    "dropbox",
+    "oauth",
+    "integration"
+  ],
+  "author": "Konstantin Tarkus <hello@tarkus.me>",
+  "homepage": "https://github.com/kriasoft/better-auth-plugins/tree/main/better-auth-connect",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kriasoft/better-auth-plugins.git",
+    "directory": "better-auth-connect"
+  },
+  "bugs": {
+    "url": "https://github.com/kriasoft/better-auth-plugins/issues"
+  },
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./client": {
+      "import": "./dist/client.js",
+      "types": "./dist/client.d.ts"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "bun run build"
+  },
+  "peerDependencies": {
+    "better-auth": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.1.14",
+    "@types/node": "^22.10.5",
+    "better-auth": "^1.0.39",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "zod": "^3.24.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

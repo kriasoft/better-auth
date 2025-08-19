@@ -1,0 +1,25 @@
+{
+  "recommendations": [
+    // TypeScript & JavaScript
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "ms-vscode.vscode-typescript-next",
+
+    // Bun runtime
+    "oven.bun-vscode",
+
+    // Code quality
+    "streetsidesoftware.code-spell-checker",
+    "usernamehw.errorlens",
+
+    // Documentation
+    "yzhang.markdown-all-in-one",
+    "bierner.markdown-preview-github-styles",
+
+    // Testing
+    "vitest.explorer",
+
+    // Vue/Vitepress (for docs)
+    "vue.volar"
+  ]
+}
