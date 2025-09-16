@@ -26,20 +26,26 @@ Install Better Auth and the plugins you need:
 
 ```bash
 # Using Bun (recommended)
-bun add better-auth better-auth-feature-flags
+bun add better-auth better-call better-auth-feature-flags
 
 # Using npm
-npm install better-auth better-auth-feature-flags
+npm install better-auth better-call better-auth-feature-flags
 
 # Using pnpm
-pnpm add better-auth better-auth-feature-flags
+pnpm add better-auth better-call better-auth-feature-flags
 ```
+
+#### Peer Dependencies
+
+- `better-auth` and `better-call` are peer dependencies.
+- `better-call` provides the API/middleware foundation used by Better Auth and this plugin. Better Auth depends on it and re-exports related types.
+- Installing both ensures version alignment and avoids resolution issues with strict package managers (e.g., pnpm).
 
 ### Basic Setup
 
 ```typescript
 import { betterAuth } from "better-auth";
-import { featureFlagsPlugin } from "better-auth-feature-flags";
+import { featureFlags } from "better-auth-feature-flags";
 
 export const auth = betterAuth({
   database: {
@@ -48,15 +54,16 @@ export const auth = betterAuth({
   },
   plugins: [
     // Feature flags and access control
-    featureFlagsPlugin({
+    featureFlags({
+      // Optional static flags (server defaults)
       flags: {
         "premium-features": {
-          description: "Access to premium features",
-          defaultValue: false,
+          default: false,
+          enabled: false,
         },
         "beta-ui": {
-          description: "New beta UI design",
-          defaultValue: false,
+          default: false,
+          enabled: false,
         },
       },
     }),
@@ -74,10 +81,32 @@ const authClient = createAuthClient({
   plugins: [featureFlagsClient()],
 });
 
-// Check feature flags
+// Check feature flags (simple boolean checks)
 const hasPremiumFeatures =
   await authClient.featureFlags.isEnabled("premium-features");
 const canUseBetaUI = await authClient.featureFlags.isEnabled("beta-ui");
+
+// Evaluate multiple flags efficiently
+const flags = await authClient.featureFlags.evaluateMany([
+  "premium-features",
+  "beta-ui",
+  "new-dashboard",
+]);
+
+// Get all flags for current user
+const allFlags = await authClient.featureFlags.bootstrap();
+
+// Track flag usage for analytics
+await authClient.featureFlags.track("premium-features", "viewed");
+
+// Admin operations (requires proper permissions)
+const adminFlags = await authClient.featureFlags.admin.flags.list();
+await authClient.featureFlags.admin.flags.create({
+  key: "new-feature",
+  name: "New Feature",
+  type: "boolean",
+  defaultValue: false,
+});
 
 if (hasPremiumFeatures) {
   // Show premium features
@@ -131,6 +160,10 @@ better-auth-plugins/
 
 Plugin structure: src/{index,client,plugin,schema,types}.ts → tsup → dist/
 ```
+
+## Vendor Dependencies
+
+This project includes reference implementations as Git submodules in the `vendor/` directory. See [vendor/README.md](./vendor/README.md) for details and license information.
 
 ## Contributing
 

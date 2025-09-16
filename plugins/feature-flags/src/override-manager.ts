@@ -2,30 +2,30 @@
 // SPDX-License-Identifier: MIT
 
 /**
- * Secure override management for feature flags.
- *
- * @security Critical: Prevents debug features from leaking to production.
- * - Disabled in production environments
- * - Automatic expiration to prevent persistent overrides
- * - Optional localStorage with encryption consideration
+ * Secure flag override manager with environment detection.
+ * @security Blocks production overrides unless explicitly enabled
+ * @usage Debug/testing environments only by default
  */
 
 export interface OverrideConfig {
-  /** Allow overrides in production (dangerous!) */
+  /** DANGEROUS: Allow overrides in production */
   allowInProduction?: boolean;
-  /** Override expiration time in ms (default: 1 hour) */
+  /** Override TTL in ms (default: 1 hour) */
   ttl?: number;
-  /** Persist overrides to localStorage */
+  /** Persist to localStorage */
   persist?: boolean;
   /** Storage key prefix */
   keyPrefix?: string;
-  /** Environment detection override for testing */
+  /** Override environment detection for testing */
   environment?: "development" | "production";
 }
 
 interface StoredOverride {
+  /** Override value */
   value: any;
+  /** Unix timestamp when override expires */
   expires: number;
+  /** Environment where override was set */
   environment: string;
 }
 
@@ -55,25 +55,21 @@ export class SecureOverrideManager {
   }
 
   /**
-   * Detect if we're in a production environment.
-   *
-   * @returns true if production, false otherwise
-   * @decision Check multiple indicators for robustness:
-   * - NODE_ENV (most common)
-   * - window.location.hostname (production domains)
-   * - Build-time flags (VITE_ENV, etc.)
+   * Multi-indicator environment detection.
+   * @algorithm NODE_ENV → hostname → build flags
+   * @see https://12factor.net/config
    */
   private detectEnvironment(): string {
-    // Node.js/bundler environment variable
+    // Primary: NODE_ENV
     if (typeof process !== "undefined" && process.env?.NODE_ENV) {
       return process.env.NODE_ENV;
     }
 
-    // Browser environment checks
+    // Fallback: hostname-based detection
     if (typeof window !== "undefined") {
       const hostname = window.location.hostname;
 
-      // Common production indicators
+      // Production domain patterns
       if (
         hostname !== "localhost" &&
         !hostname.startsWith("127.") &&
@@ -84,8 +80,8 @@ export class SecureOverrideManager {
         return "production";
       }
 
-      // Check for Vite/webpack environment variables
-      // @ts-ignore - These are injected at build time
+      // Build-time environment (Vite/webpack)
+      // @ts-ignore - Injected at build time
       if (typeof import.meta?.env?.MODE !== "undefined") {
         // @ts-ignore
         return import.meta.env.MODE;
@@ -95,9 +91,7 @@ export class SecureOverrideManager {
     return "development";
   }
 
-  /**
-   * Check if overrides are allowed in current environment.
-   */
+  /** Guards production override access */
   private isOverrideAllowed(): boolean {
     if (this.environment === "production" && !this.allowInProduction) {
       return false;
@@ -106,12 +100,9 @@ export class SecureOverrideManager {
   }
 
   /**
-   * Set a feature flag override.
-   *
-   * @security Blocked in production unless explicitly allowed.
-   * @param flag - Flag key
-   * @param value - Override value
-   * @returns true if override was set, false if blocked
+   * Sets flag override with environment protection.
+   * @security Blocks production unless allowInProduction=true
+   * @returns true if set, false if blocked
    */
   set(flag: string, value: any): boolean {
     if (!this.isOverrideAllowed()) {
@@ -135,7 +126,7 @@ export class SecureOverrideManager {
       this.saveToStorage();
     }
 
-    // Log for debugging
+    // Debug logging in development only
     if (this.environment === "development") {
       console.debug(
         `[feature-flags] Override set: ${flag} = ${JSON.stringify(value)}, expires in ${this.ttl}ms`,
@@ -145,9 +136,7 @@ export class SecureOverrideManager {
     return true;
   }
 
-  /**
-   * Get an override value if it exists and hasn't expired.
-   */
+  /** Gets override value, auto-expires stale entries */
   get(flag: string): any | undefined {
     if (!this.isOverrideAllowed()) {
       return undefined;
@@ -158,7 +147,7 @@ export class SecureOverrideManager {
       return undefined;
     }
 
-    // Check expiration
+    // Auto-expire stale overrides
     if (Date.now() > override.expires) {
       this.overrides.delete(flag);
       if (this.persist) {
@@ -167,7 +156,7 @@ export class SecureOverrideManager {
       return undefined;
     }
 
-    // Warn if override from different environment
+    // Environment mismatch warning
     if (override.environment !== this.environment) {
       console.warn(
         `[feature-flags] Override "${flag}" was set in ${override.environment} but current is ${this.environment}`,
@@ -177,16 +166,12 @@ export class SecureOverrideManager {
     return override.value;
   }
 
-  /**
-   * Check if an override exists (without returning value).
-   */
+  /** Checks override existence without returning value */
   has(flag: string): boolean {
     return this.get(flag) !== undefined;
   }
 
-  /**
-   * Clear a specific override.
-   */
+  /** Clears specific override and syncs storage */
   delete(flag: string): void {
     this.overrides.delete(flag);
     if (this.persist) {
@@ -194,9 +179,7 @@ export class SecureOverrideManager {
     }
   }
 
-  /**
-   * Clear all overrides.
-   */
+  /** Clears all overrides and storage */
   clear(): void {
     this.overrides.clear();
     if (this.persist) {
@@ -204,9 +187,7 @@ export class SecureOverrideManager {
     }
   }
 
-  /**
-   * Get all active overrides (for debugging).
-   */
+  /** Returns all non-expired overrides for debugging */
   getAll(): Record<string, any> {
     if (!this.isOverrideAllowed()) {
       return {};
@@ -221,9 +202,7 @@ export class SecureOverrideManager {
     return result;
   }
 
-  /**
-   * Load overrides from localStorage.
-   */
+  /** Loads persisted overrides, skips expired entries */
   private loadFromStorage(): void {
     if (typeof globalThis.localStorage === "undefined") {
       return;
@@ -239,7 +218,7 @@ export class SecureOverrideManager {
       const now = Date.now();
 
       for (const [key, override] of Object.entries(data)) {
-        // Skip expired overrides
+        // Only load non-expired overrides
         if (override.expires > now) {
           this.overrides.set(key, override);
         }
@@ -252,9 +231,7 @@ export class SecureOverrideManager {
     }
   }
 
-  /**
-   * Save overrides to localStorage.
-   */
+  /** Persists current overrides to localStorage */
   private saveToStorage(): void {
     if (typeof globalThis.localStorage === "undefined") {
       return;
@@ -274,9 +251,7 @@ export class SecureOverrideManager {
     }
   }
 
-  /**
-   * Clear overrides from localStorage.
-   */
+  /** Removes persisted overrides from storage */
   private clearStorage(): void {
     if (typeof globalThis.localStorage === "undefined") {
       return;
@@ -292,24 +267,20 @@ export class SecureOverrideManager {
     }
   }
 
-  /**
-   * Start periodic cleanup of expired overrides.
-   */
+  /** Starts 1-minute cleanup timer for expired overrides */
   private startCleanupTimer(): void {
-    // Run cleanup every minute
+    // 1-minute cleanup cycle
     this.cleanupTimer = setInterval(() => {
       this.cleanupExpired();
     }, 60000);
 
-    // Allow cleanup in Node.js environments
+    // Node.js: don't block process exit
     if (typeof process !== "undefined" && this.cleanupTimer.unref) {
       this.cleanupTimer.unref();
     }
   }
 
-  /**
-   * Remove expired overrides.
-   */
+  /** Removes expired overrides and syncs storage */
   private cleanupExpired(): void {
     const now = Date.now();
     let hasChanges = false;
@@ -326,9 +297,7 @@ export class SecureOverrideManager {
     }
   }
 
-  /**
-   * Clean up resources.
-   */
+  /** Cleanup timer and resources */
   dispose(): void {
     if (this.cleanupTimer) {
       clearInterval(this.cleanupTimer);

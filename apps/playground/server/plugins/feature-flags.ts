@@ -18,11 +18,11 @@ import { getPluginStatus } from "../env";
  * - Audit logging and analytics
  * - Multi-tenancy support
  */
-export function getFeatureFlagsPlugin(env: Env): ReturnType<
-  typeof featureFlags
-> | null {
+export function getFeatureFlagsPlugin(
+  env: Env,
+): ReturnType<typeof featureFlags> | null {
   const pluginStatus = getPluginStatus(env);
-  
+
   // Check if feature flags are enabled
   if (!pluginStatus.featureFlags) {
     return null;

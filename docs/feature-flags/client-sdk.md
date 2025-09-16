@@ -9,16 +9,22 @@ Install the client SDK with your package manager:
 ::: code-group
 
 ```bash [bun]
-bun add better-auth better-auth-feature-flags
+bun add better-auth better-call better-auth-feature-flags
 ```
 
 ```bash [npm]
-npm install better-auth better-auth-feature-flags
+npm install better-auth better-call better-auth-feature-flags
 ```
 
 ```bash [pnpm]
-pnpm add better-auth better-auth-feature-flags
+pnpm add better-auth better-call better-auth-feature-flags
 ```
+
+> Note
+>
+> - `better-auth` and `better-call` are peer dependencies of this package.
+> - `better-call` is the transport/middleware layer Better Auth uses under the hood and this plugin’s middleware relies on it as well.
+> - Use compatible versions (e.g., `better-auth@^1.3.11`, `better-call@^1.0.19`) to ensure type and runtime alignment.
 
 :::
 
@@ -137,7 +143,7 @@ const isEnabled = await authClient.featureFlags.isEnabled("dark-mode");
 // With default value
 const isEnabled = await authClient.featureFlags.isEnabled(
   "new-feature",
-  false // Default if flag not found
+  false, // Default if flag not found
 );
 ```
 
@@ -147,7 +153,7 @@ const isEnabled = await authClient.featureFlags.isEnabled(
 // Get typed value
 const theme = await authClient.featureFlags.getValue<string>(
   "theme-name",
-  "light" // Default value
+  "light", // Default value
 );
 
 // Complex object
@@ -165,13 +171,10 @@ const config = await authClient.featureFlags.getValue<Config>("ui-config", {
 ### Get Variant
 
 ```typescript
-// Get A/B test variant
+// Get A/B test variant (returns variant key)
 const variant = await authClient.featureFlags.getVariant("checkout-test");
-
 if (variant) {
-  console.log(variant.key); // "control" or "variant-a"
-  console.log(variant.value); // Variant configuration
-  console.log(variant.percentage); // Optional percentage allocation
+  console.log(variant); // "control" | "variant_a" | ...
 }
 ```
 
@@ -179,7 +182,7 @@ if (variant) {
 
 ```typescript
 // Get all evaluated flags
-const flags = await authClient.featureFlags.getAllFlags();
+const flags = await authClient.featureFlags.bootstrap();
 
 console.log(flags);
 // {
@@ -193,7 +196,7 @@ console.log(flags);
 
 ```typescript
 // Evaluate multiple flags at once for better performance
-const results = await authClient.featureFlags.evaluateBatch([
+const results = await authClient.featureFlags.evaluateMany([
   "feature-1",
   "feature-2",
   "feature-3",
@@ -202,7 +205,7 @@ const results = await authClient.featureFlags.evaluateBatch([
 console.log(results);
 // {
 //   "feature-1": { value: true, reason: "rule_match" },
-//   "feature-2": { value: "variant-a", variant: {...}, reason: "percentage" },
+//   "feature-2": { value: "variant-a", variant: "variant_a", reason: "percentage_rollout" },
 //   "feature-3": { value: false, reason: "default" }
 // }
 ```
@@ -214,18 +217,44 @@ console.log(results);
 await authClient.featureFlags.track(
   "checkout-test",
   "purchase",
-  99.99 // Optional numeric value
+  99.99, // Optional numeric value
 );
 
 // Track with metadata
 await authClient.featureFlags.track(
   "onboarding-flow",
   "step-completed",
-  { step: 3, time: 45 } // Optional metadata object
+  { step: 3, time: 45 }, // Optional metadata object
 );
 
 // Track simple event
 await authClient.featureFlags.track("feature-used", "click");
+
+// Track with idempotency key (NEW in v0.2.0)
+await authClient.featureFlags.track(
+  "payment-completed",
+  "purchase",
+  99.99,
+  { idempotencyKey: "payment-123" }, // Prevents duplicate events
+);
+
+// Batch tracking (NEW in v0.2.0)
+await authClient.featureFlags.trackBatch(
+  [
+    {
+      flag: "checkout-test",
+      event: "purchase",
+      data: 99.99,
+      timestamp: new Date(),
+    },
+    {
+      flag: "onboarding-flow",
+      event: "step-completed",
+      data: { step: 3 },
+    },
+  ],
+  { idempotencyKey: "batch-123" },
+);
 ```
 
 ### Context Management
@@ -402,6 +431,50 @@ if (process.env.NODE_ENV === "development") {
 authClient.featureFlags.clearOverrides();
 ```
 
+### Admin Operations (NEW in v0.2.0)
+
+The client SDK now includes organized admin operations under the `authClient.featureFlags.admin` namespace:
+
+```typescript
+// Flag management
+await authClient.featureFlags.admin.flags.create({
+  key: "new-feature",
+  name: "New Feature",
+  type: "boolean",
+  enabled: true,
+  defaultValue: false,
+});
+
+await authClient.featureFlags.admin.flags.list();
+await authClient.featureFlags.admin.flags.update("flag-id", { enabled: false });
+await authClient.featureFlags.admin.flags.delete("flag-id");
+
+// Rule management
+await authClient.featureFlags.admin.rules.create({
+  flagId: "flag-id",
+  priority: 0,
+  conditions: {
+    all: [{ attribute: "role", operator: "equals", value: "admin" }],
+  },
+  value: true,
+});
+
+await authClient.featureFlags.admin.rules.list("flag-id");
+
+// Override management
+await authClient.featureFlags.admin.overrides.create({
+  flagId: "flag-id",
+  userId: "user-123",
+  value: true,
+});
+
+await authClient.featureFlags.admin.overrides.list({ flagId: "flag-id" });
+
+// Analytics and audit
+await authClient.featureFlags.admin.analytics.stats.get("flag-id");
+await authClient.featureFlags.admin.audit.list({ flagId: "flag-id" });
+```
+
 ### Real-time Updates
 
 ```typescript
@@ -558,16 +631,16 @@ import { useVariant } from "better-auth-feature-flags/react";
 function CheckoutButton() {
   const variant = useVariant("checkout-test");
 
-  const buttonProps = variant?.value || {
-    text: "Buy Now",
-    color: "blue",
+  // useVariant returns the variant key; map keys to UI behavior
+  const labelByVariant: Record<string, string> = {
+    control: "Buy Now",
+    variant_a: "Purchase",
+    variant_b: "Get Started",
   };
 
-  return (
-    <button style={{ backgroundColor: buttonProps.color }}>
-      {buttonProps.text}
-    </button>
-  );
+  const label = (variant && labelByVariant[variant]) || "Buy Now";
+
+  return <button>{label}</button>;
 }
 ```
 
@@ -688,7 +761,7 @@ const EnhancedComponent = withFeatureFlags(({ featureFlags }) => {
 // Conditionally render based on flag
 const PremiumFeature = withFeatureFlag(
   "premium-feature",
-  FallbackComponent // Optional fallback
+  FallbackComponent, // Optional fallback
 )(PremiumComponent);
 ```
 
@@ -756,8 +829,8 @@ import { auth } from "@/lib/auth";
 
 export default async function Page() {
   const session = await auth.api.getSession();
-  const flags = await auth.api.featureFlags.evaluateAll({
-    userId: session?.user?.id,
+  const { flags } = await auth.api.bootstrapFeatureFlags({
+    body: { context: { userId: session?.user?.id } },
   });
 
   return <div>{flags["new-feature"] && <NewFeature />}</div>;
@@ -807,9 +880,10 @@ import { auth } from "@/lib/auth";
 
 export async function getServerSideProps(ctx) {
   const session = await auth.api.getSession(ctx.req);
-  const flags = await auth.api.featureFlags.evaluateAll({
-    userId: session?.user?.id,
-    context: { headers: ctx.req.headers },
+  const { flags } = await auth.api.bootstrapFeatureFlags({
+    body: {
+      context: { userId: session?.user?.id, headers: ctx.req.headers as any },
+    },
   });
 
   return {
@@ -828,8 +902,8 @@ export default function Page({ flags }) {
 // pages/marketing.tsx
 export async function getStaticProps() {
   // Evaluate flags without user context
-  const flags = await auth.api.featureFlags.evaluateAll({
-    attributes: { page: "marketing" },
+  const { flags } = await auth.api.bootstrapFeatureFlags({
+    body: { context: { attributes: { page: "marketing" } } },
   });
 
   return {
@@ -849,8 +923,8 @@ import { auth } from "@/lib/auth";
 
 export async function middleware(request: NextRequest) {
   const session = await auth.api.getSession(request);
-  const flags = await auth.api.featureFlags.evaluateAll({
-    userId: session?.user?.id,
+  const { flags } = await auth.api.bootstrapFeatureFlags({
+    body: { context: { userId: session?.user?.id } },
   });
 
   // Add flags to headers
@@ -1045,7 +1119,7 @@ const flag2 = await client.featureFlags.isEnabled("flag2");
 const flag3 = await client.featureFlags.isEnabled("flag3");
 
 // Use batch evaluation
-const flags = await client.featureFlags.evaluateBatch([
+const flags = await client.featureFlags.evaluateMany([
   "flag1",
   "flag2",
   "flag3",
@@ -1057,7 +1131,7 @@ const flags = await client.featureFlags.evaluateBatch([
 ```typescript
 // Lazy load flags when needed
 const LazyFeature = lazy(async () => {
-  const flags = await client.featureFlags.getAllFlags();
+  const flags = await client.featureFlags.bootstrap();
   return flags["new-feature"] ? import("./NewFeature") : import("./OldFeature");
 });
 ```
@@ -1128,22 +1202,69 @@ featureFlagsClient({
 if (process.env.NODE_ENV === "development") {
   window.__FEATURE_FLAGS_DEVTOOLS__ = {
     client: authClient,
-    flags: await authClient.featureFlags.getAllFlags(),
+    flags: await authClient.featureFlags.bootstrap(),
   };
 }
 ```
 
-### Console Helpers
-
-```javascript
-// In browser console
-featureFlags.getAll(); // List all flags
-featureFlags.enable("flag-key"); // Enable flag locally
-featureFlags.disable("flag-key"); // Disable flag locally
-featureFlags.reset(); // Reset to server values
-```
+<!-- Console helpers are not provided by the SDK; use your own devtools if needed. -->
 
 ## Migration Guide
+
+### From v0.1.x to v0.2.0
+
+The v0.2.0 release introduces canonical API naming and admin client namespacing as the initial major feature set.
+
+#### Client Admin Methods Migration
+
+```typescript
+// ❌ Old (flat admin methods - deprecated)
+await authClient.featureFlags.adminCreateFlag({ key: "my-flag" });
+await authClient.featureFlags.adminListFlags();
+await authClient.featureFlags.adminUpdateFlag({ id: "flag-id" });
+await authClient.featureFlags.adminDeleteFlag({ id: "flag-id" });
+await authClient.featureFlags.adminCreateRule({ flagId: "flag-id" });
+await authClient.featureFlags.adminCreateOverride({ flagId: "flag-id" });
+
+// ✅ New (namespaced admin methods)
+await authClient.featureFlags.admin.flags.create({ key: "my-flag" });
+await authClient.featureFlags.admin.flags.list();
+await authClient.featureFlags.admin.flags.update("flag-id", { enabled: false });
+await authClient.featureFlags.admin.flags.delete("flag-id");
+await authClient.featureFlags.admin.rules.create({ flagId: "flag-id" });
+await authClient.featureFlags.admin.overrides.create({ flagId: "flag-id" });
+```
+
+#### Event Tracking Migration
+
+```typescript
+// ❌ Old (deprecated)
+await authClient.featureFlags.trackEvent("flag-key", "click", 1);
+
+// ✅ New (canonical)
+await authClient.featureFlags.track("flag-key", "click", 1);
+
+// ✅ New with idempotency (v0.2.0 feature)
+await authClient.featureFlags.track("flag-key", "purchase", 99.99, {
+  idempotencyKey: "purchase-123",
+});
+```
+
+#### Batch Operations Migration
+
+```typescript
+// ❌ Old (multiple individual calls)
+await authClient.featureFlags.trackEvent("flag1", "event1");
+await authClient.featureFlags.trackEvent("flag2", "event2");
+await authClient.featureFlags.trackEvent("flag3", "event3");
+
+// ✅ New (batch tracking)
+await authClient.featureFlags.trackBatch([
+  { flag: "flag1", event: "event1" },
+  { flag: "flag2", event: "event2" },
+  { flag: "flag3", event: "event3" },
+]);
+```
 
 ### From LaunchDarkly
 

@@ -2,19 +2,15 @@
 // SPDX-License-Identifier: MIT
 
 /**
- * Central schema export. Import from here, not submodules.
+ * Schema module exports. Import from here, not submodules.
  *
- * @structure
- * - tables.ts: DB schema + constraints
- * - validation.ts: Runtime validation
- * - types.ts: TypeScript types
+ * REQUIRED CONSTRAINTS (add manually after table creation):
+ * - flag_overrides(flag_id, user_id) - unique
+ * - feature_flags(organization_id, key) - unique
  *
- * @invariant Add unique constraints manually after table creation:
- * - flag_overrides(flag_id, user_id)
- * - feature_flags(organization_id, key)
- *
- * @decision Scheduled rollouts via external cron, not DB fields (performance)
+ * @decision External cron for scheduled rollouts (performance)
  * @decision No flag dependencies in v1 (complexity vs usage)
+ * @see tables.ts - DB schema, validation.ts - runtime validation, types.ts - TS types
  */
 
 // Database schema
@@ -22,59 +18,54 @@ export { featureFlagsSchema } from "./tables";
 
 // Validation schemas
 export {
-  // Enum schemas
-  flagTypeSchema,
-  evaluationReasonSchema,
   auditActionSchema,
   conditionOperatorSchema,
 
   // Condition schemas
   conditionSchema,
+  evaluationContextSchema,
+  evaluationReasonSchema,
+  // Input validation schemas
+  featureFlagInputSchema,
+  flagAuditInputSchema,
+  flagEvaluationInputSchema,
+  flagOverrideInputSchema,
+  flagOverrideUpsertSchema,
+  flagRuleInputSchema,
+  // Enum schemas
+  flagTypeSchema,
   ruleConditionsSchema,
 
   // Variant schemas
   variantSchema,
-
-  // Input validation schemas
-  featureFlagInputSchema,
-  flagRuleInputSchema,
-  flagOverrideInputSchema,
-  flagOverrideUpsertSchema,
-  flagEvaluationInputSchema,
-  flagAuditInputSchema,
-  evaluationContextSchema,
 } from "./validation";
 
 // TypeScript types
 export type {
-  // Base types
-  FlagType,
-  EvaluationReason,
+  AnalyticsConfig,
   AuditAction,
-  ConditionOperator,
-  RuleConditions,
-  EvaluationContext,
-  Variant,
-
-  // Entity types
-  FeatureFlag,
-  FlagRule,
-  FlagOverride,
-  FlagEvaluation,
-  FlagAudit,
-
-  // API types
-  EvaluationResult,
+  AuditConfig,
   BatchEvaluationResult,
-
-  // Query types
-  FlagQuery,
-  FlagWithRules,
-  FlagWithOverrides,
-  FlagWithStats,
-
   // Configuration types
   CacheConfig,
-  AuditConfig,
-  AnalyticsConfig,
+  ConditionOperator,
+  EvaluationContext,
+  EvaluationReason,
+  // API types
+  EvaluationResult,
+  // Entity types
+  FeatureFlag,
+  FlagAudit,
+  FlagEvaluation,
+  FlagOverride,
+  // Query types
+  FlagQuery,
+  FlagRule,
+  // Base types
+  FlagType,
+  FlagWithOverrides,
+  FlagWithRules,
+  FlagWithStats,
+  RuleConditions,
+  Variant,
 } from "./types";

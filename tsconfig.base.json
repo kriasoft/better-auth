@@ -40,5 +40,6 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true
-  }
+  },
+  "exclude": ["node_modules", "dist", "vendor"]
 }

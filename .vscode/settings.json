@@ -1,4 +1,7 @@
 {
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "editor.tabSize": 2,
@@ -6,9 +9,13 @@
     "bunx",
     "konstantin",
     "kriasoft",
+    "namespacing",
     "onedrive",
     "stringbool",
     "tarkus",
     "vitepress"
-  ]
+  ],
+  "search.exclude": {
+    "vendor": true
+  }
 }

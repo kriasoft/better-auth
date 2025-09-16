@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: MIT
 
 /**
- * Security validation utilities for feature flags context data
+ * Security validation for feature flag context data.
+ * Prevents prototype pollution, XSS, and injection attacks.
+ * @see plugins/feature-flags/src/middleware/types.ts
  */
 
-/**
- * Configuration for header validation
- */
+/** Header validation config with type checking and sanitization rules. */
 export interface HeaderConfig {
   name: string;
   type: "string" | "number" | "boolean" | "json" | "enum";
@@ -18,20 +18,21 @@ export interface HeaderConfig {
   sanitize?: (value: string) => string;
 }
 
-/**
- * Configuration for context data validation
- */
+/** Context validation limits to prevent DoS and memory exhaustion. */
 export interface ValidationConfig {
-  maxStringLength?: number; // Default: 10KB
-  maxObjectDepth?: number; // Default: 5
-  maxArrayLength?: number; // Default: 100
-  maxTotalSize?: number; // Default: 50KB
-  allowedKeyPattern?: RegExp; // Default: /^[a-zA-Z0-9_.-]+$/
+  /** Max string length in characters (default: 10KB) */
+  maxStringLength?: number;
+  /** Max object nesting depth (default: 5) */
+  maxObjectDepth?: number;
+  /** Max array length (default: 100) */
+  maxArrayLength?: number;
+  /** Max total JSON size in bytes (default: 50KB) */
+  maxTotalSize?: number;
+  /** Allowed key pattern (default: /^[a-zA-Z0-9_.-]+$/) */
+  allowedKeyPattern?: RegExp;
 }
 
-/**
- * Default header configuration with secure validation rules
- */
+/** Production-ready header configs for common feature flag use cases. */
 export const DEFAULT_HEADER_CONFIG: HeaderConfig[] = [
   {
     name: "x-feature-flag-segment",
@@ -78,9 +79,7 @@ export const DEFAULT_HEADER_CONFIG: HeaderConfig[] = [
   },
 ];
 
-/**
- * Blacklisted keys that could lead to prototype pollution
- */
+// Prototype pollution prevention - these keys are always rejected
 const BLACKLISTED_KEYS = [
   "__proto__",
   "constructor",
@@ -91,7 +90,11 @@ const BLACKLISTED_KEYS = [
 ];
 
 /**
- * Validate context attribute key and value
+ * Validates context attributes against security rules.
+ * @param key - Attribute name (alphanumeric, underscore, dash, dot only)
+ * @param value - Any serializable value
+ * @param config - Size and format limits
+ * @returns false if validation fails (prototype pollution, size limits, etc.)
  */
 export function validateContextAttribute(
   key: string,
@@ -106,34 +109,34 @@ export function validateContextAttribute(
     allowedKeyPattern = /^[a-zA-Z0-9_.-]+$/,
   } = config;
 
-  // 1. Prevent prototype pollution and reserved keys
+  // Prototype pollution prevention
   if (BLACKLISTED_KEYS.includes(key)) {
     return false;
   }
 
-  // 2. Validate key format (alphanumeric, underscore, dash, dot)
+  // SECURITY: Key format validation - alphanumeric, underscore, dash, dot only
   if (!allowedKeyPattern.test(key)) {
     return false;
   }
 
-  // 3. Check total serialized size
+  // Size limit check via JSON serialization
   try {
     const serialized = JSON.stringify(value);
     if (serialized.length > maxTotalSize) {
       return false;
     }
   } catch {
-    return false; // Non-serializable values rejected
+    return false; // SECURITY: Reject non-serializable types (functions, symbols, etc.)
   }
 
-  // 4. Type-specific validation
+  // Recursive validation with depth/size limits
   function validateValue(val: any, depth = 0): boolean {
-    // Prevent deep nesting
+    // SECURITY: DoS prevention - limit nesting depth
     if (depth > maxObjectDepth) {
       return false;
     }
 
-    // Handle different types
+    // Type-specific validation rules
     if (val === null || val === undefined) {
       return true;
     }
@@ -143,7 +146,7 @@ export function validateContextAttribute(
     }
 
     if (typeof val === "number") {
-      return isFinite(val); // No Infinity or NaN
+      return isFinite(val); // Reject Infinity/NaN
     }
 
     if (typeof val === "boolean") {
@@ -160,19 +163,18 @@ export function validateContextAttribute(
     if (typeof val === "object") {
       const keys = Object.keys(val);
       if (keys.length > 100) {
-        // Max 100 properties per object
+        // DoS prevention: max 100 properties
         return false;
       }
 
-      // Check for blacklisted keys in the object
+      // Additional prototype pollution checks
       for (const k of keys) {
         if (BLACKLISTED_KEYS.includes(k)) {
           return false;
         }
       }
 
-      // Check if object has own properties that are blacklisted
-      // (using hasOwnProperty to avoid checking inherited properties)
+      // Direct property checks for prototype pollution
       if (
         Object.prototype.hasOwnProperty.call(val, "__proto__") ||
         Object.prototype.hasOwnProperty.call(val, "prototype")
@@ -180,11 +182,11 @@ export function validateContextAttribute(
         return false;
       }
 
-      // Validate all values recursively
+      // Recursive validation for nested objects
       return keys.every((k) => validateValue(val[k], depth + 1));
     }
 
-    // Reject functions, symbols, and other types
+    // Reject non-serializable types
     return false;
   }
 
@@ -192,7 +194,10 @@ export function validateContextAttribute(
 }
 
 /**
- * Validate header value based on configuration
+ * Validates header value against type and format rules.
+ * @param value - Raw header string value
+ * @param config - Validation rules (type, length, pattern, enum)
+ * @returns true if valid, false otherwise
  */
 export function isValidHeaderValue(
   value: string,
@@ -202,12 +207,12 @@ export function isValidHeaderValue(
     return !config.required;
   }
 
-  // Check max length
+  // Length validation
   if (config.maxLength && value.length > config.maxLength) {
     return false;
   }
 
-  // Type-specific validation
+  // Type coercion and validation
   switch (config.type) {
     case "string":
       if (config.pattern && !config.pattern.test(value)) {
@@ -247,20 +252,23 @@ export function isValidHeaderValue(
 }
 
 /**
- * Sanitize header value based on type
+ * Sanitizes and converts header values to proper types.
+ * @param value - Raw header string
+ * @param config - Type conversion rules
+ * @returns Converted value or null if invalid
  */
 export function sanitizeHeaderValue(value: string, config: HeaderConfig): any {
   if (!value) return null;
 
-  // Apply custom sanitization if provided
+  // Custom sanitization hook
   if (config.sanitize) {
     value = config.sanitize(value);
   }
 
-  // Type conversion
+  // Type-specific sanitization and conversion
   switch (config.type) {
     case "string":
-      // Remove control characters and trim
+      // Strip control chars, normalize whitespace
       return value.replace(/[\x00-\x1F\x7F]/g, "").trim();
 
     case "number":
@@ -270,18 +278,18 @@ export function sanitizeHeaderValue(value: string, config: HeaderConfig): any {
       return value === "true";
 
     case "enum":
-      return value; // Already validated
+      return value; // Pre-validated in isValidHeaderValue
 
     case "json":
       try {
         const parsed = JSON.parse(value);
-        // Additional validation for parsed JSON
+        // Clean parsed objects from prototype pollution
         if (
           typeof parsed === "object" &&
           parsed !== null &&
           !Array.isArray(parsed)
         ) {
-          // Create a clean object without prototype chain
+          // Safe object creation, filter blacklisted keys
           const clean: any = {};
           for (const [k, v] of Object.entries(parsed)) {
             if (!BLACKLISTED_KEYS.includes(k)) {
@@ -301,11 +309,13 @@ export function sanitizeHeaderValue(value: string, config: HeaderConfig): any {
 }
 
 /**
- * XSS sanitization for display contexts
+ * HTML entity encoding for safe display in web contexts.
+ * @param value - Any value to sanitize
+ * @returns HTML-safe version with encoded entities
  */
 export function sanitizeForDisplay(value: any): any {
   if (typeof value === "string") {
-    // Basic HTML entity encoding
+    // Standard HTML entity encoding for XSS prevention
     return value
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
@@ -330,7 +340,11 @@ export function sanitizeForDisplay(value: any): any {
 }
 
 /**
- * Extract and validate custom headers
+ * Extracts whitelisted headers into sanitized context attributes.
+ * @param ctx - Request context with headers
+ * @param headerConfig - Allowed headers and validation rules
+ * @param options - Logging and strict mode settings
+ * @returns Safe context attributes with security metadata
  */
 export function extractSecureCustomAttributes(
   ctx: any,
@@ -341,12 +355,12 @@ export function extractSecureCustomAttributes(
 
   if (!ctx.headers) return attributes;
 
-  // Process each configured header
+  // Extract only whitelisted headers
   for (const config of headerConfig) {
     const value = ctx.headers.get?.(config.name);
 
     if (value !== undefined && value !== null) {
-      // Validate the header value
+      // Apply validation rules
       if (!isValidHeaderValue(value, config)) {
         if (options.logInvalid) {
           console.warn(
@@ -356,12 +370,12 @@ export function extractSecureCustomAttributes(
         continue;
       }
 
-      // Sanitize and add to attributes
+      // Convert to safe context attribute
       const sanitized = sanitizeHeaderValue(value, config);
       if (sanitized !== null) {
-        // Convert header name to camelCase attribute name
+        // Header name to camelCase: x-feature-flag -> featureFlag
         const attrName = config.name
-          .substring(2) // Remove 'x-' prefix
+          .substring(2) // Strip x- prefix
           .replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
 
         attributes[attrName] = sanitized;
@@ -369,7 +383,7 @@ export function extractSecureCustomAttributes(
     }
   }
 
-  // Check for unexpected headers if strict mode
+  // Strict mode: warn about non-whitelisted feature headers
   if (options.strict && options.logInvalid && ctx.headers) {
     for (const [key] of ctx.headers.entries()) {
       if (key.startsWith("x-feature-") || key.startsWith("x-targeting-")) {
@@ -383,7 +397,7 @@ export function extractSecureCustomAttributes(
     }
   }
 
-  // Add security metadata
+  // Security audit trail metadata
   attributes._headerSource = true;
   attributes._validated = true;
   attributes._timestamp = Date.now();
@@ -392,7 +406,9 @@ export function extractSecureCustomAttributes(
 }
 
 /**
- * Create a header extractor with custom configuration
+ * Factory for header extractors with custom validation config.
+ * @param customConfig - Custom header validation rules
+ * @returns Configured extractor function
  */
 export function createHeaderExtractor(customConfig?: HeaderConfig[]) {
   const config = customConfig || DEFAULT_HEADER_CONFIG;

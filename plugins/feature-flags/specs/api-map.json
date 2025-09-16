@@ -1,0 +1,252 @@
+[
+  {
+    "server": "auth.api.evaluateFeatureFlag",
+    "http": { "method": "POST", "path": "/feature-flags/evaluate" },
+    "client": "authClient.featureFlags.evaluate",
+    "visibility": "public"
+  },
+  {
+    "server": "auth.api.evaluateFeatureFlags",
+    "http": { "method": "POST", "path": "/feature-flags/evaluate-batch" },
+    "client": "authClient.featureFlags.evaluateMany",
+    "visibility": "public"
+  },
+  {
+    "server": "auth.api.bootstrapFeatureFlags",
+    "http": { "method": "POST", "path": "/feature-flags/bootstrap" },
+    "client": "authClient.featureFlags.bootstrap",
+    "visibility": "public"
+  },
+  {
+    "server": "auth.api.createFeatureFlagEvent",
+    "http": { "method": "POST", "path": "/feature-flags/events" },
+    "client": "authClient.featureFlags.track",
+    "visibility": "public"
+  },
+  {
+    "server": "auth.api.createFeatureFlagEventBatch",
+    "http": { "method": "POST", "path": "/feature-flags/events/batch" },
+    "client": "authClient.featureFlags.trackBatch",
+    "visibility": "public"
+  },
+
+  {
+    "server": "auth.api.listFeatureFlags",
+    "http": { "method": "GET", "path": "/feature-flags/admin/flags" },
+    "client": "authClient.featureFlags.admin.flags.list",
+    "visibility": "admin"
+  },
+  {
+    "server": "auth.api.createFeatureFlag",
+    "http": { "method": "POST", "path": "/feature-flags/admin/flags" },
+    "client": "authClient.featureFlags.admin.flags.create",
+    "visibility": "admin"
+  },
+  {
+    "server": "auth.api.getFeatureFlag",
+    "http": { "method": "GET", "path": "/feature-flags/admin/flags/{id}" },
+    "client": "authClient.featureFlags.admin.flags.get",
+    "visibility": "admin"
+  },
+  {
+    "server": "auth.api.updateFeatureFlag",
+    "http": { "method": "PATCH", "path": "/feature-flags/admin/flags/{id}" },
+    "client": "authClient.featureFlags.admin.flags.update",
+    "visibility": "admin"
+  },
+  {
+    "server": "auth.api.deleteFeatureFlag",
+    "http": { "method": "DELETE", "path": "/feature-flags/admin/flags/{id}" },
+    "client": "authClient.featureFlags.admin.flags.delete",
+    "visibility": "admin"
+  },
+  {
+    "server": "auth.api.enableFeatureFlag",
+    "http": {
+      "method": "POST",
+      "path": "/feature-flags/admin/flags/{id}/enable"
+    },
+    "client": "authClient.featureFlags.admin.flags.enable",
+    "visibility": "admin"
+  },
+  {
+    "server": "auth.api.disableFeatureFlag",
+    "http": {
+      "method": "POST",
+      "path": "/feature-flags/admin/flags/{id}/disable"
+    },
+    "client": "authClient.featureFlags.admin.flags.disable",
+    "visibility": "admin"
+  },
+
+  {
+    "server": "auth.api.listFeatureFlagRules",
+    "http": {
+      "method": "GET",
+      "path": "/feature-flags/admin/flags/{flagId}/rules"
+    },
+    "client": "authClient.featureFlags.admin.rules.list",
+    "visibility": "admin"
+  },
+  {
+    "server": "auth.api.createFeatureFlagRule",
+    "http": {
+      "method": "POST",
+      "path": "/feature-flags/admin/flags/{flagId}/rules"
+    },
+    "client": "authClient.featureFlags.admin.rules.create",
+    "visibility": "admin"
+  },
+  {
+    "server": "auth.api.getFeatureFlagRule",
+    "http": {
+      "method": "GET",
+      "path": "/feature-flags/admin/flags/{flagId}/rules/{ruleId}"
+    },
+    "client": "authClient.featureFlags.admin.rules.get",
+    "visibility": "admin"
+  },
+  {
+    "server": "auth.api.updateFeatureFlagRule",
+    "http": {
+      "method": "PATCH",
+      "path": "/feature-flags/admin/flags/{flagId}/rules/{ruleId}"
+    },
+    "client": "authClient.featureFlags.admin.rules.update",
+    "visibility": "admin"
+  },
+  {
+    "server": "auth.api.deleteFeatureFlagRule",
+    "http": {
+      "method": "DELETE",
+      "path": "/feature-flags/admin/flags/{flagId}/rules/{ruleId}"
+    },
+    "client": "authClient.featureFlags.admin.rules.delete",
+    "visibility": "admin"
+  },
+  {
+    "server": "auth.api.reorderFeatureFlagRules",
+    "http": {
+      "method": "POST",
+      "path": "/feature-flags/admin/flags/{flagId}/rules/reorder"
+    },
+    "client": "authClient.featureFlags.admin.rules.reorder",
+    "visibility": "admin"
+  },
+
+  {
+    "server": "auth.api.listFeatureFlagOverrides",
+    "http": { "method": "GET", "path": "/feature-flags/admin/overrides" },
+    "client": "authClient.featureFlags.admin.overrides.list",
+    "visibility": "admin"
+  },
+  {
+    "server": "auth.api.createFeatureFlagOverride",
+    "http": { "method": "POST", "path": "/feature-flags/admin/overrides" },
+    "client": "authClient.featureFlags.admin.overrides.create",
+    "visibility": "admin"
+  },
+  {
+    "server": "auth.api.getFeatureFlagOverride",
+    "http": { "method": "GET", "path": "/feature-flags/admin/overrides/{id}" },
+    "client": "authClient.featureFlags.admin.overrides.get",
+    "visibility": "admin"
+  },
+  {
+    "server": "auth.api.updateFeatureFlagOverride",
+    "http": {
+      "method": "PATCH",
+      "path": "/feature-flags/admin/overrides/{id}"
+    },
+    "client": "authClient.featureFlags.admin.overrides.update",
+    "visibility": "admin"
+  },
+  {
+    "server": "auth.api.deleteFeatureFlagOverride",
+    "http": {
+      "method": "DELETE",
+      "path": "/feature-flags/admin/overrides/{id}"
+    },
+    "client": "authClient.featureFlags.admin.overrides.delete",
+    "visibility": "admin"
+  },
+
+  {
+    "server": "auth.api.getFeatureFlagStats",
+    "http": {
+      "method": "GET",
+      "path": "/feature-flags/admin/flags/{flagId}/stats"
+    },
+    "client": "authClient.featureFlags.admin.analytics.stats.get",
+    "visibility": "admin"
+  },
+  {
+    "server": "auth.api.getFeatureFlagsUsageMetrics",
+    "http": { "method": "GET", "path": "/feature-flags/admin/metrics/usage" },
+    "client": "authClient.featureFlags.admin.analytics.usage.get",
+    "visibility": "admin"
+  },
+  {
+    "server": "auth.api.exportFeatureFlagData",
+    "http": { "method": "POST", "path": "/feature-flags/admin/export" },
+    "client": "authClient.featureFlags.admin.exports.create",
+    "visibility": "admin"
+  },
+
+  {
+    "server": "auth.api.listFeatureFlagAuditEntries",
+    "http": { "method": "GET", "path": "/feature-flags/admin/audit" },
+    "client": "authClient.featureFlags.admin.audit.list",
+    "visibility": "admin"
+  },
+  {
+    "server": "auth.api.getFeatureFlagAuditEntry",
+    "http": { "method": "GET", "path": "/feature-flags/admin/audit/{id}" },
+    "client": "authClient.featureFlags.admin.audit.get",
+    "visibility": "admin"
+  },
+
+  {
+    "server": "auth.api.listFeatureFlagEnvironments",
+    "http": { "method": "GET", "path": "/feature-flags/admin/environments" },
+    "client": "authClient.featureFlags.admin.environments.list",
+    "visibility": "admin"
+  },
+  {
+    "server": "auth.api.createFeatureFlagEnvironment",
+    "http": { "method": "POST", "path": "/feature-flags/admin/environments" },
+    "client": "authClient.featureFlags.admin.environments.create",
+    "visibility": "admin"
+  },
+  {
+    "server": "auth.api.updateFeatureFlagEnvironment",
+    "http": {
+      "method": "PATCH",
+      "path": "/feature-flags/admin/environments/{id}"
+    },
+    "client": "authClient.featureFlags.admin.environments.update",
+    "visibility": "admin"
+  },
+  {
+    "server": "auth.api.deleteFeatureFlagEnvironment",
+    "http": {
+      "method": "DELETE",
+      "path": "/feature-flags/admin/environments/{id}"
+    },
+    "client": "authClient.featureFlags.admin.environments.delete",
+    "visibility": "admin"
+  },
+
+  {
+    "server": "auth.api.getFeatureFlagsConfig",
+    "http": { "method": "GET", "path": "/feature-flags/config" },
+    "client": "authClient.featureFlags.config",
+    "visibility": "public"
+  },
+  {
+    "server": "auth.api.checkFeatureFlagsHealth",
+    "http": { "method": "GET", "path": "/feature-flags/health" },
+    "client": null,
+    "visibility": "none"
+  }
+]

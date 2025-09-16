@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2025-present Kriasoft
 // SPDX-License-Identifier: MIT
 
-import { describe, it, expect, beforeEach, afterEach, mock } from "bun:test";
+import { afterEach, describe, expect, it, mock } from "bun:test";
 import { SmartPoller } from "./polling";
 
 describe("SmartPoller", () => {
@@ -18,7 +18,7 @@ describe("SmartPoller", () => {
       executions.push(Date.now());
     });
 
-    // Create multiple pollers with same interval
+    // Multiple pollers with same base interval
     const pollers: SmartPoller[] = [];
     for (let i = 0; i < 5; i++) {
       const p = new SmartPoller(100, task);
@@ -32,11 +32,11 @@ describe("SmartPoller", () => {
     // Stop all pollers
     pollers.forEach((p) => p.stop());
 
-    // Check that execution times are spread out (jittered)
+    // Verify jitter spreads execution times
     expect(task).toHaveBeenCalledTimes(5);
     const times = executions.sort((a, b) => a - b);
     const spread = times[times.length - 1] - times[0];
-    expect(spread).toBeGreaterThan(0); // Should have some spread due to jitter
+    expect(spread).toBeGreaterThan(0); // Jitter should create time spread
   });
 
   it("should implement exponential backoff on errors", async () => {
@@ -96,14 +96,14 @@ describe("SmartPoller", () => {
       executed = true;
     });
 
-    poller = new SmartPoller(10000, task); // Long interval
+    poller = new SmartPoller(10000, task); // Long base interval
     poller.start();
 
-    // Should not execute immediately with start()
+    // Normal start() doesn't execute immediately
     await new Promise((resolve) => setTimeout(resolve, 50));
     expect(executed).toBe(false);
 
-    // Force immediate refresh
+    // refreshNow() bypasses timer for immediate execution
     await poller.refreshNow();
     expect(executed).toBe(true);
     expect(task).toHaveBeenCalledTimes(1);
@@ -126,8 +126,7 @@ describe("SmartPoller", () => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
     poller.stop();
 
-    // After many failures, interval should be capped
-    // The max interval should be 1000ms (100 * 10)
+    // Verify interval capping at maxInterval (100 * 10 = 1000ms)
     const lastIntervals = [];
     for (
       let i = executionTimes.length - 2;
@@ -140,7 +139,7 @@ describe("SmartPoller", () => {
     if (lastIntervals.length > 0) {
       const avgLastInterval =
         lastIntervals.reduce((a, b) => a + b, 0) / lastIntervals.length;
-      expect(avgLastInterval).toBeLessThanOrEqual(1500); // Should be around 1000ms + jitter
+      expect(avgLastInterval).toBeLessThanOrEqual(1500); // ~1000ms + jitter
     }
   });
 });

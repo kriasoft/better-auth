@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2025-present Kriasoft
 // SPDX-License-Identifier: MIT
 
-import { describe, it, expect, beforeEach } from "bun:test";
+import { describe, expect, it } from "bun:test";
 import { featureFlagsClient } from "./client";
 
 describe("FlagCache", () => {
@@ -14,8 +14,7 @@ describe("FlagCache", () => {
         },
       });
 
-      // Test will be implemented when we have access to cache internals
-      // For now, just verify the plugin initializes
+      // TODO: Test cache internals when exposed
       expect(plugin.id).toBe("feature-flags");
     });
   });
@@ -29,21 +28,21 @@ describe("FlagCache", () => {
         },
       });
 
-      // Mock session atom
+      // Mock session atom for testing
       const mockSessionAtom = {
         subscribe: (callback: Function) => {
-          // Simulate session change
+          // Simulate session change events
           setTimeout(() => {
             callback({ data: { session: { id: "session-1" } } });
             callback({ data: { session: { id: "session-2" } } });
           }, 10);
 
-          return () => {}; // unsubscribe
+          return () => {}; // Unsubscribe function
         },
       };
 
-      // Initialize with mock session
-      const atoms = plugin.getAtoms?.({ session: mockSessionAtom } as any);
+      // Initialize plugin with mock session
+      const atoms = plugin.getAtoms(null);
 
       expect(plugin.id).toBe("feature-flags");
     });
@@ -96,9 +95,9 @@ describe("featureFlagsClient", () => {
         data: { flags: {} },
       } as any);
 
-    const actions = plugin.getActions?.(mockFetch as any, {} as any);
+    const actions = plugin.getActions?.(mockFetch as any, {} as any, {} as any);
 
-    // Verify dispose exists and can be called
+    // Verify cleanup method exists
     expect(actions?.featureFlags.dispose).toBeDefined();
     actions?.featureFlags.dispose?.();
   });

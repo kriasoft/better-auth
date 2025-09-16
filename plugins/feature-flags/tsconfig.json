@@ -9,5 +9,12 @@
     }
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "*.config.ts", "*.config.js"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "*.config.ts",
+    "*.config.js",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx"
+  ]
 }

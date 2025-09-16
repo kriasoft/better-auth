@@ -2,71 +2,175 @@
 // SPDX-License-Identifier: MIT
 
 import type {
-  FeatureFlag,
-  FlagRule,
   EvaluationContext,
   EvaluationResult,
+  FeatureFlag,
+  FlagRule,
+  RuleConditions,
 } from "./schema";
 import type { PluginContext } from "./types";
 import { calculateRollout, evaluateCondition } from "./utils";
 
 /**
- * Core flag evaluation engine
+ * Core flag evaluation engine with deterministic priority cascade.
  *
- * @important Evaluation order matters for predictable behavior:
- * 1. Disabled flags return immediately (fail-safe)
- * 2. User overrides have highest priority (explicit control)
- * 3. Rules evaluated by priority field (0 = highest)
- * 4. Percentage rollout (gradual release)
- * 5. Default value (fallback)
+ * Order: Disabled → Overrides → Rules → Rollout → Default
+ * Performance: Cheap checks first, DB cached, hash-based consistency
  *
- * @performance Checks are ordered by likelihood and cost:
- * - Cheap checks (enabled, default) come first
- * - Database lookups (overrides, rules) are cached
- * - Hash calculations (rollout) only when needed
+ * @see src/storage/ for caching implementation
  */
 export async function evaluateFlags(
   flag: FeatureFlag,
   context: EvaluationContext,
   pluginContext: PluginContext,
+  debug = false,
+  environment?: string,
 ): Promise<EvaluationResult> {
-  // Check if flag is disabled
+  const startTime = debug ? Date.now() : 0;
+  const debugInfo = debug
+    ? {
+        evaluationPath: [] as string[],
+        steps: [] as Array<{
+          step: string;
+          matched?: boolean;
+          [key: string]: any;
+        }>,
+      }
+    : null;
+
+  // Fail-safe: disabled flags bypass all logic
   if (!flag.enabled) {
+    if (debug) {
+      debugInfo!.evaluationPath.push("disabled");
+      debugInfo!.steps.push({ step: "disabled", flagEnabled: false });
+    }
     return {
       value: flag.defaultValue,
       reason: "disabled",
+      ...(debug && {
+        metadata: {
+          debug: {
+            ...debugInfo,
+            processingTime: Date.now() - startTime,
+            flagId: flag.id,
+            environment,
+          },
+        },
+      }),
     };
   }
 
-  // Check for user overrides first (highest priority)
+  // User-specific overrides (highest priority after disabled check)
   const override = await checkOverride(flag, context, pluginContext);
   if (override) {
+    if (debug) {
+      debugInfo!.evaluationPath.push("override");
+      debugInfo!.steps.push({
+        step: "override",
+        matched: true,
+        overrideId: override.metadata?.overrideId,
+        userId: context.userId,
+      });
+      // Add debug metadata to existing override result
+      return {
+        ...override,
+        metadata: {
+          ...override.metadata,
+          debug: {
+            ...debugInfo,
+            processingTime: Date.now() - startTime,
+            flagId: flag.id,
+            environment,
+          },
+        },
+      };
+    }
     return override;
   }
 
-  // Evaluate rules in priority order
+  // Rules evaluation (priority-ordered, 0 = highest)
   const ruleResult = await evaluateRules(flag, context, pluginContext);
   if (ruleResult) {
+    if (debug) {
+      debugInfo!.evaluationPath.push("rule");
+      debugInfo!.steps.push({
+        step: "rule",
+        matched: true,
+        ruleId: ruleResult.metadata?.ruleId,
+      });
+      return {
+        ...ruleResult,
+        metadata: {
+          ...ruleResult.metadata,
+          debug: {
+            ...debugInfo,
+            processingTime: Date.now() - startTime,
+            flagId: flag.id,
+            environment,
+          },
+        },
+      };
+    }
     return ruleResult;
   }
 
-  // Check percentage rollout
+  if (debug) {
+    debugInfo!.steps.push({ step: "rules", matched: false });
+  }
+
+  // Percentage rollout using consistent hashing
   const rolloutResult = checkRollout(flag, context);
   if (rolloutResult) {
+    if (debug) {
+      debugInfo!.evaluationPath.push("rollout");
+      debugInfo!.steps.push({
+        step: "rollout",
+        matched: true,
+        rolloutPercentage: flag.rolloutPercentage,
+      });
+      return {
+        ...rolloutResult,
+        metadata: {
+          ...rolloutResult.metadata,
+          debug: {
+            ...debugInfo,
+            processingTime: Date.now() - startTime,
+            flagId: flag.id,
+            environment,
+          },
+        },
+      };
+    }
     return rolloutResult;
   }
 
-  // Return default value
+  if (debug) {
+    debugInfo!.steps.push({ step: "rollout", matched: false });
+  }
+
+  // Fallback to configured default
+  if (debug) {
+    debugInfo!.evaluationPath.push("default");
+    debugInfo!.steps.push({ step: "default", matched: true });
+  }
+
   return {
     value: flag.defaultValue,
-    variant: flag.defaultVariant,
     reason: "default",
+    ...(debug && {
+      metadata: {
+        debug: {
+          ...debugInfo,
+          processingTime: Date.now() - startTime,
+          flagId: flag.id,
+          environment,
+        },
+      },
+    }),
   };
 }
 
-/**
- * Check for user-specific overrides
- */
+// Individual user overrides - admin-configured exceptions
 async function checkOverride(
   flag: FeatureFlag,
   context: EvaluationContext,
@@ -75,6 +179,9 @@ async function checkOverride(
   const { storage } = pluginContext;
 
   try {
+    // Anonymous users cannot have personal overrides
+    if (!context.userId) return null;
+
     const override = await storage.getOverride(flag.id, context.userId);
     if (override && override.enabled) {
       return {
@@ -93,9 +200,7 @@ async function checkOverride(
   return null;
 }
 
-/**
- * Evaluate flag rules
- */
+// Rule-based targeting: segment users by attributes/behavior
 async function evaluateRules(
   flag: FeatureFlag,
   context: EvaluationContext,
@@ -104,21 +209,19 @@ async function evaluateRules(
   const { storage } = pluginContext;
 
   try {
-    // Get all rules for this flag
+    // Fetch rules pre-sorted by priority (0 = highest precedence)
     const rules = await storage.getRulesForFlag(flag.id);
-
-    // Rules are already sorted by priority
     for (const rule of rules) {
       if (!rule.enabled) continue;
 
       const matches = evaluateRuleConditions(rule, context);
       if (matches) {
-        // Select variant if specified
+        // First matching rule wins (priority-based evaluation)
         const variant = selectVariant(rule, flag, context);
 
         return {
           value: rule.value !== undefined ? rule.value : flag.defaultValue,
-          variant: variant || rule.variant,
+          variant,
           reason: "rule_match",
           metadata: {
             ruleId: rule.id,
@@ -135,36 +238,81 @@ async function evaluateRules(
   return null;
 }
 
-/**
- * Evaluate rule conditions
- */
+// Condition evaluation with boolean logic (all/any/not recursion)
 function evaluateRuleConditions(
   rule: FlagRule,
   context: EvaluationContext,
 ): boolean {
   const { conditions } = rule;
 
-  if (!conditions || conditions.conditions.length === 0) {
-    // No conditions means rule always matches
+  // No conditions = unconditional match (allows simple percentage rollouts)
+  if (!conditions) {
     return true;
   }
 
-  const results = conditions.conditions.map((condition) => {
-    const attributeValue = getAttributeValue(context, condition.attribute);
-    return evaluateCondition(
-      attributeValue,
-      condition.operator,
-      condition.value,
-    );
-  });
+  return evaluateConditionsRecursive(conditions, context);
+}
 
-  // Apply logical operator
-  if (conditions.operator === "AND") {
-    return results.every((r) => r === true);
-  } else {
-    // OR
-    return results.some((r) => r === true);
+// Recursive boolean evaluation supporting complex targeting logic
+function evaluateConditionsRecursive(
+  conditions: RuleConditions | any,
+  context: EvaluationContext,
+): boolean {
+  // Legacy support: flat conditions array with single operator
+  if (conditions.conditions && conditions.operator) {
+    const results = conditions.conditions.map((condition: any) => {
+      const attributeValue = getAttributeValue(context, condition.attribute);
+      return evaluateCondition(
+        attributeValue,
+        condition.operator,
+        condition.value,
+      );
+    });
+
+    if (conditions.operator === "AND") {
+      return results.every(Boolean);
+    } else {
+      // OR
+      return results.some(Boolean);
+    }
   }
+
+  // Modern structure: nested all/any/not conditions
+  let result = true; // Default passes (no constraints = universal match)
+
+  // Process 'all' conditions (AND logic)
+  if (conditions.all && conditions.all.length > 0) {
+    const allResults = conditions.all.map((condition: any) => {
+      const attributeValue = getAttributeValue(context, condition.attribute);
+      return evaluateCondition(
+        attributeValue,
+        condition.operator,
+        condition.value,
+      );
+    });
+    result = result && allResults.every(Boolean);
+  }
+
+  // Process 'any' conditions (OR logic)
+  if (conditions.any && conditions.any.length > 0) {
+    const anyResults = conditions.any.map((condition: any) => {
+      const attributeValue = getAttributeValue(context, condition.attribute);
+      return evaluateCondition(
+        attributeValue,
+        condition.operator,
+        condition.value,
+      );
+    });
+    result = result && anyResults.some(Boolean);
+  }
+
+  // Process 'not' condition (negation)
+  if (conditions.not) {
+    const notResult = evaluateConditionsRecursive(conditions.not, context);
+    result = result && !notResult;
+  }
+
+  return result;
 }
 
 /**
@@ -187,15 +335,9 @@ function getAttributeValue(context: EvaluationContext, attribute: string): any {
 }
 
 /**
- * Check percentage rollout
- *
- * @important Uses consistent hashing to ensure:
- * - Same user always gets same result (sticky sessions)
- * - Even distribution across user population
- * - Deterministic without external state
- *
- * @note Hash input combines userId:flagKey to ensure different
- * flags can have independent rollout percentages for same user
+ * Consistent percentage rollout with sticky user assignment.
+ * Hash-based distribution ensures same user gets same result across sessions.
+ * Format: userId:flagKey for per-flag independence
  */
 function checkRollout(
   flag: FeatureFlag,
@@ -216,13 +358,13 @@ function checkRollout(
     };
   }
 
-  // Use consistent hashing based on user ID and flag key
+  // Deterministic inclusion via hash: same user + flag = same result
   const hashInput = `${context.userId}:${flag.key}`;
   const included = calculateRollout(hashInput, flag.rolloutPercentage);
 
   if (included) {
     // Select variant for included users
-    const variant = selectVariantByPercentage(flag, context);
+    const variant = selectVariantByWeight(flag, context);
 
     return {
       value: flag.defaultValue !== false ? flag.defaultValue : true,
@@ -253,47 +395,66 @@ function selectVariant(
   flag: FeatureFlag,
   context: EvaluationContext,
 ): string | undefined {
-  // If rule specifies a variant, use it
-  if (rule.variant) {
-    return rule.variant;
-  }
-
   // If flag has variants, select based on user
-  if (flag.variants && Object.keys(flag.variants).length > 0) {
-    return selectVariantByPercentage(flag, context);
+  if (flag.variants && flag.variants.length > 0) {
+    return selectVariantByWeight(flag, context);
   }
 
   return undefined;
 }
 
 /**
- * Select variant based on percentage distribution
+ * Deterministic variant selection with optional weighting.
  *
- * @important Variant assignment is deterministic:
- * - Same user always gets same variant (consistency)
- * - Uses separate hash seed (:variant suffix) from rollout
- * - Distribution is uniform across variants
- *
- * @note This is NOT weighted distribution - all variants
- * have equal probability. For weighted variants, use rules.
+ * Consistency: Same user gets same variant across sessions
+ * Hash suffix ":variant" ensures independence from rollout calculation
+ * Supports both weighted and equal distribution strategies
  */
-function selectVariantByPercentage(
+function selectVariantByWeight(
   flag: FeatureFlag,
   context: EvaluationContext,
 ): string | undefined {
-  if (!flag.variants || Object.keys(flag.variants).length === 0) {
+  if (!flag.variants || flag.variants.length === 0) {
     return undefined;
   }
 
-  const variants = Object.keys(flag.variants);
+  const variants = flag.variants;
   if (variants.length === 0) return undefined;
 
-  // Use consistent hashing to assign variant
+  // Hash with :variant suffix to ensure independence from rollout
   const hashInput = `${context.userId}:${flag.key}:variant`;
   const hashValue = simpleHash(hashInput);
-  const variantIndex = hashValue % variants.length;
 
-  return variants[variantIndex];
+  // Detect weight configuration
+  const hasWeights = variants.some((v) => typeof v.weight === "number");
+
+  if (hasWeights) {
+    // Weighted selection
+    const totalWeight = variants.reduce((sum, v) => sum + (v.weight || 0), 0);
+    if (totalWeight <= 0) {
+      // Fallback to equal distribution if invalid weights
+      const variantIndex = hashValue % variants.length;
+      return variants[variantIndex]!.key;
+    }
+
+    // Map hash to weighted selection
+    const targetWeight = hashValue % totalWeight;
+    let cumulativeWeight = 0;
+
+    for (const variant of variants) {
+      cumulativeWeight += variant.weight || 0;
+      if (targetWeight < cumulativeWeight) {
+        return variant.key;
+      }
+    }
+
+    // Fallback to last variant
+    return variants[variants.length - 1]!.key;
+  } else {
+    // Equal distribution
+    const variantIndex = hashValue % variants.length;
+    return variants[variantIndex]!.key;
+  }
 }
 
 /**
@@ -310,28 +471,31 @@ function simpleHash(str: string): number {
 }
 
 /**
- * Batch evaluate multiple flags
+ * Batch flag evaluation with parallel fetching and error isolation.
+ * Individual flag failures don't affect other evaluations.
  */
 export async function evaluateFlagsBatch(
   keys: string[],
   context: EvaluationContext,
   pluginContext: PluginContext,
+  debug = false,
+  environment?: string,
 ): Promise<Record<string, EvaluationResult>> {
   const { storage, config } = pluginContext;
   const results: Record<string, EvaluationResult> = {};
 
-  // Get organization ID if multi-tenant
+  // Multi-tenant org scoping when enabled
   const organizationId = config.multiTenant.enabled
     ? context.organizationId
     : undefined;
 
-  // Fetch all flags in parallel
+  // Parallel flag fetching for performance
   const flagPromises = keys.map((key) => storage.getFlag(key, organizationId));
   const flags = await Promise.all(flagPromises);
 
   // Evaluate each flag
   for (let i = 0; i < keys.length; i++) {
-    const key = keys[i];
+    const key = keys[i]!;
     const flag = flags[i];
 
     if (!flag) {
@@ -343,12 +507,19 @@ export async function evaluateFlagsBatch(
     }
 
     try {
-      results[key] = await evaluateFlags(flag, context, pluginContext);
+      results[key] = await evaluateFlags(
+        flag,
+        context,
+        pluginContext,
+        debug,
+        environment,
+      );
     } catch (error) {
       console.error(`[feature-flags] Error evaluating flag ${key}:`, error);
       results[key] = {
         value: flag.defaultValue,
-        reason: "error",
+        reason: "default",
+        metadata: { error: true },
       };
     }
   }

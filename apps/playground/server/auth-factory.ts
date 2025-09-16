@@ -17,7 +17,7 @@ import type { Env } from "./env";
  */
 function createAuthConfig(
   env: Env,
-  db: PostgresJsDatabase<typeof schema>
+  db: PostgresJsDatabase<typeof schema>,
 ): BetterAuthOptions {
   return {
     secret: env.BETTER_AUTH_SECRET,

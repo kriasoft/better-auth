@@ -14,15 +14,17 @@ Flag returns unexpected value or default value when it shouldn't.
 
 ```typescript
 // Check flag status
-const flag = await auth.api.admin.featureFlags.get("flag-key");
+const { flags } = await auth.api.listFeatureFlags({ query: {} });
+const flag = flags.find((f) => f.key === "flag-key");
 console.log("Flag enabled:", flag.enabled);
 console.log("Rollout %:", flag.rolloutPercentage);
 
 // Check evaluation with context
-const result = await auth.api.featureFlags.evaluate({
-  key: "flag-key",
-  userId: "user-123",
-  attributes: { role: "admin" },
+const result = await auth.api.evaluateFeatureFlag({
+  body: {
+    flagKey: "flag-key",
+    context: { userId: "user-123", attributes: { role: "admin" } },
+  },
 });
 console.log("Result:", result.value);
 console.log("Reason:", result.reason);
@@ -34,8 +36,8 @@ console.log("Reason:", result.reason);
 
    ```typescript
    // Enable the flag
-   await auth.api.admin.featureFlags.update("flag-id", {
-     enabled: true,
+   await auth.api.updateFeatureFlag({
+     body: { id: "flag-id", enabled: true },
    });
    ```
 
@@ -43,17 +45,17 @@ console.log("Reason:", result.reason);
 
    ```typescript
    // Increase rollout or add override
-   await auth.api.admin.featureFlags.createOverride({
-     flagId: "flag-id",
-     userId: "user-123",
-     value: true,
+   await auth.api.createFeatureFlagOverride({
+     body: { flagId: "flag-id", userId: "user-123", value: true },
    });
    ```
 
 3. **Rule conditions not matching**
    ```typescript
    // Debug rule evaluation
-   const rules = await auth.api.admin.featureFlags.getRules("flag-id");
+   const { rules } = await auth.api.listFeatureFlagRules({
+     params: { flagId: "flag-id" },
+   });
    rules.forEach((rule) => {
      console.log("Rule:", rule.name);
      console.log("Conditions:", JSON.stringify(rule.conditions));
@@ -105,15 +107,14 @@ Slow flag evaluation or high latency.
 ```typescript
 // Measure evaluation time
 const start = Date.now();
-const result = await auth.api.featureFlags.evaluate({
-  key: "flag-key",
+const result = await auth.api.evaluateFeatureFlag({
+  body: { flagKey: "flag-key" },
 });
 const duration = Date.now() - start;
 console.log(`Evaluation took ${duration}ms`);
 
 // Check cache status
-const cacheStats = await auth.api.featureFlags.getCacheStats();
-console.log("Cache hit rate:", cacheStats.hitRate);
+// Enable analytics to monitor evaluation performance and error rates.
 ```
 
 #### Solutions
@@ -134,12 +135,10 @@ console.log("Cache hit rate:", cacheStats.hitRate);
 2. **Use batch evaluation**
 
    ```typescript
-   // Instead of multiple calls
-   const flag1 = await evaluate("flag1");
-   const flag2 = await evaluate("flag2");
-
-   // Use batch
-   const results = await evaluateBatch(["flag1", "flag2"]);
+   // Use batch evaluation
+   const { flags } = await auth.api.evaluateFeatureFlags({
+     body: { flagKeys: ["flag1", "flag2"] },
+   });
    ```
 
 3. **Add database indexes**
@@ -195,9 +194,8 @@ Different flag values on client and server.
 
 ```typescript
 // Server-side
-const serverValue = await auth.api.featureFlags.evaluate({
-  key: "flag",
-  userId: "user-123",
+const serverValue = await auth.api.evaluateFeatureFlag({
+  body: { flagKey: "flag", context: { userId: "user-123" } },
 });
 
 // Client-side
@@ -386,27 +384,12 @@ featureFlagsClient({
 });
 ```
 
-### Inspection Endpoints
-
-```typescript
-// Get evaluation details
-const debug = await auth.api.featureFlags.debugEvaluate({
-  key: "flag-key",
-  userId: "user-123",
-  verbose: true,
-});
-
-console.log("Evaluation steps:", debug.steps);
-console.log("Matched rules:", debug.matchedRules);
-console.log("Final value:", debug.value);
-```
-
 ### Browser DevTools
 
 ```javascript
 // In browser console (development only)
 window.__FEATURE_FLAGS__ = {
-  list: () => client.featureFlags.getAllFlags(),
+  list: () => client.featureFlags.evaluateAllFlags(),
   enable: (key) => client.featureFlags.setOverride(key, true),
   disable: (key) => client.featureFlags.setOverride(key, false),
   clear: () => client.featureFlags.clearOverrides(),
@@ -686,9 +669,11 @@ featureFlagsClient({
 **A**: Yes, evaluate without user context:
 
 ```typescript
-const result = await auth.api.featureFlags.evaluate({
-  key: "public-flag",
-  attributes: { anonymous: true },
+const result = await auth.api.evaluateFeatureFlag({
+  body: {
+    flagKey: "public-flag",
+    context: { attributes: { anonymous: true } },
+  },
 });
 ```
 

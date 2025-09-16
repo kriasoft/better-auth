@@ -16,11 +16,11 @@ import { getPluginStatus } from "../env";
  * - Member management
  * - Multi-tenant support
  */
-export function getOrganizationsPlugin(env: Env): ReturnType<
-  typeof organization
-> | null {
+export function getOrganizationsPlugin(
+  env: Env,
+): ReturnType<typeof organization> | null {
   const pluginStatus = getPluginStatus(env);
-  
+
   // Check if organizations are enabled
   if (!pluginStatus.organizations) {
     return null;

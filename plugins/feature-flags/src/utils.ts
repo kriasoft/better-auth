@@ -1,20 +1,14 @@
 // SPDX-FileCopyrightText: 2025-present Kriasoft
 // SPDX-License-Identifier: MIT
 
-/**
- * Utility functions for the feature flags plugin
- */
+/** Utility functions for flag evaluation and data processing */
 
-/**
- * Generate a unique ID
- */
+/** Generates cryptographically secure UUID */
 export function generateId(): string {
   return crypto.randomUUID();
 }
 
-/**
- * Parse JSON with fallback
- */
+/** Safely parses JSON, returns original value on failure */
 export function parseJSON<T = unknown>(value: unknown): T {
   if (typeof value !== "string") {
     return value as T;
@@ -26,9 +20,7 @@ export function parseJSON<T = unknown>(value: unknown): T {
   }
 }
 
-/**
- * Hash a string using SHA-256
- */
+/** Creates SHA-256 hash of string, returns hex digest */
 export async function hash(value: string): Promise<string> {
   const encoder = new TextEncoder();
   const data = encoder.encode(value);
@@ -38,22 +30,15 @@ export async function hash(value: string): Promise<string> {
 }
 
 /**
- * Calculate percentage rollout for a user
- *
- * @algorithm Uses DJB2-like hash for consistent distribution:
- * - Deterministic: same input always produces same output
- * - Uniform: hash values distribute evenly across range
- * - Fast: O(n) where n is string length
- *
- * @important The '| 0' forces 32-bit integer arithmetic,
- * preventing JavaScript's float precision issues and ensuring
- * consistent behavior across different JS engines.
+ * Deterministic percentage rollout using DJB2 hash.
+ * @algorithm DJB2 hash for uniform distribution, O(n) complexity
+ * @important '| 0' forces 32-bit integers, prevents float precision issues
  */
 export function calculateRollout(userId: string, percentage: number): boolean {
   if (percentage <= 0) return false;
   if (percentage >= 100) return true;
 
-  // Simple hash-based rollout (DJB2 variant)
+  // DJB2 hash: (hash * 33) + char, with 32-bit overflow
   const hashValue = userId.split("").reduce((acc, char) => {
     return ((acc << 5) - acc + char.charCodeAt(0)) | 0; // (acc * 31) + char
   }, 0);
@@ -62,8 +47,8 @@ export function calculateRollout(userId: string, percentage: number): boolean {
 }
 
 /**
- * Validate that a value matches the expected flag type.
- * @throws {Error} if value doesn't match type
+ * Validates flag value against expected type.
+ * @throws {Error} Type mismatch or invalid type
  */
 export function validateValueType(value: any, type: string): boolean {
   switch (type) {
@@ -93,9 +78,7 @@ export function validateValueType(value: any, type: string): boolean {
   }
 }
 
-/**
- * Check if a value matches a condition
- */
+/** Evaluates targeting rule conditions for flag evaluation */
 export function evaluateCondition(
   value: any,
   operator: string,
@@ -130,7 +113,7 @@ export function evaluateCondition(
       try {
         return new RegExp(String(target)).test(String(value));
       } catch {
-        return false;
+        return false; // Invalid regex
       }
     default:
       return false;

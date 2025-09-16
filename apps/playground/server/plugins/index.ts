@@ -52,7 +52,7 @@ export function getEnabledPlugins(env: Env): BetterAuthPlugin[] {
 
   // Filter out null/disabled plugins (shouldn't be any at this point)
   return plugins.filter(
-    (plugin): plugin is BetterAuthPlugin => plugin !== null
+    (plugin): plugin is BetterAuthPlugin => plugin !== null,
   );
 }
 
