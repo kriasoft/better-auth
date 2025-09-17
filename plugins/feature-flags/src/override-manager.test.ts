@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2025-present Kriasoft
 // SPDX-License-Identifier: MIT
 
-import { describe, it, expect, beforeEach, afterEach } from "bun:test";
+import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { SecureOverrideManager } from "./override-manager";
 
 describe("SecureOverrideManager", () => {
@@ -86,7 +86,7 @@ describe("SecureOverrideManager", () => {
       // Wait for expiration and cleanup
       await new Promise((resolve) => setTimeout(resolve, 100));
 
-      // Force cleanup
+      // Force manual cleanup to test expired removal
       manager["cleanupExpired"]();
 
       expect(manager.getAll()).toEqual({});
@@ -155,7 +155,7 @@ describe("SecureOverrideManager", () => {
 
   describe("Storage Persistence", () => {
     beforeEach(() => {
-      // Mock localStorage for testing
+      // Mock localStorage with in-memory storage
       const storage: Record<string, string> = {};
       global.localStorage = {
         getItem: (key: string) => storage[key] || null,
@@ -174,7 +174,7 @@ describe("SecureOverrideManager", () => {
     });
 
     afterEach(() => {
-      // @ts-ignore - Clean up mock
+      // @ts-ignore - Cleanup localStorage mock
       delete global.localStorage;
     });
 
@@ -267,13 +267,13 @@ describe("SecureOverrideManager", () => {
         warnMessage = msg;
       };
 
-      // Simulate override from different environment
+      // Test cross-environment override detection
       manager = new SecureOverrideManager({
         environment: "production",
         allowInProduction: true,
       });
 
-      // Manually insert override with different environment
+      // Simulate override set in different environment
       manager["overrides"].set("testFlag", {
         value: true,
         expires: Date.now() + 10000,
@@ -344,7 +344,7 @@ describe("SecureOverrideManager", () => {
         environment: "production",
       });
 
-      // Try to set some overrides (will fail)
+      // Attempts to set overrides should fail in production
       manager.set("flag1", true);
       manager.set("flag2", false);
 

@@ -6,25 +6,23 @@ import * as z from "zod";
 import { parseJSON } from "../utils";
 
 /**
- * Database schema optimized for <100ms P99 evaluation at 100K+ RPS.
+ * Database schema for <100ms P99 evaluation at 100K+ RPS.
  *
- * REQUIRED CONSTRAINTS (add manually after table creation):
+ * REQUIRED CONSTRAINTS (add manually):
  * ```sql
  * ALTER TABLE flag_overrides ADD CONSTRAINT uk_flag_user UNIQUE (flag_id, user_id);
  * ALTER TABLE feature_flags ADD CONSTRAINT uk_org_key UNIQUE (organization_id, key);
  * ```
  *
  * CRITICAL INDEXES:
- * - (organizationId, key) on featureFlag - tenant lookups O(1)
- * - (flagId, priority) on flagRule - ordered evaluation O(log n)
- * - (flagId, userId) on flagOverride - override checks O(1)
+ * - (organizationId, key) on featureFlag - O(1) tenant lookups
+ * - (flagId, priority) on flagRule - O(log n) ordered evaluation
+ * - (flagId, userId) on flagOverride - O(1) override checks
  *
- * INVARIANTS:
- * - Percentages: 0 ≤ n ≤ 100
- * - Variant weights sum to 100 ± 0.01
- * - Priority: -1000 ≤ n ≤ 1000, lower evaluates first
- * - One override per (flag, user) pair
- * - One flag per (org, key) pair
+ * @invariant Percentages: 0 ≤ n ≤ 100
+ * @invariant Variant weights sum to 100 ± 0.01
+ * @invariant Priority: -1000 ≤ n ≤ 1000, lower first
+ * @see ../utils/index.ts for parseJSON utility
  */
 
 export const featureFlagsSchema = {
@@ -46,7 +44,7 @@ export const featureFlagsSchema = {
       },
       type: {
         type: "string",
-        defaultValue: "boolean" /** @values boolean | string | number | json */,
+        defaultValue: "boolean",
         validator: {
           input: z.enum(["boolean", "string", "number", "json"]),
           output: z.enum(["boolean", "string", "number", "json"]),
@@ -68,11 +66,10 @@ export const featureFlagsSchema = {
             return parseJSON<any>(value as string);
           },
         },
-        /** @decision Type validation at API layer to avoid circular schema dependency */
       },
       rolloutPercentage: {
         type: "number",
-        defaultValue: 0 /** @invariant 0 ≤ n ≤ 100; determines hash(userId) % 100 < n */,
+        defaultValue: 0,
         validator: {
           input: z.number().min(0).max(100),
           output: z.number().min(0).max(100),
@@ -140,7 +137,7 @@ export const featureFlagsSchema = {
       },
       priority: {
         type: "number",
-        defaultValue: 0 /** @invariant -1000 ≤ n ≤ 1000; lower evaluates first */,
+        defaultValue: 0,
         validator: {
           input: z.number().int().min(-1000).max(1000),
           output: z.number().int(),
@@ -176,7 +173,7 @@ export const featureFlagsSchema = {
       },
       percentage: {
         type: "number",
-        required: false /** @invariant 0 ≤ n ≤ 100; gradual rule rollout */,
+        required: false,
         validator: {
           input: z.number().min(0).max(100).optional(),
           output: z.number().min(0).max(100).optional(),
@@ -196,7 +193,6 @@ export const featureFlagsSchema = {
 
   flagOverride: {
     modelName: "flagOverride",
-    /** @invariant One override per (flag, user) pair - enforced by uk_flag_user constraint */
     fields: {
       flagId: {
         type: "string",
@@ -228,9 +224,17 @@ export const featureFlagsSchema = {
           },
         },
       },
+      enabled: {
+        type: "boolean",
+        defaultValue: true,
+      },
+      variant: {
+        type: "string",
+        required: false,
+      },
       reason: {
         type: "string",
-        required: false /** @intent Human audit trail for override decisions */,
+        required: false,
       },
       expiresAt: {
         type: "date",
@@ -287,7 +291,7 @@ export const featureFlagsSchema = {
       },
       reason: {
         type: "string",
-        required: false /** @values rule_match | override | percentage_rollout | default | disabled | not_found */,
+        required: false,
         validator: {
           input: z
             .enum([
@@ -355,7 +359,7 @@ export const featureFlagsSchema = {
       },
       action: {
         type: "string",
-        required: true /** @values created | updated | deleted | enabled | disabled | rule_* | override_* */,
+        required: true,
         validator: {
           input: z.enum([
             "created",

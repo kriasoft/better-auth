@@ -2,6 +2,15 @@
 
 Complete API documentation for the Better Auth Feature Flags plugin.
 
+## API Architecture
+
+The feature flags plugin follows Better Auth's architectural pattern:
+
+- Server API: flat methods on `auth.api.*` (e.g., `auth.api.evaluateFeatureFlag`, `auth.api.createFeatureFlag`)
+- Client API: namespaced methods on `authClient.featureFlags.*` (e.g., `authClient.featureFlags.evaluate`, `authClient.featureFlags.admin.flags.create`)
+
+Server methods are exported using keys from the plugin’s endpoints object. Client methods are derived from endpoint paths and organized under the feature-flags namespace for clarity.
+
 ## Server API
 
 ### Plugin Initialization
@@ -17,26 +26,25 @@ const auth = betterAuth({
 
 ### Evaluation API
 
-#### `evaluate()`
+#### `evaluateFeatureFlag()`
 
-Evaluate a single feature flag for a user.
+Evaluate a single feature flag for the current context.
 
 ```typescript
-const result = await auth.api.featureFlags.evaluate({
-  key: string,              // Required: Flag key
-  userId?: string,          // User ID for evaluation
-  organizationId?: string,  // Organization context
-  attributes?: Record<string, any>, // Custom attributes
-  defaultValue?: any        // Fallback if flag not found
+const result = await auth.api.evaluateFeatureFlag({
+  body: {
+    flagKey: string,
+    context?: { userId?: string; organizationId?: string; attributes?: Record<string, any> },
+    default?: any,
+    select?: 'value' | 'full' | Array<'value'|'variant'|'reason'|'metadata'>,
+    environment?: string,
+    track?: boolean,
+    debug?: boolean,
+    contextInResponse?: boolean,
+  },
 });
-
-// Returns: EvaluationResult
-{
-  value: any,              // The evaluated value
-  variant?: string,        // Variant key if applicable
-  reason: EvaluationReason, // Why this value was returned
-  metadata?: Record<string, any> // Additional data
-}
+// Returns (default): { value, variant?, reason, metadata?, evaluatedAt, context? }
+// Returns (select: 'value'): { value, evaluatedAt, context? }
 ```
 
 **Evaluation Reasons:**
@@ -48,180 +56,130 @@ const result = await auth.api.featureFlags.evaluate({
 - `"disabled"` - Flag is disabled
 - `"not_found"` - Flag doesn't exist
 
-#### `evaluateBatch()`
+#### `evaluateFeatureFlags()`
 
-Evaluate multiple flags at once.
+Evaluate multiple flags in a single request.
 
 ```typescript
-const results = await auth.api.featureFlags.evaluateBatch({
-  keys: string[],           // Flag keys to evaluate
-  userId?: string,
-  organizationId?: string,
-  attributes?: Record<string, any>,
-  defaults?: Record<string, any> // Default values by key
+const { flags } = await auth.api.evaluateFeatureFlags({
+  body: {
+    flagKeys: string[],
+    defaults?: Record<string, any>,
+    context?: { userId?: string; organizationId?: string; attributes?: Record<string, any> },
+    select?: 'value' | 'full' | Array<'value'|'variant'|'reason'|'metadata'>,
+    environment?: string,
+    track?: boolean,
+    debug?: boolean,
+    contextInResponse?: boolean,
+  },
 });
-
-// Returns: Record<string, EvaluationResult>
-{
-  "flag-1": { value: true, reason: "rule_match" },
-  "flag-2": { value: "blue", reason: "default" }
-}
+// Returns: { flags: Record<string, { value: any; variant?: string; reason: string; metadata?: any }>, evaluatedAt: string, context?: object }
 ```
 
-#### `evaluateAll()`
+#### `bootstrapFeatureFlags()`
 
 Get all enabled flags for a user.
 
 ```typescript
-const flags = await auth.api.featureFlags.evaluateAll({
-  userId?: string,
-  organizationId?: string,
-  attributes?: Record<string, any>
+const { flags, evaluatedAt, context } = await auth.api.bootstrapFeatureFlags({
+  body: {
+    context?: { userId?: string; organizationId?: string; attributes?: Record<string, any> },
+    include?: string[],
+    prefix?: string,
+    select?: 'value' | 'full' | Array<'value'|'variant'|'reason'|'metadata'>,
+    environment?: string,
+    track?: boolean,
+    debug?: boolean,
+  },
 });
 
-// Returns: Record<string, any>
-{
-  "feature-1": true,
-  "feature-2": "value",
-  "feature-3": { config: "data" }
-}
+// Returns: { flags: Record<string, { value: any; variant?: string; reason: string }>|Record<string, any>, evaluatedAt: string, context: object }
 ```
 
-#### `isEnabled()`
-
-Check if a boolean flag is enabled.
-
-```typescript
-const enabled = await auth.api.featureFlags.isEnabled({
-  key: string,
-  userId?: string,
-  organizationId?: string,
-  attributes?: Record<string, any>
-});
-
-// Returns: boolean
-```
-
-#### `getVariant()`
-
-Get the variant assignment for an A/B test.
-
-```typescript
-const variant = await auth.api.featureFlags.getVariant({
-  key: string,
-  userId?: string,
-  organizationId?: string,
-  attributes?: Record<string, any>
-});
-
-// Returns: Variant | null
-{
-  key: string,
-  value: any,
-  weight: number,
-  metadata?: Record<string, any>
-}
-```
+Note: High-level helpers like `isEnabled()` and `getVariant()` are available on the client SDK.
 
 ### Admin API
 
 #### Flag Management
 
-##### `admin.featureFlags.create()`
+##### `createFeatureFlag()`
 
 Create a new feature flag.
 
 ```typescript
-const flag = await auth.api.admin.featureFlags.create({
-  key: string,              // Unique identifier
-  name?: string,            // Display name
-  description?: string,     // Description
-  type: "boolean" | "string" | "number" | "json",
-  enabled: boolean,         // Is flag active?
-  defaultValue?: any,       // Default value
-  rolloutPercentage?: number, // 0-100
-  organizationId?: string,  // For multi-tenant
-  variants?: Variant[],     // A/B test variants
-  metadata?: Record<string, any>
+const flag = await auth.api.createFeatureFlag({
+  body: {
+    key: string,
+    name: string,
+    description?: string,
+    type: "boolean" | "string" | "number" | "json",
+    enabled?: boolean,
+    defaultValue?: any,
+    rolloutPercentage?: number,
+    organizationId?: string,
+    variants?: Array<{ key: string; weight: number; value: any }>,
+    metadata?: Record<string, any>,
+  },
 });
 
 // Returns: FeatureFlag
 ```
 
-##### `admin.featureFlags.get()`
+<!-- Single-flag fetch is available via getFeatureFlag(id). -->
 
-Get a flag by ID or key.
-
-```typescript
-// By ID
-const flag = await auth.api.admin.featureFlags.get(id: string);
-
-// By key
-const flag = await auth.api.admin.featureFlags.getByKey(
-  key: string,
-  organizationId?: string
-);
-
-// Returns: FeatureFlag | null
-```
-
-##### `admin.featureFlags.list()`
+##### `listFeatureFlags()`
 
 List all flags with pagination.
 
 ```typescript
-const { flags, total, page } = await auth.api.admin.featureFlags.list({
-  organizationId?: string,
-  enabled?: boolean,
-  type?: FlagType,
-  search?: string,          // Search in key/name/description
-  page?: number,            // Default: 1
-  limit?: number,           // Default: 20
-  sortBy?: "key" | "createdAt" | "updatedAt",
-  sortOrder?: "asc" | "desc"
+const { flags, page } = await auth.api.listFeatureFlags({
+  query: {
+    organizationId?: string,
+    cursor?: string,
+    limit?: number,
+    q?: string,
+    sort?: string,
+    type?: 'boolean'|'string'|'number'|'json',
+    enabled?: boolean,
+    prefix?: string,
+    include?: 'stats',
+  },
 });
 
-// Returns: PaginatedResponse<FeatureFlag>
+// Returns: { flags: FeatureFlag[], page: { nextCursor?: string, limit: number, hasMore: boolean } }
 ```
 
-##### `admin.featureFlags.update()`
+##### `updateFeatureFlag()`
 
 Update an existing flag.
 
 ```typescript
-const updated = await auth.api.admin.featureFlags.update(
-  id: string,
-  updates: Partial<FeatureFlag>
-);
+const updated = await auth.api.updateFeatureFlag({
+  body: { id: string, key?: string, name?: string, description?: string, enabled?: boolean, type?: FlagType, defaultValue?: any, rolloutPercentage?: number },
+});
 
 // Returns: FeatureFlag
 ```
 
-##### `admin.featureFlags.delete()`
+##### `deleteFeatureFlag()`
 
 Delete a flag and all associated data.
 
 ```typescript
-await auth.api.admin.featureFlags.delete(id: string);
+await auth.api.deleteFeatureFlag({ body: { id } });
 
 // Returns: void
 ```
 
 #### Rule Management
 
-##### `admin.featureFlags.createRule()`
+##### `createFeatureFlagRule()`
 
 Add a targeting rule to a flag.
 
 ```typescript
-const rule = await auth.api.admin.featureFlags.createRule({
-  flagId: string,
-  name?: string,
-  priority: number,         // Lower = higher priority
-  conditions: RuleConditions,
-  value: any,               // Value when rule matches
-  percentage?: number,      // Optional rollout within rule
-  enabled?: boolean         // Default: true
+const rule = await auth.api.createFeatureFlagRule({
+  body: { flagId: string, priority: number, conditions: RuleConditions, value: any, variant?: string },
 });
 
 // Returns: FlagRule
@@ -257,46 +215,22 @@ type ConditionOperator =
   | "less_than"
   | "greater_than_or_equal"
   | "less_than_or_equal"
-  | "regex"
-  | "exists"
-  | "not_exists";
+  | "regex";
 ```
 
-##### `admin.featureFlags.getRules()`
+##### `listFeatureFlagRules()`
 
 Get all rules for a flag.
 
 ```typescript
-const rules = await auth.api.admin.featureFlags.getRules(
-  flagId: string
-);
+const { rules } = await auth.api.listFeatureFlagRules({
+  params: { flagId: string },
+});
 
-// Returns: FlagRule[]
-// Sorted by priority (ascending)
+// Returns: { rules: FlagRule[] }
 ```
 
-##### `admin.featureFlags.updateRule()`
-
-Update a rule.
-
-```typescript
-const updated = await auth.api.admin.featureFlags.updateRule(
-  ruleId: string,
-  updates: Partial<FlagRule>
-);
-
-// Returns: FlagRule
-```
-
-##### `admin.featureFlags.deleteRule()`
-
-Delete a rule.
-
-```typescript
-await auth.api.admin.featureFlags.deleteRule(ruleId: string);
-
-// Returns: void
-```
+<!-- Rule update/delete endpoints are not currently provided. -->
 
 #### Override Management
 
@@ -304,121 +238,102 @@ await auth.api.admin.featureFlags.deleteRule(ruleId: string);
 These are server-side overrides for specific users, different from client-side local overrides. Server overrides persist across sessions while client overrides are temporary and blocked in production.
 :::
 
-##### `admin.featureFlags.createOverride()`
+##### `createFeatureFlagOverride()`
 
 Create a user-specific override.
 
 ```typescript
-const override = await auth.api.admin.featureFlags.createOverride({
-  flagId: string,
-  userId: string,
-  value: any,               // Override value
-  reason?: string,          // Audit trail
-  expiresAt?: Date          // Auto-expire
+const override = await auth.api.createFeatureFlagOverride({
+  body: { flagId: string, userId: string, value: any, enabled?: boolean, variant?: string, expiresAt?: string },
 });
 
 // Returns: FlagOverride
 ```
 
-##### `admin.featureFlags.getOverrides()`
+##### `listFeatureFlagOverrides()`
 
 Get overrides for a flag or user.
 
-```typescript
-// For a flag
-const overrides = await auth.api.admin.featureFlags.getOverrides({
-  flagId: string,
+````typescript
+const { overrides, page } = await auth.api.listFeatureFlagOverrides({
+  query: { flagId?: string, userId?: string, cursor?: string, limit?: number, q?: string, sort?: string },
 });
 
-// For a user
-const overrides = await auth.api.admin.featureFlags.getUserOverrides({
-  userId: string,
-});
-
-// Returns: FlagOverride[]
-```
-
-##### `admin.featureFlags.deleteOverride()`
-
-Remove an override.
-
-```typescript
-await auth.api.admin.featureFlags.deleteOverride(
-  overrideId: string
-);
-
-// Returns: void
-```
+<!-- Override delete endpoint is not currently provided. -->
 
 ### Analytics API
 
-#### `track()`
+#### `createFeatureFlagEvent()`
 
-Track custom events for analytics.
-
-```typescript
-await auth.api.featureFlags.track({
-  flagKey: string,
-  event: string,            // Event name
-  userId?: string,
-  value?: number,           // Numeric value for metrics
-  metadata?: Record<string, any>
-});
-
-// Returns: void
-```
-
-#### `getStats()`
-
-Get usage statistics for a flag.
+Track custom events for analytics. (Canonical method, replaces deprecated `trackEvent()`)
 
 ```typescript
-const stats = await auth.api.admin.featureFlags.getStats({
-  flagId: string,
-  startDate?: Date,         // Default: 30 days ago
-  endDate?: Date,           // Default: now
-  granularity?: "hour" | "day" | "week" | "month"
-});
-
-// Returns: FlagStatistics
-{
-  totalEvaluations: number,
-  uniqueUsers: number,
-  valueDistribution: Record<string, number>,
-  variantDistribution?: Record<string, number>,
-  evaluationReasons: Record<string, number>,
-  performance: {
-    p50: number,            // Median latency (ms)
-    p95: number,
-    p99: number
+// Single event tracking with idempotency support
+await auth.api.createFeatureFlagEvent({
+  body: {
+    flagKey: string,
+    event: string,
+    properties?: number | Record<string, any>,
+    timestamp?: string, // RFC3339
+    sampleRate?: number,
   },
-  errors: number,
-  conversions?: {
-    total: number,
-    rate: number,
-    value?: number
-  }
-}
+}, {
+  headers: { 'Idempotency-Key': 'unique-key' },
+});
+
+// Returns: { success: boolean, eventId: string }
 ```
+
+#### `createFeatureFlagEventBatch()`
+
+Track multiple events at once.
+
+```typescript
+// Batch event tracking
+await auth.api.createFeatureFlagEventBatch({
+  body: {
+    events: Array<{
+      flagKey: string,
+      event: string,
+      properties?: number | Record<string, any>,
+      timestamp?: string, // RFC3339
+      sampleRate?: number,
+    }>,
+    sampleRate?: number,
+    idempotencyKey?: string,
+  },
+});
+
+// Returns: { success: number, failed: number, batchId: string }
+```
+
+**Idempotency Support:**
+- Use `Idempotency-Key` header for single-event requests
+- Use top-level `idempotencyKey` for batch requests
+- Recommended for payment events, conversions, and critical analytics
+
+<!-- Use adminGetStats endpoint documented in the server API section. -->
 
 ### Audit API
 
-#### `getAuditLog()`
+#### `listFeatureFlagAuditEntries()`
 
 Retrieve audit log entries.
 
 ```typescript
-const entries = await auth.api.admin.featureFlags.getAuditLog({
-  flagId?: string,
-  userId?: string,
-  action?: AuditAction,
-  startDate?: Date,
-  endDate?: Date,
-  page?: number,
-  limit?: number
+const { entries } = await auth.api.listFeatureFlagAuditEntries({
+  query: {
+    flagId?: string,
+    userId?: string,
+    action?: "create" | "update" | "delete" | "evaluate",
+    start?: string,
+    end?: string,
+    limit?: number,
+    offset?: number,
+  },
 });
 
-// Returns: PaginatedResponse<AuditEntry>
+// Returns: { entries: AuditEntry[] }
 ```
 
 **Audit Actions:**
@@ -434,19 +349,7 @@ const entries = await auth.api.admin.featureFlags.getAuditLog({
 
 ### Cache Management
 
-#### `invalidateCache()`
-
-Invalidate cached flag data.
-
-```typescript
-// Single flag
-await auth.api.featureFlags.invalidateCache(key: string);
-
-// All flags
-await auth.api.featureFlags.clearCache();
-
-// Returns: void
-```
+Cache invalidation occurs automatically on admin create/update/delete operations.
 
 ## Client API
 
@@ -494,27 +397,74 @@ const variant = await client.featureFlags.getVariant(
   key: string
 );
 
-// Returns: { key: string, value: any } | null
+// Returns: string | null (variant key)
 ```
 
-#### `getAllFlags()`
+#### `bootstrap()`
 
-Get all evaluated flags for the current user.
+Get all evaluated flags for the current user. (Canonical method, replaces deprecated `getAllFlags()`)
 
 ```typescript
-const flags: Record<string, any> = await client.featureFlags.getAllFlags();
+const flags: Record<string, any> = await client.featureFlags.bootstrap();
 ```
 
 #### `track()`
 
-Track conversion or custom events.
+Track conversion or custom events with idempotency support. (Canonical method, replaces deprecated `trackEvent()`)
 
 ```typescript
+// Basic event tracking
 await client.featureFlags.track(
   flagKey: string,
   event: string,
-  value?: number
+  value?: number | Record<string, any>
 );
+
+// With idempotency key (NEW in v0.2.0)
+await client.featureFlags.track(
+  flagKey: string,
+  event: string,
+  value?: number | Record<string, any>,
+  { idempotencyKey: string }
+);
+
+// Batch tracking (NEW in v0.2.0)
+await client.featureFlags.trackBatch([
+  {
+    flag: string,
+    event: string,
+    data?: number | Record<string, any>,
+    timestamp?: Date,
+    idempotencyKey?: string,
+  }
+], batchId?: string);
+```
+
+### Admin Client API (NEW in v0.2.0)
+
+The client SDK now includes organized admin operations under the `authClient.featureFlags.admin` namespace:
+
+```typescript
+// Admin flag management
+await authClient.featureFlags.admin.flags.create({ key: "new-flag", type: "boolean" });
+await authClient.featureFlags.admin.flags.list();
+await authClient.featureFlags.admin.flags.update("flag-id", { enabled: false });
+await authClient.featureFlags.admin.flags.delete("flag-id");
+
+// Admin rule management
+await authClient.featureFlags.admin.rules.create({ flagId: "flag-id", conditions: {...} });
+await authClient.featureFlags.admin.rules.list("flag-id");
+
+// Admin override management
+await authClient.featureFlags.admin.overrides.create({ flagId: "flag-id", userId: "user-123" });
+await authClient.featureFlags.admin.overrides.list({ flagId: "flag-id" });
+
+// Admin analytics
+await authClient.featureFlags.admin.analytics.stats.get("flag-id");
+await authClient.featureFlags.admin.analytics.usage.get();
+
+// Admin audit
+await authClient.featureFlags.admin.audit.list({ flagId: "flag-id" });
 ```
 
 #### `setOverride()`
@@ -613,7 +563,7 @@ All endpoints are prefixed with your Better Auth API path (default: `/api/auth`)
 
 ### Public Endpoints
 
-#### `GET /feature-flags/evaluate/:key`
+#### `POST /feature-flags/evaluate`
 
 Evaluate a single flag.
 
@@ -634,7 +584,7 @@ x-organization-id: <org-id> (optional)
 }
 ```
 
-#### `POST /feature-flags/evaluate/batch`
+#### `POST /feature-flags/evaluate-batch`
 
 Evaluate multiple flags.
 
@@ -642,7 +592,7 @@ Evaluate multiple flags.
 
 ```json
 {
-  "keys": ["flag-1", "flag-2"],
+  "flagKeys": ["flag-1", "flag-2"],
   "defaults": {
     "flag-1": false
   }
@@ -664,9 +614,9 @@ Evaluate multiple flags.
 }
 ```
 
-#### `GET /feature-flags/all`
+#### `POST /feature-flags/bootstrap`
 
-Get all enabled flags.
+Get all enabled flags for bootstrap.
 
 **Response:**
 
@@ -678,9 +628,9 @@ Get all enabled flags.
 }
 ```
 
-#### `POST /feature-flags/track`
+#### `POST /feature-flags/events`
 
-Track an event.
+Track a single event.
 
 **Request Body:**
 
@@ -696,7 +646,9 @@ Track an event.
 
 All admin endpoints require authentication and appropriate permissions.
 
-#### `GET /admin/feature-flags`
+Admin endpoints are under `/feature-flags/admin/...`.
+
+#### `GET /feature-flags/admin/flags`
 
 List all flags.
 
@@ -707,7 +659,7 @@ List all flags.
 - `enabled` (boolean): Filter by status
 - `search` (string): Search term
 
-#### `POST /admin/feature-flags`
+#### `POST /feature-flags/admin/flags`
 
 Create a new flag.
 
@@ -723,51 +675,51 @@ Create a new flag.
 }
 ```
 
-#### `GET /admin/feature-flags/:id`
+#### `GET /feature-flags/admin/flags/:id`
 
 Get flag details.
 
-#### `PATCH /admin/feature-flags/:id`
+#### `PATCH /feature-flags/admin/flags/:id`
 
 Update a flag.
 
-#### `DELETE /admin/feature-flags/:id`
+#### `DELETE /feature-flags/admin/flags/:id`
 
 Delete a flag.
 
-#### `GET /admin/feature-flags/:id/rules`
+#### `GET /feature-flags/admin/flags/:flagId/rules`
 
 Get flag rules.
 
-#### `POST /admin/feature-flags/:id/rules`
+#### `POST /feature-flags/admin/flags/:flagId/rules`
 
 Create a rule.
 
-#### `PATCH /admin/rules/:id`
+#### `PATCH /feature-flags/admin/flags/:flagId/rules/:ruleId`
 
 Update a rule.
 
-#### `DELETE /admin/rules/:id`
+#### `DELETE /feature-flags/admin/flags/:flagId/rules/:ruleId`
 
 Delete a rule.
 
-#### `GET /admin/feature-flags/:id/overrides`
+#### `GET /feature-flags/admin/overrides`
 
 Get flag overrides.
 
-#### `POST /admin/feature-flags/:id/overrides`
+#### `POST /feature-flags/admin/overrides`
 
 Create an override.
 
-#### `DELETE /admin/overrides/:id`
+#### `DELETE /feature-flags/admin/overrides/:id`
 
 Delete an override.
 
-#### `GET /admin/feature-flags/:id/stats`
+#### `GET /feature-flags/admin/flags/:id/stats`
 
 Get flag statistics.
 
-#### `GET /admin/audit`
+#### `GET /feature-flags/admin/audit`
 
 Get audit log.
 
@@ -817,8 +769,8 @@ enum ErrorCode {
 
 ```typescript
 try {
-  const result = await auth.api.featureFlags.evaluate({
-    key: "my-flag",
+  const result = await auth.api.evaluateFeatureFlag({
+    body: { flagKey: "my-flag" },
   });
 } catch (error) {
   if (error instanceof FeatureFlagError) {
@@ -914,29 +866,47 @@ interface EvaluationContext {
 }
 ```
 
+### Field Semantics (Authoritative)
+
+- key
+  - Unique, URL‑safe identifier (alphanumeric, `-`, `_`); recommended immutable.
+  - Used in consistent hashing with `userId` for sticky rollout/variants.
+- name
+  - Human‑readable display name; safe to change without affecting evaluation.
+- description
+  - Optional long text for docs/discovery; not used in evaluation.
+- type
+  - One of `boolean | string | number | json`. `defaultValue` and rule values should match this type.
+- enabled
+  - When `false`, evaluation returns `defaultValue` with reason `"disabled"`.
+- defaultValue
+  - Safe fallback when no rule/override/rollout applies. Must be compatible with `type`.
+- rolloutPercentage
+  - Integer 0–100. Sticky assignment via consistent hashing of `userId:key`.
+  - If no `userId`, assignment is consistent for anonymous cohort (same hash seed).
+- variants
+  - Array of `{ key, value, weight }`. Weights must sum to 100.
+  - EvaluationResult.variant is the variant key (string).
+- metadata
+  - Free‑form JSON for tooling and UI. Not part of evaluation logic.
+- organizationId
+  - Multi‑tenant scope. Required when multi‑tenancy is enabled.
+- createdAt / updatedAt
+  - Timestamps. Dates in SDK types; serialized as ISO strings over HTTP.
+
+See also: Flag authoring Do/Don’t in Quickstart for practical guidance.
+
 ## Rate Limits
 
-Default rate limits for API endpoints:
+Default rate limits (built-in):
 
-| Endpoint Type | Rate Limit | Window   |
-| ------------- | ---------- | -------- |
-| Evaluation    | 1000/sec   | Per IP   |
-| Admin Read    | 100/min    | Per user |
-| Admin Write   | 20/min     | Per user |
-| Analytics     | 500/min    | Per user |
+| Endpoint Path                        | Limit    | Window |
+| ------------------------------------ | -------- | ------ |
+| `/feature-flags/evaluate*`           | 100/min  | 60s    |
+| `/feature-flags/evaluate-batch`      | 1000/min | 60s    |
+| `/feature-flags/admin/*`             | 20/min   | 60s    |
 
-Configure custom limits:
-
-```typescript
-featureFlags({
-  security: {
-    rateLimit: {
-      evaluation: 2000, // 2000/sec
-      admin: 50, // 50/min
-    },
-  },
-});
-```
+Note: These defaults are defined by the plugin’s `rateLimit` settings.
 
 ## Response Codes
 
@@ -967,15 +937,15 @@ Official SDKs:
 
 ## Migration Guide
 
-### From v0.x to v1.0
+### From v0.1.x to v0.2.0
 
 ```typescript
-// Old API (v0.x)
+// Old API (v0.1.x) - basic setup
 const enabled = await featureFlags.isEnabled("flag");
 
-// New API (v1.0)
-const result = await auth.api.featureFlags.evaluate({
-  key: "flag",
+// New API (v0.2.0) - canonical naming
+const result = await auth.api.evaluateFeatureFlag({
+  body: { flagKey: "flag" },
 });
 const enabled = result.value;
 ```
@@ -994,3 +964,20 @@ const enabled = result.value;
 - GitHub Issues: [Report bugs](https://github.com/better-auth/plugins/issues)
 - Documentation: [Full docs](https://better-auth.com/plugins/feature-flags)
 - Discord: [Community support](https://discord.gg/better-auth)
+Admin client plugin
+
+- Public runtime uses `better-auth-feature-flags/client` only.
+- Admin surfaces should add `better-auth-feature-flags/admin` alongside the public client.
+
+```ts
+import { createAuthClient } from "better-auth/client";
+import { featureFlagsClient } from "better-auth-feature-flags/client";
+import { featureFlagsAdminClient } from "better-auth-feature-flags/admin";
+
+// Public runtime
+createAuthClient({ plugins: [featureFlagsClient()] });
+
+// Admin runtime
+createAuthClient({ plugins: [featureFlagsClient(), featureFlagsAdminClient()] });
+```
+````

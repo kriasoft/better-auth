@@ -1,5 +1,7 @@
 # Better Auth Plugins
 
+**Website:**: https://kriasoft.com/better-auth/
+**GitHub**: https://github.com/kriasoft/better-auth
 **What:** 18 modular Better Auth plugins (security, compliance, integrations, user mgmt, analytics)  
 **Structure:** `plugins/*/` → TypeScript → tsup → npm | Bun workspaces | Independent versioning
 
@@ -18,7 +20,10 @@ better-auth-plugins/
 │   ├── storage/            ├── subscription/      └── webhooks/
 ├── apps/playground/        # Dev environment
 ├── docs/                   # Documentation site
-└── test/                   # Test suites
+├── test/                   # Test suites
+└── vendor/                 # Submodules for reference
+    ├── better-auth/        # Better Auth core - plugin patterns & APIs
+    └── zod/                # Zod validation library - schema patterns
 
 Plugin structure: src/{index,client,plugin,schema,types}.ts → tsup → dist/
 ```

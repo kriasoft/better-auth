@@ -44,7 +44,7 @@ const toEnvKey = (plugin: string) =>
   `BETTER_AUTH_${plugin.replace(/[A-Z]/g, (m) => `_${m}`).toUpperCase()}`;
 
 const pluginSchemas = Object.fromEntries(
-  PLUGINS.map((p) => [toEnvKey(p), bool()])
+  PLUGINS.map((p) => [toEnvKey(p), bool()]),
 );
 
 // OAuth providers
@@ -63,7 +63,7 @@ const oauthSchemas = Object.fromEntries(
   OAUTH_PROVIDERS.flatMap((p) => [
     [`${p}_CLIENT_ID`, str()],
     [`${p}_CLIENT_SECRET`, str()],
-  ])
+  ]),
 );
 
 /**
@@ -163,9 +163,9 @@ export type Env = z.infer<typeof envSchema>;
  * This is now used by the context middleware with validated env
  */
 export function getPluginStatus(
-  env: Env
+  env: Env,
 ): Record<(typeof PLUGINS)[number], boolean> {
   return Object.fromEntries(
-    PLUGINS.map((name) => [name, Boolean(env[toEnvKey(name) as keyof Env])])
+    PLUGINS.map((name) => [name, Boolean(env[toEnvKey(name) as keyof Env])]),
   ) as Record<(typeof PLUGINS)[number], boolean>;
 }

@@ -1,72 +1,11 @@
 // SPDX-FileCopyrightText: 2025-present Kriasoft
 // SPDX-License-Identifier: MIT
 
-// Type augmentations must be imported first
-import "./augmentation";
+// Type augmentations only - no runtime imports to preserve tree-shaking
+import type {} from "./augmentation";
 
-import type { BetterAuthPlugin } from "better-auth";
 import { createFeatureFlagsPlugin } from "./plugin";
-import type { ContextCollectionOptions } from "./middleware/context";
-import type { HeaderConfig, ValidationConfig } from "./middleware/validation";
-
-export interface FeatureFlagsOptions {
-  flags?: {
-    [key: string]: {
-      enabled?: boolean;
-      default?: boolean;
-      rollout?: number; // Percentage 0-100
-      targeting?: {
-        roles?: string[];
-        userIds?: string[];
-        attributes?: Record<string, any>;
-      };
-      variants?: {
-        [key: string]: any;
-      };
-    };
-  };
-  storage?: "memory" | "database" | "redis";
-  analytics?: {
-    trackUsage?: boolean;
-    trackPerformance?: boolean;
-  };
-  adminAccess?: {
-    enabled?: boolean;
-    roles?: string[];
-  };
-  multiTenant?: {
-    enabled?: boolean;
-    useOrganizations?: boolean;
-  };
-  caching?: {
-    enabled?: boolean;
-    ttl?: number; // seconds
-  };
-  audit?: {
-    enabled?: boolean;
-    retentionDays?: number;
-  };
-  /**
-   * Configure what context data to collect for flag evaluation.
-   * By default, only basic session data is collected for privacy.
-   */
-  contextCollection?: ContextCollectionOptions;
-  /**
-   * Configure custom header processing for feature flag evaluation.
-   * Provides a secure whitelist-based approach for header extraction.
-   */
-  customHeaders?: {
-    enabled?: boolean;
-    whitelist?: HeaderConfig[];
-    strict?: boolean;
-    logInvalid?: boolean;
-  };
-  /**
-   * Configure validation rules for context data.
-   * Helps prevent memory exhaustion and security issues.
-   */
-  contextValidation?: ValidationConfig;
-}
+import type { FeatureFlagsOptions } from "./types";
 
 /**
  * Better Auth Feature Flags Plugin
@@ -96,32 +35,32 @@ export interface FeatureFlagsOptions {
  * });
  * ```
  */
-export function featureFlags(
-  options: FeatureFlagsOptions = {},
-): BetterAuthPlugin {
+export function featureFlags(options: FeatureFlagsOptions = {}) {
   return createFeatureFlagsPlugin(options);
 }
 
 export default featureFlags;
 
-// Re-export types from schema
+// Core schema types for external consumers
 export type {
-  FeatureFlag,
-  FlagRule,
-  FlagOverride,
-  FlagEvaluation,
-  FlagAudit,
-  EvaluationContext,
-  FlagType,
-  EvaluationReason,
   AuditAction,
   ConditionOperator,
+  EvaluationContext,
+  EvaluationReason,
+  FeatureFlag,
+  FlagAudit,
+  FlagEvaluation,
+  FlagOverride,
+  FlagRule,
+  FlagType,
   RuleConditions,
 } from "./schema";
 
-// Re-export context collection options
+// Middleware configuration types
 export type { ContextCollectionOptions } from "./middleware/context";
 
-// Re-export validation types
-export type { HeaderConfig, ValidationConfig } from "./middleware/validation";
+// Validation utilities and configuration
 export { DEFAULT_HEADER_CONFIG } from "./middleware/validation";
+export type { HeaderConfig, ValidationConfig } from "./middleware/validation";
+// Main plugin configuration interface
+export type { FeatureFlagsOptions } from "./types";

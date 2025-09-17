@@ -1,0 +1,46 @@
+{
+  "name": "db",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./schema": {
+      "types": "./dist/schema/index.d.ts",
+      "import": "./dist/schema/index.js",
+      "require": "./dist/schema/index.cjs"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
+    "db:check": "drizzle-kit check",
+    "generate": "bun --filter \"better-auth-feature-flags\" build && bunx @better-auth/cli@latest generate --config auth.ts --output auth-schema.ts --yes && bun --cwd .. prettier --write db/auth-schema.ts"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.44.5"
+  },
+  "peerDependencies": {
+    "better-auth-feature-flags": "*",
+    "better-auth": "*",
+    "postgres": "*"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.22",
+    "better-auth-feature-flags": "workspace:*",
+    "better-auth": "^1.3.11",
+    "drizzle-kit": "^0.31.4",
+    "postgres": "^3.4.7",
+    "typescript": "^5.9.2"
+  }
+}

@@ -9,20 +9,26 @@ Install the feature flags plugin alongside Better Auth:
 ::: code-group
 
 ```bash [bun]
-bun add better-auth-feature-flags
+bun add better-auth better-call better-auth-feature-flags
 ```
 
 ```bash [npm]
-npm install better-auth-feature-flags
+npm install better-auth better-call better-auth-feature-flags
 ```
 
 ```bash [pnpm]
-pnpm add better-auth-feature-flags
+pnpm add better-auth better-call better-auth-feature-flags
 ```
 
 ```bash [yarn]
-yarn add better-auth-feature-flags
+yarn add better-auth better-call better-auth-feature-flags
 ```
+
+> Note
+>
+> - `better-auth` and `better-call` are peer dependencies of the feature flags plugin.
+> - `better-call` is the HTTP API/middleware foundation used by Better Auth and this plugin. Better Auth depends on it and re-exports some of its types.
+> - Install matching versions (e.g., `better-auth@^1.3.11`, `better-call@^1.0.19`) to avoid package resolution issues.
 
 :::
 
@@ -75,6 +81,26 @@ export const authClient = createAuthClient({
 });
 ```
 
+### Client Bundles
+
+Keep the public bundle lean and include admin capabilities only where needed:
+
+```ts
+import { createAuthClient } from "better-auth/client";
+import { featureFlagsClient } from "better-auth-feature-flags/client";
+import { featureFlagsAdminClient } from "better-auth-feature-flags/admin";
+
+// Public surfaces (no admin)
+export const publicClient = createAuthClient({
+  plugins: [featureFlagsClient()],
+});
+
+// Admin surfaces only (add admin plugin)
+export const adminClient = createAuthClient({
+  plugins: [featureFlagsClient(), featureFlagsAdminClient()],
+});
+```
+
 ## Your First Feature Flag
 
 ### Create a Flag
@@ -83,12 +109,16 @@ Create your first feature flag programmatically:
 
 ```typescript
 // Create a simple boolean flag
-await auth.api.admin.flags.create({
-  key: "new-feature",
-  type: "boolean",
-  enabled: true,
-  defaultValue: false,
-  description: "My first feature flag",
+await auth.api.createFeatureFlag({
+  body: {
+    key: "new-feature",
+    name: "New Feature",
+    type: "boolean",
+    enabled: true,
+    defaultValue: false,
+    rolloutPercentage: 0,
+    description: "My first feature flag",
+  },
 });
 ```
 
@@ -102,9 +132,8 @@ Check if a feature is enabled:
 // Server-side evaluation
 app.get("/api/feature-check", async (req, res) => {
   const session = await auth.getSession(req);
-  const result = await auth.api.flags.evaluate({
-    key: "new-feature",
-    context: { userId: session?.user?.id },
+  const result = await auth.api.evaluateFeatureFlag({
+    body: { flagKey: "new-feature", context: { userId: session?.user?.id } },
   });
 
   res.json({ enabled: result.value });
@@ -130,12 +159,15 @@ if (isEnabled) {
 Gradually roll out a feature to users:
 
 ```typescript
-await auth.api.admin.flags.create({
-  key: "beta-feature",
-  type: "boolean",
-  enabled: true,
-  defaultValue: false,
-  rolloutPercentage: 25, // 25% of users
+await auth.api.createFeatureFlag({
+  body: {
+    key: "beta-feature",
+    name: "Beta Feature",
+    type: "boolean",
+    enabled: true,
+    defaultValue: false,
+    rolloutPercentage: 25,
+  },
 });
 ```
 
@@ -144,22 +176,29 @@ await auth.api.admin.flags.create({
 Target specific users or groups:
 
 ```typescript
-await auth.api.admin.flags.create({
-  key: "premium-feature",
-  type: "boolean",
-  enabled: true,
-  defaultValue: false,
-  rules: [
-    {
-      priority: 1,
-      conditions: {
-        attribute: "subscription",
-        operator: "equals",
-        value: "premium",
-      },
-      value: true,
+// Create flag
+const { flag } = await auth.api.createFeatureFlag({
+  body: {
+    key: "premium-feature",
+    name: "Premium Feature",
+    type: "boolean",
+    enabled: true,
+    defaultValue: false,
+  },
+});
+
+// Add targeting rule
+await auth.api.createFeatureFlagRule({
+  body: {
+    flagId: flag.id,
+    priority: 0,
+    conditions: {
+      all: [
+        { attribute: "subscription", operator: "equals", value: "premium" },
+      ],
     },
-  ],
+    value: true,
+  },
 });
 ```
 
@@ -168,29 +207,33 @@ await auth.api.admin.flags.create({
 Set up an A/B test with variants:
 
 ```typescript
-await auth.api.admin.flags.create({
-  key: "checkout-test",
-  type: "json",
-  enabled: true,
-  variants: {
-    control: {
-      buttonColor: "blue",
-      buttonText: "Buy Now",
-    },
-    variant_a: {
-      buttonColor: "green",
-      buttonText: "Purchase",
-    },
-  },
-  defaultValue: {
-    buttonColor: "blue",
-    buttonText: "Buy Now",
+await auth.api.createFeatureFlag({
+  body: {
+    key: "checkout-test",
+    name: "Checkout Test",
+    type: "json",
+    enabled: true,
+    defaultValue: { buttonColor: "blue", buttonText: "Buy Now" },
+    variants: [
+      {
+        key: "control",
+        weight: 50,
+        value: { buttonColor: "blue", buttonText: "Buy Now" },
+      },
+      {
+        key: "variant_a",
+        weight: 50,
+        value: { buttonColor: "green", buttonText: "Purchase" },
+      },
+    ],
   },
 });
 
-// Get variant for user
-const variant = await authClient.featureFlags.getVariant("checkout-test");
-// Use variant.buttonColor and variant.buttonText
+// Get variant key and JSON config
+const variantKey = await authClient.featureFlags.getVariant("checkout-test");
+const config = await authClient.featureFlags.getValue("checkout-test");
+// Use config.buttonColor and config.buttonText
+// Or branch on variantKey to control UI
 ```
 
 ## React Integration
@@ -243,8 +286,7 @@ function App() {
 Get all flags with their current status:
 
 ```typescript
-const response = await auth.api.admin.flags.list();
-const flags = response.flags;
+const { flags } = await auth.api.listFeatureFlags({ query: {} });
 
 flags.forEach((flag) => {
   console.log(`${flag.key}: ${flag.enabled ? "ON" : "OFF"}`);
@@ -257,15 +299,13 @@ Toggle a flag on/off:
 
 ```typescript
 // Disable a flag
-await auth.api.admin.flags.update({
-  id: "flag-id",
-  enabled: false,
+await auth.api.updateFeatureFlag({
+  body: { id: "flag-id", enabled: false },
 });
 
 // Increase rollout percentage
-await auth.api.admin.flags.update({
-  id: "flag-id",
-  rolloutPercentage: 50,
+await auth.api.updateFeatureFlag({
+  body: { id: "flag-id", rolloutPercentage: 50 },
 });
 ```
 
@@ -274,10 +314,8 @@ await auth.api.admin.flags.update({
 Override a flag for a specific user:
 
 ```typescript
-await auth.api.admin.overrides.create({
-  flagId: "flag-id",
-  userId: "user-123",
-  value: true,
+await auth.api.createFeatureFlagOverride({
+  body: { flagId: "flag-id", userId: "user-123", value: true },
 });
 ```
 
@@ -326,9 +364,8 @@ featureFlags({
 });
 
 // Query usage stats
-const stats = await auth.api.admin.flags.stats({
-  id: "flag-id",
-  period: "7d",
+const { stats } = await auth.api.getFeatureFlagStats({
+  body: { flagId: "flag-id", period: "day" },
 });
 
 console.log(`Evaluations: ${stats.evaluationCount}`);
@@ -348,9 +385,8 @@ featureFlags({
 });
 
 // Query audit log
-const logs = await auth.api.admin.audit.list({
-  flagId: "flag-id",
-  limit: 10,
+const { entries } = await auth.api.listFeatureFlagAuditEntries({
+  body: { flagId: "flag-id", limit: 10 },
 });
 ```
 
@@ -364,6 +400,24 @@ const logs = await auth.api.admin.audit.list({
 4. **Clean up old flags** to keep your codebase maintainable
 5. **Monitor performance** when rolling out to large user bases
    :::
+
+### Flag Authoring Tips (Do/Don’t)
+
+Do
+
+- Use URL‑safe, unique `key` values; avoid renaming after release.
+- Keep `type` stable; ensure `defaultValue`, rules, and overrides match it.
+- Start disabled with a safe `defaultValue`; ramp with `rolloutPercentage`.
+- Define `variants` with weights that sum to 100 and meaningful keys.
+- Add `description`/`metadata` for clarity and ownership.
+- Scope by `organizationId` when using multi‑tenant mode.
+
+Don’t
+
+- Don’t put PII or secrets in `metadata`/`key`.
+- Don’t expect sticky rollout without a stable `userId` in context.
+- Don’t omit weights when you need non‑equal variant distribution.
+- Don’t rely on overrides as long‑term targeting; prefer rules.
 
 ## Common Issues
 

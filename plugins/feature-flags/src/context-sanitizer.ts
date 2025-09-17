@@ -3,12 +3,9 @@
 
 import type { EvaluationContext } from "./client";
 
-/**
- * Context sanitization for security and performance.
- * Prevents PII leakage and handles size constraints.
- */
+// Context sanitization: prevents PII leakage, enforces size limits (REF: GDPR/CCPA compliance)
 
-// Default allowed fields (can be extended via options)
+// Safe-by-default allowlist - balances functionality with privacy
 const DEFAULT_ALLOWED_FIELDS = new Set([
   // User attributes
   "userId",
@@ -40,7 +37,7 @@ const DEFAULT_ALLOWED_FIELDS = new Set([
   "buildVersion",
 ]);
 
-// Fields that should never be sent (even if explicitly allowed)
+// Hard-blocked PII fields - cannot be overridden for security
 const FORBIDDEN_FIELDS = new Set([
   "password",
   "token",
@@ -59,7 +56,7 @@ const FORBIDDEN_FIELDS = new Set([
   "authToken",
 ]);
 
-// Patterns that suggest sensitive data
+// Regex patterns for dynamic PII detection
 const SENSITIVE_PATTERNS = [
   /password/i,
   /secret/i,
@@ -73,20 +70,21 @@ const SENSITIVE_PATTERNS = [
 ];
 
 export interface SanitizationOptions {
+  /** Custom allowlist of field names (extends defaults) */
   allowedFields?: Set<string>;
-  maxSizeForUrl?: number; // Default: 2KB
-  maxSizeForBody?: number; // Default: 10KB
-  strict?: boolean; // If true, only allowed fields pass through
-  warnOnDrop?: boolean; // Log warnings when fields are dropped
+  /** Max serialized size for URL params - default: 2KB */
+  maxSizeForUrl?: number;
+  /** Max serialized size for POST body - default: 10KB */
+  maxSizeForBody?: number;
+  /** If true, only allowlisted fields pass through - default: true */
+  strict?: boolean;
+  /** Log warnings when fields are dropped - default: development mode */
+  warnOnDrop?: boolean;
 }
 
 /**
- * Sanitizes context data before sending to server.
- *
- * Security considerations:
- * - Removes potentially sensitive fields
- * - Enforces size limits for URL/body transmission
- * - Optionally restricts to whitelist of allowed fields
+ * Context sanitizer with PII protection and size enforcement.
+ * Prevents credential leakage while maintaining feature flag functionality.
  */
 export class ContextSanitizer {
   private allowedFields: Set<string>;
@@ -99,14 +97,14 @@ export class ContextSanitizer {
     this.allowedFields = options.allowedFields || DEFAULT_ALLOWED_FIELDS;
     this.maxSizeForUrl = options.maxSizeForUrl || 2048; // 2KB for URL params
     this.maxSizeForBody = options.maxSizeForBody || 10240; // 10KB for POST body
-    this.strict = options.strict ?? true; // Default to strict mode
+    this.strict = options.strict ?? true; // Default strict mode
     this.warnOnDrop =
       options.warnOnDrop ?? process.env.NODE_ENV === "development";
   }
 
   /**
-   * Sanitizes context for URL parameters (GET requests).
-   * More strict size limits due to URL length constraints.
+   * Sanitizes context for URL params with strict size limits.
+   * @returns JSON string under 2KB or undefined if too large
    */
   sanitizeForUrl(context: EvaluationContext): string | undefined {
     const sanitized = this.sanitize(context);
@@ -117,7 +115,7 @@ export class ContextSanitizer {
     const serialized = JSON.stringify(sanitized);
 
     if (serialized.length > this.maxSizeForUrl) {
-      // Try to reduce by keeping only most important fields
+      // Fallback: strip to essential fields only (userId, orgId, etc.)
       const essential = this.extractEssentialFields(sanitized);
       const essentialSerialized = JSON.stringify(essential);
 
@@ -128,7 +126,7 @@ export class ContextSanitizer {
               `Maximum allowed: ${this.maxSizeForUrl} bytes. Consider using fewer fields.`,
           );
         }
-        return undefined; // Too large even after reduction
+        return undefined; // Even essentials exceed URL limit
       }
 
       return essentialSerialized;
@@ -138,8 +136,8 @@ export class ContextSanitizer {
   }
 
   /**
-   * Sanitizes context for request body (POST requests).
-   * Less strict size limits than URL.
+   * Sanitizes context for POST body with larger size allowance.
+   * @returns Sanitized object under 10KB or progressively reduced object
    */
   sanitizeForBody(context: EvaluationContext): object | undefined {
     const sanitized = this.sanitize(context);
@@ -157,34 +155,32 @@ export class ContextSanitizer {
         );
       }
 
-      // Progressively drop fields until size is acceptable
+      // Progressive field removal by priority (shorter keys kept first)
       return this.reduceToSize(sanitized, this.maxSizeForBody);
     }
 
     return sanitized;
   }
 
-  /**
-   * Core sanitization logic.
-   */
+  // Core sanitization: PII filtering + type normalization
   private sanitize(context: EvaluationContext): Record<string, any> {
     const result: Record<string, any> = {};
     const droppedFields: string[] = [];
 
     for (const [key, value] of Object.entries(context)) {
-      // Skip if forbidden field
+      // Skip forbidden fields
       if (FORBIDDEN_FIELDS.has(key)) {
         droppedFields.push(`${key} (forbidden)`);
         continue;
       }
 
-      // Skip if field name suggests sensitive data
+      // Skip sensitive field patterns
       if (SENSITIVE_PATTERNS.some((pattern) => pattern.test(key))) {
         droppedFields.push(`${key} (sensitive pattern)`);
         continue;
       }
 
-      // In strict mode, only allow whitelisted fields
+      // Strict mode: only allowlisted fields
       if (this.strict && !this.allowedFields.has(key)) {
         droppedFields.push(`${key} (not in allowlist)`);
         continue;
@@ -192,23 +188,23 @@ export class ContextSanitizer {
 
       // Handle different value types
       if (value === null || value === undefined) {
-        // Preserve null/undefined values
+        // Preserve null/undefined
         result[key] = value;
       } else if (typeof value === "object" && !Array.isArray(value)) {
-        // Recursively sanitize nested objects
+        // Recursive nested sanitization
         const sanitizedNested = this.sanitize(value);
         if (Object.keys(sanitizedNested).length > 0) {
           result[key] = sanitizedNested;
         }
       } else if (Array.isArray(value)) {
-        // Sanitize arrays (but limit length)
-        result[key] = value.slice(0, 10); // Max 10 items in arrays
+        // Limit array length to prevent payload bloat
+        result[key] = value.slice(0, 10);
       } else if (typeof value === "string") {
         // Truncate long strings
         result[key] =
           value.length > 200 ? value.substring(0, 200) + "..." : value;
       } else if (typeof value !== "function" && typeof value !== "symbol") {
-        // Allow other primitives (numbers, booleans)
+        // Allow other primitives
         result[key] = value;
       }
     }
@@ -222,9 +218,7 @@ export class ContextSanitizer {
     return result;
   }
 
-  /**
-   * Extracts only the most essential fields for minimal context.
-   */
+  // Extracts essential fields for minimal context
   private extractEssentialFields(
     context: Record<string, any>,
   ): Record<string, any> {
@@ -247,9 +241,7 @@ export class ContextSanitizer {
     return result;
   }
 
-  /**
-   * Progressively removes fields until size is acceptable.
-   */
+  // Progressively removes fields until size acceptable
   private reduceToSize(
     context: Record<string, any>,
     maxSize: number,
@@ -257,24 +249,27 @@ export class ContextSanitizer {
     const entries = Object.entries(context);
     let result = { ...context };
 
-    // Sort by assumed importance (shorter keys often more important)
+    // Sort by importance (shorter keys often more important)
     entries.sort((a, b) => a[0].length - b[0].length);
 
-    // Remove fields from the end until size is OK
+    // Remove from end until size OK
     for (let i = entries.length - 1; i >= 0; i--) {
       const serialized = JSON.stringify(result);
       if (serialized.length <= maxSize) {
         break;
       }
-      delete result[entries[i][0]];
+      const tuple = entries[i];
+      if (!tuple) continue;
+      const key = tuple[0];
+      delete result[key];
     }
 
     return result;
   }
 
   /**
-   * Validates that context doesn't contain sensitive data.
-   * Returns array of warnings if issues found.
+   * Pre-flight validation to detect potential PII before sanitization.
+   * @returns Array of warning messages for sensitive fields
    */
   static validate(context: EvaluationContext): string[] {
     const warnings: string[] = [];
@@ -306,7 +301,5 @@ export class ContextSanitizer {
   }
 }
 
-/**
- * Default sanitizer instance for convenience.
- */
+// Pre-configured instance with production-safe defaults
 export const defaultSanitizer = new ContextSanitizer();

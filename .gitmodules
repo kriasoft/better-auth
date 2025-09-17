@@ -1,0 +1,9 @@
+[submodule "vendor/better-auth"]
+	path = vendor/better-auth
+	url = https://github.com/better-auth/better-auth.git
+	branch = main
+[submodule "vendor/zod"]
+	path = vendor/zod
+	url = https://github.com/colinhacks/zod.git
+	branch = main
+

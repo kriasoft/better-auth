@@ -91,66 +91,78 @@ With `ua-parser-js`, you also get:
 ### Mobile-Only Feature
 
 ```typescript
-const mobileFeature = await auth.api.featureFlags.create({
-  key: "mobile-app-banner",
-  enabled: true,
-  rules: [
-    {
-      conditions: [
-        {
-          attribute: "device",
-          operator: "equals",
-          value: "mobile",
-        },
-      ],
-      value: true,
+const { flag } = await auth.api.createFeatureFlag({
+  body: {
+    key: "mobile-app-banner",
+    name: "Mobile App Banner",
+    type: "boolean",
+    enabled: true,
+    defaultValue: false,
+  },
+});
+await auth.api.createFeatureFlagRule({
+  body: {
+    flagId: flag.id,
+    priority: 0,
+    conditions: {
+      all: [{ attribute: "device", operator: "equals", value: "mobile" }],
     },
-  ],
-  defaultValue: false,
+    value: true,
+  },
 });
 ```
 
 ### Browser-Specific CSS
 
 ```typescript
-const cssFeature = await auth.api.featureFlags.create({
-  key: "safari-workaround",
-  enabled: true,
-  rules: [
-    {
-      conditions: [
-        {
-          attribute: "browser",
-          operator: "equals",
-          value: "safari",
-        },
-      ],
-      value: true,
+const { flag: safariFlag } = await auth.api.createFeatureFlag({
+  body: {
+    key: "safari-workaround",
+    name: "Safari Workaround",
+    type: "boolean",
+    enabled: true,
+    defaultValue: false,
+  },
+});
+await auth.api.createFeatureFlagRule({
+  body: {
+    flagId: safariFlag.id,
+    priority: 0,
+    conditions: {
+      all: [{ attribute: "browser", operator: "equals", value: "safari" }],
     },
-  ],
-  defaultValue: false,
+    value: true,
+  },
 });
 ```
 
 ### Platform Detection
 
 ```typescript
-const nativeFeature = await auth.api.featureFlags.create({
-  key: "native-features",
-  enabled: true,
-  rules: [
-    {
-      conditions: [
+const { flag: nativeFlag } = await auth.api.createFeatureFlag({
+  body: {
+    key: "native-features",
+    name: "Native Features",
+    type: "boolean",
+    enabled: true,
+    defaultValue: false,
+  },
+});
+await auth.api.createFeatureFlagRule({
+  body: {
+    flagId: nativeFlag.id,
+    priority: 0,
+    conditions: {
+      all: [
         {
           attribute: "platform",
           operator: "in",
           value: ["flutter", "react-native", "electron"],
         },
       ],
-      value: true,
     },
-  ],
-  defaultValue: false,
+    value: true,
+  },
 });
 ```
 

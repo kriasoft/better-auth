@@ -1,16 +1,17 @@
 // SPDX-FileCopyrightText: 2025-present Kriasoft
 // SPDX-License-Identifier: MIT
 
-import { describe, it, expect } from "bun:test";
+import { describe, expect, it } from "bun:test";
 import {
-  validateContextAttribute,
+  DEFAULT_HEADER_CONFIG,
+  extractSecureCustomAttributes,
   isValidHeaderValue,
   sanitizeHeaderValue,
-  extractSecureCustomAttributes,
-  DEFAULT_HEADER_CONFIG,
+  validateContextAttribute,
   type HeaderConfig,
 } from "./validation";
 
+// Security validation tests: prototype pollution, XSS, DoS prevention
 describe("Context Validation", () => {
   describe("validateContextAttribute", () => {
     it("should reject prototype pollution attempts", () => {
@@ -49,6 +50,7 @@ describe("Context Validation", () => {
       };
       expect(validateContextAttribute("data", validObject)).toBe(true);
 
+      // Test against prototype pollution via enumerable __proto__
       const invalidObject: any = {};
       Object.defineProperty(invalidObject, "__proto__", {
         value: "polluted",
@@ -159,6 +161,7 @@ describe("Context Validation", () => {
         type: "json",
       };
 
+      // JSON with prototype pollution attempt should be cleaned
       const result = sanitizeHeaderValue(
         '{"__proto__": "bad", "data": "test"}',
         config,
@@ -217,6 +220,7 @@ describe("Context Validation", () => {
     });
 
     it("should log invalid headers when configured", () => {
+      // Mock console.warn to capture security warnings
       const logs: string[] = [];
       const originalWarn = console.warn;
       console.warn = (msg: string) => logs.push(msg);

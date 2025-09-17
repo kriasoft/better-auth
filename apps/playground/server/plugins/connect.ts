@@ -16,9 +16,11 @@ import { getPluginStatus } from "../env";
  * - Data synchronization
  * - Token management
  */
-export function getConnectPlugin(env: Env): ReturnType<typeof connectPlugin> | null {
+export function getConnectPlugin(
+  env: Env,
+): ReturnType<typeof connectPlugin> | null {
   const pluginStatus = getPluginStatus(env);
-  
+
   // Check if connect plugin is enabled
   if (!pluginStatus.connect) {
     return null;

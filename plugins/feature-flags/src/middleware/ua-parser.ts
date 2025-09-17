@@ -2,49 +2,43 @@
 // SPDX-License-Identifier: MIT
 
 /**
- * Enhanced user agent parsing module
+ * Optional ua-parser-js integration for enhanced device detection.
+ * Falls back to built-in parsing when peer dependency not installed.
  *
- * This module provides an optional integration with ua-parser-js
- * for more accurate device detection. Users can opt-in by installing
- * ua-parser-js as a peer dependency.
- *
- * @example
- * ```ts
- * // Install ua-parser-js for enhanced detection
- * bun add ua-parser-js
- *
- * // Configure the plugin to use enhanced parsing
- * featureFlags({
- *   parsing: {
- *     useEnhancedUA: true
- *   }
- * })
- * ```
+ * @example featureFlags({ parsing: { useEnhancedUA: true } })
+ * @see https://www.npmjs.com/package/ua-parser-js
  */
 
 let UAParser: any;
 
-// Try to load ua-parser-js if available
+// Dynamic import: graceful fallback when peer dependency missing
 try {
   UAParser = require("ua-parser-js");
 } catch {
-  // ua-parser-js not installed, will use built-in detection
+  // Falls back to parseUserAgentBuiltin
 }
 
+/** Parsed user agent data for feature flag targeting and analytics. */
 export interface ParsedUserAgent {
+  /** Device type: 'mobile', 'tablet', 'desktop', 'tv', 'bot', etc. */
   device: string;
+  /** Browser name: 'chrome', 'safari', 'firefox', 'edge', etc. */
   browser: string;
+  /** Operating system: 'ios', 'android', 'windows', 'macos', etc. */
   os: string;
+  /** App platform: 'react-native', 'flutter', 'electron', etc. */
   platform: string | null;
+  /** Browser version string if available */
   browserVersion?: string;
+  /** OS version string if available */
   osVersion?: string;
+  /** Device vendor: 'Apple', 'Samsung', etc. */
   deviceVendor?: string;
+  /** Device model: 'iPhone', 'Galaxy S21', etc. */
   deviceModel?: string;
 }
 
-/**
- * Enhanced cache with TTL support
- */
+// LRU cache with TTL: prevents memory leaks and stale data
 class UACache {
   private cache = new Map<string, { data: ParsedUserAgent; expires: number }>();
   private maxSize: number;
@@ -69,9 +63,11 @@ class UACache {
 
   set(key: string, value: ParsedUserAgent): void {
     if (this.cache.size >= this.maxSize) {
-      // Remove oldest entry
-      const firstKey = this.cache.keys().next().value;
-      this.cache.delete(firstKey);
+      // LRU eviction: remove oldest entry when at capacity
+      const iter = this.cache.keys().next();
+      if (!iter.done) {
+        this.cache.delete(iter.value);
+      }
     }
 
     this.cache.set(key, {
@@ -88,7 +84,10 @@ class UACache {
 const enhancedCache = new UACache();
 
 /**
- * Parse user agent with optional ua-parser-js support
+ * Parses user agent strings with caching and optional enhanced detection.
+ * @param userAgent - Raw user agent string from request headers
+ * @param useEnhanced - Enable ua-parser-js when available
+ * @returns Normalized device/browser/OS data
  */
 export function parseUserAgentEnhanced(
   userAgent?: string,
@@ -103,43 +102,42 @@ export function parseUserAgentEnhanced(
     };
   }
 
-  // Check cache first
-  const cached = enhancedCache.get(userAgent);
+  // Cache hit: return immediately to avoid re-parsing
+  const uaStr = userAgent!;
+  const cached = enhancedCache.get(uaStr);
   if (cached) return cached;
 
   let result: ParsedUserAgent;
 
   if (useEnhanced && UAParser) {
-    // Use ua-parser-js for enhanced detection
-    const parser = new UAParser(userAgent);
+    // Enhanced detection: more accurate device/vendor/version data
+    const parser = new UAParser(uaStr);
     const parsed = parser.getResult();
 
     result = {
       device: mapDeviceType(parsed.device.type, parsed.device.model),
       browser: parsed.browser.name?.toLowerCase() || "unknown",
       os: mapOSName(parsed.os.name),
-      platform: detectPlatformEnhanced(userAgent, parsed),
+      platform: detectPlatformEnhanced(userAgent!, parsed),
       browserVersion: parsed.browser.version,
       osVersion: parsed.os.version,
       deviceVendor: parsed.device.vendor,
       deviceModel: parsed.device.model,
     };
   } else {
-    // Fallback to built-in detection (imported from context.ts)
-    result = parseUserAgentBuiltin(userAgent);
+    // Fallback: built-in parsing when ua-parser-js unavailable
+    result = parseUserAgentBuiltin(userAgent!);
   }
 
   // Cache the result
-  enhancedCache.set(userAgent, result);
+  enhancedCache.set(uaStr, result);
   return result;
 }
 
-/**
- * Map ua-parser-js device types to our simplified types
- */
+// Maps ua-parser-js device types to feature flag context values
 function mapDeviceType(type?: string, model?: string): string {
   if (!type) {
-    // Try to infer from model
+    // Fallback inference from device model string
     if (model?.toLowerCase().includes("bot")) return "bot";
     return "desktop";
   }
@@ -157,9 +155,7 @@ function mapDeviceType(type?: string, model?: string): string {
   return typeMap[type.toLowerCase()] || "desktop";
 }
 
-/**
- * Map OS names to simplified versions
- */
+// Normalizes OS names for consistent feature flag targeting
 function mapOSName(osName?: string): string {
   if (!osName) return "unknown";
 
@@ -174,26 +170,24 @@ function mapOSName(osName?: string): string {
   return name;
 }
 
-/**
- * Enhanced platform detection
- */
+// Detects app frameworks and platforms beyond basic browser detection
 function detectPlatformEnhanced(userAgent: string, parsed: any): string | null {
   const ua = userAgent.toLowerCase();
 
-  // Check for app frameworks first
+  // Priority order: mobile frameworks > web frameworks > SSR
   if (ua.includes("dart")) return "flutter";
   if (ua.includes("react-native")) return "react-native";
   if (ua.includes("electron")) return "electron";
   if (ua.includes("capacitor")) return "capacitor";
   if (ua.includes("cordova")) return "cordova";
 
-  // Check engine for better detection
+  // PWA detection using engine data
   const engine = parsed.engine?.name?.toLowerCase();
   if (engine === "webkit" && parsed.os?.name === "iOS") {
     if (ua.includes("standalone")) return "pwa-ios";
   }
 
-  // SSR frameworks
+  // SSR framework detection
   if (ua.includes("next.js")) return "nextjs";
   if (ua.includes("nuxt")) return "nuxt";
   if (ua.includes("remix")) return "remix";
@@ -201,10 +195,7 @@ function detectPlatformEnhanced(userAgent: string, parsed: any): string | null {
   return null;
 }
 
-/**
- * Built-in parser fallback (copy of the optimized version from context.ts)
- * This ensures the module works even without ua-parser-js
- */
+// Built-in parser: regex-based fallback when ua-parser-js unavailable
 function parseUserAgentBuiltin(userAgent: string): ParsedUserAgent {
   const ua = userAgent.toLowerCase();
 
@@ -304,7 +295,8 @@ function detectPlatformBuiltin(ua: string): string | null {
 }
 
 /**
- * Export a function to check if enhanced parsing is available
+ * Checks if ua-parser-js is available for enhanced parsing.
+ * @returns true when peer dependency is installed
  */
 export function isEnhancedParsingAvailable(): boolean {
   return !!UAParser;

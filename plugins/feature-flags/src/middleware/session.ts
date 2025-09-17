@@ -1,28 +1,29 @@
 // SPDX-FileCopyrightText: 2025-present Kriasoft
 // SPDX-License-Identifier: MIT
 
-import "../augmentation"; // Import type augmentations
 import { createMiddleware } from "better-call";
-import type { PluginContext } from "../types";
+import type {} from "../augmentation"; // Import type augmentations (types-only)
 import type { EvaluationContext } from "../schema";
-import { buildEvaluationContext } from "./context";
+import type { PluginContext } from "../types";
 import type { EvaluationResult } from "./context";
+import { buildEvaluationContext } from "./context";
 
 /**
- * Session enhancement middleware that adds feature flags to session
+ * Enhances session with evaluated feature flags and helper methods.
+ * @returns Middleware that adds featureFlags object to session
+ * @see plugins/feature-flags/src/types.ts for flag interfaces
  */
 export function createSessionEnhancementMiddleware(
   pluginContext: PluginContext,
 ) {
   return createMiddleware(async (ctx: any) => {
-    // Get session from context if available
     const session = ctx.session || (await ctx.auth?.getSession?.());
 
     if (!session?.user) {
-      return {}; // No session to enhance
+      return {}; // Skip enhancement for unauthenticated users
     }
 
-    // Build evaluation context for this session
+    // Build context with user, device, location data for flag evaluation
     const evaluationContext = await buildEvaluationContext(
       ctx,
       session,
@@ -30,14 +31,13 @@ export function createSessionEnhancementMiddleware(
       pluginContext.config.contextCollection,
     );
 
-    // Evaluate all enabled flags for this user
+    // Pre-evaluate all enabled flags for session caching
     const userFlags = await evaluateUserFlags(
       session.user.id,
       evaluationContext,
       pluginContext,
     );
 
-    // Return enhanced session
     return {
       session: {
         ...session,
@@ -63,16 +63,23 @@ export function createSessionEnhancementMiddleware(
 }
 
 /**
- * User flag evaluation result
+ * Cached flag evaluation result for user session.
  */
 interface UserFlagResult {
+  /** The resolved flag value (boolean, string, number, object) */
   value: any;
+  /** Variant name if using A/B testing or multivariate flags */
   variant?: string;
+  /** Reason for this result: 'enabled', 'disabled', 'not_found', 'error' */
   reason: string;
 }
 
 /**
- * Evaluate all flags for a specific user
+ * Evaluates all enabled flags for user with caching and analytics tracking.
+ * @param userId - User ID for flag evaluation and tracking
+ * @param context - Evaluation context with user/device/location data
+ * @param pluginContext - Plugin configuration and storage
+ * @returns Record of flag keys to evaluation results
  */
 async function evaluateUserFlags(
   userId: string,
@@ -81,10 +88,10 @@ async function evaluateUserFlags(
 ): Promise<Record<string, UserFlagResult>> {
   const { storage, config, cache } = pluginContext;
 
-  // Check cache first
-  const cacheKey = `user-flags:${userId}:${JSON.stringify(context)}`;
-  if (config.caching.enabled && cache.has(cacheKey)) {
-    const cached = cache.get(cacheKey);
+  // Check TTL cache with secure hash of user+context data
+  const cacheKeyData = { userId, context, type: "user-flags" };
+  if (config.caching.enabled && cache.has(cacheKeyData)) {
+    const cached = cache.get(cacheKeyData);
     if (cached && cached.timestamp + config.caching.ttl * 1000 > Date.now()) {
       return cached.value;
     }
@@ -93,17 +100,15 @@ async function evaluateUserFlags(
   const flags: Record<string, UserFlagResult> = {};
 
   try {
-    // Get organization ID if multi-tenant
     const organizationId = config.multiTenant.enabled
       ? context.organizationId
       : undefined;
 
-    // Fetch all enabled flags
+    // Only fetch enabled flags to reduce evaluation overhead
     const allFlags = await storage.listFlags(organizationId, {
       filter: { enabled: true },
     });
 
-    // Evaluate each flag
     const { evaluateFlags } = await import("../evaluation");
 
     for (const flag of allFlags) {
@@ -116,7 +121,7 @@ async function evaluateUserFlags(
           reason: result.reason,
         };
 
-        // Track evaluation if analytics enabled
+        // Track evaluation for analytics and A/B test analysis
         if (config.analytics.trackUsage) {
           await storage
             .trackEvaluation({
@@ -139,7 +144,7 @@ async function evaluateUserFlags(
           `[feature-flags] Error evaluating flag ${flag.key}:`,
           error,
         );
-        // Use default value on error
+        // Fallback to default value on evaluation error
         flags[flag.key] = {
           value: flag.defaultValue,
           reason: "error",
@@ -147,9 +152,9 @@ async function evaluateUserFlags(
       }
     }
 
-    // Cache the results
+    // Cache results with TTL to reduce DB load on subsequent requests
     if (config.caching.enabled) {
-      cache.set(cacheKey, {
+      cache.set(cacheKeyData, {
         value: flags,
         timestamp: Date.now(),
         ttl: config.caching.ttl,
@@ -165,13 +170,15 @@ async function evaluateUserFlags(
 }
 
 /**
- * Create request-level feature flags middleware
+ * Creates middleware for per-request flag evaluation (no caching).
+ * Use for dynamic flags that change during request lifecycle.
+ * @returns Middleware with evaluate, isEnabled, getVariant helpers
+ * @see createSessionEnhancementMiddleware for cached session flags
  */
 export function createRequestFlagsMiddleware(pluginContext: PluginContext) {
   return createMiddleware(async (ctx: any) => {
     const session = ctx.session || (await ctx.auth?.getSession?.());
 
-    // Build evaluation context
     const evaluationContext = await buildEvaluationContext(
       ctx,
       session,
@@ -179,7 +186,7 @@ export function createRequestFlagsMiddleware(pluginContext: PluginContext) {
       pluginContext.config.contextCollection,
     );
 
-    // Create flag evaluation helpers
+    // Real-time flag evaluation helpers for dynamic flags
     const evaluate = async (
       key: string,
       defaultValue?: any,
@@ -208,11 +215,12 @@ export function createRequestFlagsMiddleware(pluginContext: PluginContext) {
       }
     };
 
-    const evaluateBatch = async (
+    const evaluateFlags = async (
       keys: string[],
     ): Promise<Record<string, EvaluationResult>> => {
       const results: Record<string, EvaluationResult> = {};
 
+      // Parallel evaluation for better performance
       const evaluations = await Promise.all(
         keys.map(async (key) => {
           const result = await evaluate(key);
@@ -237,11 +245,10 @@ export function createRequestFlagsMiddleware(pluginContext: PluginContext) {
       return result.variant;
     };
 
-    // Return context extensions
     return {
       featureFlags: {
         evaluate,
-        evaluateBatch,
+        evaluateFlags,
         isEnabled,
         getVariant,
         context: evaluationContext,

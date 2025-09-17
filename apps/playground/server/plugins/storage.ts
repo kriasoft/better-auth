@@ -15,9 +15,11 @@ import { getPluginStatus } from "../env";
  * - Storage quotas and limits
  * - Webhook support
  */
-export function getStoragePlugin(env: Env): ReturnType<typeof storagePlugin> | null {
+export function getStoragePlugin(
+  env: Env,
+): ReturnType<typeof storagePlugin> | null {
   const pluginStatus = getPluginStatus(env);
-  
+
   // Check if storage plugin is enabled
   if (!pluginStatus.storage) {
     return null;

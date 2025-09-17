@@ -10,6 +10,11 @@
 
 Enterprise-grade feature flag management integrated with Better Auth. Control feature rollouts, run A/B tests, and manage user experiences with powerful targeting rules and real-time evaluation.
 
+> Version status
+>
+> - Current (dev branch): v0.2.0 — pending publish
+> - Previous (main): v0.1.3
+
 ## Features
 
 ### Core Capabilities
@@ -41,17 +46,23 @@ Enterprise-grade feature flag management integrated with Better Auth. Control fe
 
 ```bash
 # npm
-npm install better-auth-feature-flags
+npm install better-auth better-call better-auth-feature-flags
 
 # bun
-bun add better-auth-feature-flags
+bun add better-auth better-call better-auth-feature-flags
 
 # pnpm
-pnpm add better-auth-feature-flags
+pnpm add better-auth better-call better-auth-feature-flags
 
 # yarn
-yarn add better-auth-feature-flags
+yarn add better-auth better-call better-auth-feature-flags
 ```
+
+### Peer Dependencies
+
+- This plugin lists `better-auth` and `better-call` as peer dependencies.
+- `better-call` is the request/response + middleware layer Better Auth builds on and is also used by this plugin’s server middleware. Better Auth depends on it and re-exports some of its types.
+- Installing both `better-auth@^1.3.11` and `better-call@^1.0.19` ensures consistent versions and avoids hoisting/resolution issues under pnpm and other strict package managers.
 
 ## Quick Start
 
@@ -65,13 +76,36 @@ const auth = betterAuth({
   plugins: [
     featureFlags({
       storage: "database", // "memory" | "database" | "redis"
+
+      // Analytics configuration
+      analytics: {
+        trackUsage: true,
+        trackPerformance: true,
+      },
+
+      // Caching for performance
       caching: {
         enabled: true,
-        ttl: 60, // Cache for 60 seconds
+        ttl: 60, // seconds
+        maxSize: 1000,
       },
-      analytics: {
-        trackUsage: true, // Track flag evaluations
-        trackPerformance: true, // Track evaluation latency
+
+      // Admin access control
+      adminAccess: {
+        enabled: true,
+        roles: ["admin"],
+      },
+
+      // Multi-tenancy (optional)
+      multiTenant: {
+        enabled: false,
+        useOrganizations: false,
+      },
+
+      // Audit logging
+      audit: {
+        enabled: true,
+        retentionDays: 90,
       },
     }),
   ],
@@ -84,36 +118,128 @@ const auth = betterAuth({
 import { createAuthClient } from "better-auth/client";
 import { featureFlagsClient } from "better-auth-feature-flags/client";
 
+// Public client (for end users)
 const authClient = createAuthClient({
   plugins: [
     featureFlagsClient({
+      // Client-side caching
       cache: {
         enabled: true,
         ttl: 60000, // 60 seconds
-        storage: "localStorage",
+        storage: "localStorage", // or "sessionStorage" or "memory"
       },
+
+      // Real-time updates
       polling: {
         enabled: true,
-        interval: 30000, // Poll every 30 seconds
+        interval: 30000, // 30 seconds
+      },
+
+      // Context collection
+      contextCollection: {
+        collectDevice: false,
+        collectGeo: false,
+        collectCustomHeaders: false,
       },
     }),
   ],
 });
 ```
 
-### 3. Using Feature Flags
+#### Admin Client Setup
 
-#### Simple Flag Check
+For admin dashboards, use both public and admin plugins:
 
 ```typescript
-// Server-side
-const result = await auth.api.featureFlags.evaluate({
-  key: "new-feature",
-  userId: session.user.id,
+import { createAuthClient } from "better-auth/client";
+import { featureFlagsClient } from "better-auth-feature-flags/client";
+import { featureFlagsAdminClient } from "better-auth-feature-flags/admin";
+
+// Admin client (for management interfaces)
+const adminClient = createAuthClient({
+  plugins: [
+    featureFlagsClient(), // Public evaluation methods
+    featureFlagsAdminClient(), // Admin CRUD operations
+  ],
+});
+```
+
+### 3. Using Feature Flags
+
+## API Overview
+
+### Public Endpoints
+
+- **POST** `/feature-flags/evaluate`
+  - Body: `{ flagKey: string, context?: object, default?: any, select?: 'value'|'full'|Array<'value'|'variant'|'reason'|'metadata'>, environment?: string, track?: boolean, debug?: boolean, contextInResponse?: boolean }`
+  - Response (default): `{ value: any, variant?: string, reason: string, metadata?: any, evaluatedAt: string, context?: object }`
+  - Response (`select: 'value'`): `{ value: any, evaluatedAt: string, context?: object }`
+
+- **POST** `/feature-flags/evaluate-batch`
+  - Body: `{ flagKeys: string[], defaults?: Record<string,any>, context?: object, select?: 'value'|'full'|Array<'value'|'variant'|'reason'|'metadata'>, environment?: string, track?: boolean, debug?: boolean, contextInResponse?: boolean }`
+  - Response: `{ flags: Record<string, EvaluationResult>, evaluatedAt: string, context?: object }`
+
+- **POST** `/feature-flags/bootstrap`
+  - Body: `{ context?: object, include?: string[], prefix?: string, select?: 'value'|'full'|Array<'value'|'variant'|'reason'|'metadata'>, environment?: string, track?: boolean, debug?: boolean }`
+  - Returns all enabled flags for the context with shaping via `select`
+
+- **POST** `/feature-flags/events`
+  - Body: `{ flagKey: string, event: string, properties?: number|object, timestamp?: string (RFC3339), sampleRate?: number }`
+  - Headers: `Idempotency-Key?: string`
+- Event tracking for analytics
+
+Note
+
+- Environment can also be supplied via `x-deployment-ring` header; header takes precedence over body `environment`.
+
+### Admin Endpoints
+
+- **GET** `/feature-flags/admin/flags`
+  - Query: `{ organizationId?, cursor?, limit?, q?, sort?, type?, enabled?, prefix?, include? }`
+  - Enhanced with filtering and metrics projection
+  - Response: `{ flags: FeatureFlag[], page: { nextCursor?, limit, hasMore } }`
+
+- **GET** `/feature-flags/admin/flags/:flagId/stats`
+  - Query: `{ start?, end?, granularity?, timezone?, metrics? }`
+  - Analytics with date range validation (max 90 days) and selective metrics
+
+- **GET** `/feature-flags/admin/metrics/usage`
+  - Query: `{ start?, end?, organizationId?, metrics? }`
+  - Organization-level analytics with projection support
+
+#### Simple Flag Evaluation
+
+```typescript
+// High-level client methods (v0.2.x)
+const isEnabled = await authClient.featureFlags.isEnabled("new-feature");
+const value = await authClient.featureFlags.getValue(
+  "config-setting",
+  "default",
+);
+const variant = await authClient.featureFlags.getVariant("ab-test");
+
+// Canonical evaluation API
+const result = await authClient.featureFlags.evaluate("new-feature", {
+  default: false,
+  context: { userId: "123", plan: "premium" },
+});
+// Returns: { value: boolean, variant?: string, reason: string }
+
+// Batch evaluation for performance
+const results = await authClient.featureFlags.evaluateMany(["flag1", "flag2"], {
+  context: { userId: "123" },
+  defaults: { flag1: false, flag2: "default" },
 });
 
-// Client-side
-const isEnabled = await authClient.featureFlags.isEnabled("new-feature");
+// Bootstrap all flags
+const allFlags = await authClient.featureFlags.bootstrap({
+  context: { userId: "123" },
+});
+
+// Event tracking
+await authClient.featureFlags.track("new-feature", "viewed", {
+  section: "dashboard",
+});
 ```
 
 #### React Integration
@@ -122,6 +248,9 @@ const isEnabled = await authClient.featureFlags.isEnabled("new-feature");
 import {
   FeatureFlagsProvider,
   useFeatureFlag,
+  useFeatureFlagValue,
+  useVariant,
+  useTrackEvent,
   Feature,
   Variant,
 } from "better-auth-feature-flags/react";
@@ -129,7 +258,11 @@ import {
 // Provider setup
 function App() {
   return (
-    <FeatureFlagsProvider client={authClient}>
+    <FeatureFlagsProvider
+      client={authClient}
+      fetchOnMount={true}
+      context={{ userId: "user-123", plan: "premium" }}
+    >
       <YourApp />
     </FeatureFlagsProvider>
   );
@@ -138,7 +271,21 @@ function App() {
 // Using hooks
 function Component() {
   const isDarkMode = useFeatureFlag("dark-mode", false);
-  return <div className={isDarkMode ? "dark" : "light"}>Content</div>;
+  const config = useFeatureFlagValue("ui-config", { theme: "light" });
+  const variant = useVariant("homepage-test");
+  const track = useTrackEvent();
+
+  const handleClick = () => {
+    track("ui-interaction", "button_click", { component: "header" });
+  };
+
+  return (
+    <div className={isDarkMode ? "dark" : "light"}>
+      <h1>Theme: {config.theme}</h1>
+      <p>Variant: {variant || "default"}</p>
+      <button onClick={handleClick}>Track Event</button>
+    </div>
+  );
 }
 
 // Conditional rendering
@@ -150,14 +297,14 @@ function Page() {
   );
 }
 
-// A/B testing
+// A/B testing with variants
 function Homepage() {
   return (
     <Variant flag="homepage-test">
       <Variant.Case variant="control">
         <ClassicHomepage />
       </Variant.Case>
-      <Variant.Case variant="modern">
+      <Variant.Case variant="variant-a">
         <ModernHomepage />
       </Variant.Case>
       <Variant.Default>
@@ -166,111 +313,439 @@ function Homepage() {
     </Variant>
   );
 }
-```
 
-## Advanced Features
+// Suspense support for modern React apps
+import {
+  FeatureSuspense,
+  useFeatureFlagSuspense,
+} from "better-auth-feature-flags/react";
 
-### Progressive Rollout
-
-```typescript
-await auth.api.admin.flags.create({
-  key: "new-checkout",
-  enabled: true,
-  rolloutPercentage: 25, // Start with 25% of users
-  defaultValue: false,
-});
-```
-
-### User Targeting
-
-```typescript
-await auth.api.admin.flags.create({
-  key: "premium-feature",
-  enabled: true,
-  rules: [
-    {
-      conditions: {
-        attribute: "subscription",
-        operator: "equals",
-        value: "premium",
-      },
-      value: true,
-    },
-  ],
-  defaultValue: false,
-});
-```
-
-### A/B Testing with Variants
-
-```typescript
-await auth.api.admin.flags.create({
-  key: "checkout-flow",
-  type: "json",
-  enabled: true,
-  variants: {
-    control: { buttonText: "Buy Now", color: "blue" },
-    variant_a: { buttonText: "Purchase", color: "green" },
-    variant_b: { buttonText: "Get Started", color: "orange" },
-  },
-});
-```
-
-### Type-Safe Flags
-
-```typescript
-// Define your flag schema
-interface MyFlags {
-  "feature.darkMode": boolean;
-  "experiment.algorithm": "A" | "B" | "C";
-  "config.maxItems": number;
+function SuspenseExample() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <FeatureSuspense flag="new-feature" fallback={<OldFeature />}>
+        <NewFeature />
+      </FeatureSuspense>
+    </Suspense>
+  );
 }
 
-// Use with type safety
-const client = createAuthClient({
-  plugins: [featureFlagsClient<MyFlags>()],
-});
-
-const isDark = await client.featureFlags.isEnabled("feature.darkMode");
-//    ^? boolean
+function SuspenseHook() {
+  // Throws promise for Suspense to catch
+  const isEnabled = useFeatureFlagSuspense("feature-name", false);
+  return <div>Feature is {isEnabled ? "enabled" : "disabled"}</div>;
+}
 ```
 
-## Security
-
-### Context Sanitization
-
-The SDK automatically sanitizes evaluation context to prevent PII leakage:
+### Client Configuration
 
 ```typescript
+import { createAuthClient } from "better-auth/client";
+import { featureFlagsClient } from "better-auth-feature-flags/client";
+
+const authClient = createAuthClient({
+  plugins: [
+    featureFlagsClient({
+      // Client-side caching
+      cache: {
+        enabled: true,
+        ttl: 60000, // 60 seconds
+        storage: "localStorage", // or "sessionStorage" or "memory"
+      },
+
+      // Automatic polling for updates
+      polling: {
+        enabled: true,
+        interval: 30000, // 30 seconds
+      },
+
+      // Context collection
+      contextCollection: {
+        collectDevice: false,
+        collectGeo: false,
+        collectCustomHeaders: false,
+      },
+
+      // Development overrides (disabled in production)
+      overrides: {
+        enabled: process.env.NODE_ENV === "development",
+      },
+    }),
+  ],
+});
+```
+
+## Client API Reference
+
+### Core Evaluation Methods
+
+```typescript
+// Simple boolean check
+const isEnabled = await authClient.featureFlags.isEnabled("new-feature");
+
+// Get any value type with default
+const config = await authClient.featureFlags.getValue("ui-config", {
+  theme: "light",
+  sidebar: "collapsed",
+});
+
+// Get variant for A/B testing
+const variant = await authClient.featureFlags.getVariant("homepage-test");
+
+// Full evaluation with metadata
+const result = await authClient.featureFlags.evaluate("feature-name", {
+  default: false,
+  context: { plan: "premium", region: "us-west" },
+  select: "full", // Returns { value, variant?, reason }
+});
+
+// Batch evaluation
+const results = await authClient.featureFlags.evaluateMany(
+  ["feature-1", "feature-2"],
+  {
+    context: { userId: "123" },
+    defaults: { "feature-1": false, "feature-2": "default" },
+  },
+);
+
+// Bootstrap all enabled flags
+const allFlags = await authClient.featureFlags.bootstrap({
+  context: { userId: "123" },
+  include: ["ui-*", "experiments-*"], // Optional filtering
+});
+```
+
+### Event Tracking
+
+```typescript
+// Simple event tracking
+await authClient.featureFlags.track("checkout-flow", "step_completed", {
+  step: "payment",
+  value: 99.99,
+});
+
+// Context and override management
+authClient.featureFlags.setContext({ plan: "premium", region: "us" });
+const context = authClient.featureFlags.getContext();
+
+// Development overrides (disabled in production)
+authClient.featureFlags.setOverride("debug-mode", true);
+authClient.featureFlags.clearOverrides();
+
+// Cache management
+authClient.featureFlags.clearCache();
+await authClient.featureFlags.refresh();
+```
+
+### Admin API (Separate Bundle)
+
+Admin operations use a separate client plugin to keep public bundles lean:
+
+```typescript
+import { createAuthClient } from "better-auth/client";
+import { featureFlagsClient } from "better-auth-feature-flags/client";
+import { featureFlagsAdminClient } from "better-auth-feature-flags/admin";
+
+// Admin clients include both public and admin plugins
+const adminClient = createAuthClient({
+  plugins: [featureFlagsClient(), featureFlagsAdminClient()],
+});
+
+// Flag management
+const flags = await adminClient.featureFlags.admin.flags.list({
+  q: "search-term",
+  type: "boolean",
+  enabled: true,
+  sort: "-updatedAt",
+  limit: 20,
+});
+// Returns: { flags: FeatureFlag[], page: { nextCursor?, limit, hasMore } }
+
+const newFlag = await adminClient.featureFlags.admin.flags.create({
+  key: "new-checkout",
+  name: "New Checkout Flow",
+  type: "boolean",
+  enabled: true,
+  defaultValue: false,
+  rolloutPercentage: 25,
+  variants: [
+    { key: "control", value: false, weight: 50 },
+    { key: "test", value: true, weight: 50 },
+  ],
+});
+
+// Rule-based targeting
+await adminClient.featureFlags.admin.rules.create({
+  flagId: newFlag.id,
+  priority: 1,
+  conditions: {
+    all: [
+      { attribute: "plan", operator: "equals", value: "premium" },
+      { attribute: "region", operator: "in", value: ["us", "ca"] },
+    ],
+  },
+  value: true,
+});
+
+// Analytics with enhanced projection
+const stats = await adminClient.featureFlags.admin.analytics.getStats(
+  newFlag.id,
+  {
+    start: "2025-01-01",
+    end: "2025-01-31",
+    granularity: "day",
+    metrics: ["total", "uniqueUsers", "variants"], // Selective metrics
+  },
+);
+
+const usage = await adminClient.featureFlags.admin.analytics.getUsage({
+  start: "2025-01-01",
+  end: "2025-01-31",
+  metrics: ["errorRate", "avgLatency"], // Only get performance metrics
+});
+```
+
+### What's New in v0.2.0
+
+- Idempotency support for analytics events
+- Batch event tracking for performance
+- Canonical API naming and improved DX
+- Enhanced TypeScript types and error handling
+- React Suspense hooks and advanced React helpers
+
+## Migration Guide (v0.1.3 → v0.2.0)
+
+The v0.2.0 release introduces canonical API naming for better consistency and long-term stability. The old methods are deprecated but still supported. API renames:
+
+- `getFlag()` → `evaluate()`
+- `getFlags()` → `evaluateMany()`
+- `getAllFlags()` → `bootstrap()`
+- `trackEvent()` → `track()`
+
+Old methods are deprecated but still supported for backward compatibility.
+
+### API Methods Overview (Canonical)
+
+| Purpose                   | Method                                     |
+| ------------------------- | ------------------------------------------ |
+| **Flag Evaluation**       | `featureFlags.isEnabled()`                 |
+|                           | `featureFlags.getValue()`                  |
+|                           | `featureFlags.getVariant()`                |
+|                           | `featureFlags.evaluate()`                  |
+|                           | `featureFlags.evaluateMany()`              |
+|                           | `featureFlags.bootstrap()`                 |
+| **Analytics**             | `featureFlags.track()`                     |
+|                           | `featureFlags.trackBatch()`                |
+| **Admin Operations**      | `featureFlags.admin.flags.list()`          |
+|                           | `featureFlags.admin.flags.create()`        |
+|                           | `featureFlags.admin.flags.get()`           |
+|                           | `featureFlags.admin.flags.update()`        |
+|                           | `featureFlags.admin.flags.delete()`        |
+|                           | `featureFlags.admin.flags.enable()`        |
+|                           | `featureFlags.admin.flags.disable()`       |
+|                           | `featureFlags.admin.rules.list()`          |
+|                           | `featureFlags.admin.rules.create()`        |
+|                           | `featureFlags.admin.rules.get()`           |
+|                           | `featureFlags.admin.rules.update()`        |
+|                           | `featureFlags.admin.rules.delete()`        |
+|                           | `featureFlags.admin.rules.reorder()`       |
+|                           | `featureFlags.admin.overrides.list()`      |
+|                           | `featureFlags.admin.overrides.create()`    |
+|                           | `featureFlags.admin.overrides.get()`       |
+|                           | `featureFlags.admin.overrides.update()`    |
+|                           | `featureFlags.admin.overrides.delete()`    |
+|                           | `featureFlags.admin.audit.list()`          |
+|                           | `featureFlags.admin.audit.get()`           |
+|                           | `featureFlags.admin.analytics.stats.get()` |
+|                           | `featureFlags.admin.analytics.usage.get()` |
+| **Context**               | `featureFlags.setContext()`                |
+|                           | `featureFlags.getContext()`                |
+| **Cache Management**      | `featureFlags.clearCache()`                |
+|                           | `featureFlags.refresh()`                   |
+| **Development Overrides** | `featureFlags.setOverride()`               |
+|                           | `featureFlags.clearOverrides()`            |
+
+## Advanced Configuration
+
+### Static Flag Definitions
+
+Define flags in your server configuration for version control:
+
+```typescript
+import { betterAuth } from "better-auth";
+import { featureFlags } from "better-auth-feature-flags";
+
+const auth = betterAuth({
+  plugins: [
+    featureFlags({
+      storage: "database",
+
+      // Static flag definitions
+      flags: {
+        "maintenance-mode": {
+          enabled: false,
+          default: false,
+        },
+
+        "new-checkout": {
+          enabled: true,
+          default: false,
+          rolloutPercentage: 25, // Gradual rollout
+          targeting: {
+            roles: ["beta-tester"],
+            attributes: { plan: "premium" },
+          },
+        },
+
+        "homepage-test": {
+          enabled: true,
+          variants: [
+            { key: "control", value: "classic", weight: 50 },
+            { key: "variant", value: "modern", weight: 50 },
+          ],
+        },
+      },
+
+      // Analytics configuration
+      analytics: {
+        trackUsage: true,
+        trackPerformance: true,
+      },
+
+      // Multi-tenancy
+      multiTenant: {
+        enabled: true,
+        useOrganizations: true,
+      },
+
+      // Admin access control
+      adminAccess: {
+        enabled: true,
+        roles: ["admin", "feature-manager"],
+      },
+    }),
+  ],
+});
+```
+
+### Storage Options
+
+```typescript
+// Database storage (recommended for production)
+featureFlags({ storage: "database" });
+
+// Memory storage (development/testing)
+featureFlags({ storage: "memory" });
+
+// Redis storage (high-scale distributed)
+featureFlags({ storage: "redis" });
+```
+
+## Best Practices
+
+### Flag Design
+
+✅ **Do:**
+
+- Use descriptive, URL-safe keys: `new-checkout`, `experiment-homepage`
+- Start with `enabled: false` and safe defaults
+- Use gradual rollouts: `rolloutPercentage: 10` → `25` → `50` → `100`
+- Define meaningful variant keys: `control`, `variant-a`, `new-design`
+- Scope flags by organization in multi-tenant environments
+
+❌ **Don't:**
+
+- Include PII or secrets in flag metadata
+- Change flag keys after deployment (breaks analytics)
+- Use chaotic on/off toggling (prefer rollout percentages)
+- Omit weights in variants (must sum to 100)
+
+### Performance Optimization
+
+```typescript
+// Use caching for better performance
 featureFlagsClient({
-  contextSanitization: {
-    enabled: true, // Default: true
-    strict: true, // Only allow whitelisted fields
-    maxUrlSize: 2048, // Max context size for GET requests
-    maxBodySize: 10240, // Max context size for POST requests
+  cache: {
+    enabled: true,
+    ttl: 60000, // 1 minute
+    storage: "localStorage",
+  },
+
+  // Enable polling for real-time updates
+  polling: {
+    enabled: true,
+    interval: 30000, // 30 seconds
   },
 });
+
+// Batch evaluations when possible
+const results = await client.featureFlags.evaluateMany([
+  "feature-1",
+  "feature-2",
+  "feature-3",
+]);
+
+// Use bootstrap for initial page load
+const allFlags = await client.featureFlags.bootstrap();
 ```
 
-### Production Safeguards
+### Security Considerations
 
-Local overrides are automatically disabled in production:
+- Context sanitization is enabled by default
+- Production overrides are automatically disabled
+- Admin operations require proper role-based access
+- Audit logging tracks all flag changes
+
+### TypeScript Integration
 
 ```typescript
-// Development only - no effect in production
-client.featureFlags.setOverride("debug-feature", true);
+// Define your flag schema for type safety
+interface AppFlags {
+  "ui.dark-mode": boolean;
+  "experiment.homepage": "control" | "variant-a" | "variant-b";
+  "config.max-items": number;
+  "feature.premium-checkout": boolean;
+}
+
+// Type-safe client
+const client = createAuthClient({
+  plugins: [featureFlagsClient<AppFlags>()],
+});
+
+// TypeScript ensures correct types
+const isDark = await client.featureFlags.isEnabled("ui.dark-mode");
+//    ^? boolean
+
+const variant = await client.featureFlags.getValue(
+  "experiment.homepage",
+  "control",
+);
+//    ^? "control" | "variant-a" | "variant-b"
+
+const maxItems = await client.featureFlags.getValue("config.max-items", 10);
+//    ^? number
 ```
 
-## Performance
+## Performance & Security
+
+### Performance Metrics
 
 - **Evaluation Latency**: <10ms P50, <100ms P99
 - **Throughput**: 100,000+ evaluations/second
 - **Cache Hit Rate**: >95% with proper configuration
 - **Bundle Size**: ~5KB minified + gzipped (core + React)
 
+### Security Features
+
+- **Context Sanitization**: Automatic PII filtering and validation
+- **Production Safeguards**: Development overrides disabled in production
+- **Role-Based Access**: Admin operations require proper authentication
+- **Audit Trail**: Complete change history with configurable retention
+- **Multi-Tenant Isolation**: Organization-level flag scoping
+
 ## Documentation
 
-📚 **[Full Documentation](https://kriasoft.com/better-auth/feature-flags/overview.html)**
+📚 **[Full Documentation](https://kriasoft.com/better-auth/feature-flags/overview)**
 
 - [Quickstart Guide](https://kriasoft.com/better-auth/feature-flags/quickstart.html) - Get up and running in 5 minutes
 - [Configuration](https://kriasoft.com/better-auth/feature-flags/configuration.html) - Detailed configuration options
@@ -278,6 +753,51 @@ client.featureFlags.setOverride("debug-feature", true);
 - [Client SDK](https://kriasoft.com/better-auth/feature-flags/client-sdk.html) - Frontend integration guide
 - [Device Detection](https://kriasoft.com/better-auth/feature-flags/device-detection.html) - Target by device, browser, OS
 - [Troubleshooting](https://kriasoft.com/better-auth/feature-flags/troubleshooting.html) - Common issues and solutions
+
+## Architecture
+
+### Modular Endpoint Design
+
+The feature flags plugin uses a modular architecture for better maintainability and performance:
+
+#### Public Endpoints (by functional concern)
+
+```
+src/endpoints/public/
+├── evaluate.ts          # Single flag evaluation
+├── evaluate-batch.ts    # Batch flag evaluation
+├── bootstrap.ts         # Bulk flag initialization
+├── events.ts           # Analytics event tracking
+├── config.ts           # Public configuration
+└── health.ts           # Service health checks
+```
+
+#### Admin Endpoints (by resource type)
+
+```
+src/endpoints/admin/
+├── flags.ts            # Flag CRUD operations
+├── rules.ts            # Rule management
+├── overrides.ts        # Override management
+├── analytics.ts        # Stats and metrics
+├── audit.ts            # Audit log access
+└── environments.ts     # Environment management + data export
+```
+
+### Benefits
+
+- **Single Responsibility**: Each module focuses on one concern (200-300 lines)
+- **Better Tree-Shaking**: Unused admin features don't bloat client bundles
+- **Easier Testing**: Focused test suites per module
+- **Independent Development**: Teams can work on different modules without conflicts
+- **Clear API Surface**: RESTful organization makes the API predictable
+
+### Design Decisions
+
+- **Public endpoints** organized by **functional concern** for performance optimization
+- **Admin endpoints** organized by **REST resource** for consistent management UX
+- **Shared utilities** in `endpoints/shared.ts` for consistent security and validation
+- **Composition pattern** in `endpoints/index.ts` to maintain backward compatibility
 
 ## Comparison
 
@@ -297,12 +817,12 @@ client.featureFlags.setOverride("debug-feature", true);
 ## Support
 
 - **GitHub Issues:** [Report bugs](https://github.com/kriasoft/better-auth/issues)
-- **Documentation:** [Full docs](https://kriasoft.com/better-auth/feature-flags/overview.html)
+- **Documentation:** [Full docs](https://docs.better-auth.com/docs/feature-flags/overview)
 - **Discord:** [Community support](https://discord.gg/SBwX6VeqCY)
 
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guide](../../CONTRIBUTING.md) for details.
+We welcome contributions! Please see our [Contributing Guide](../../.github/CONTRIBUTING.md) for details.
 
 ## Sponsors
 

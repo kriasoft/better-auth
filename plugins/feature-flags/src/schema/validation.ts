@@ -11,8 +11,8 @@ import * as z from "zod";
  * @invariant Variant weights: Σ(weights) = 100 ± 0.01
  * @invariant Priority: integer, -1000 ≤ n ≤ 1000
  *
- * @decision 0.01 tolerance for variant weights handles IEEE 754 precision
- * @decision Empty variants array allowed (feature without A/B test)
+ * @decision 0.01 tolerance handles IEEE 754 precision
+ * @decision Empty variants allowed (feature without A/B test)
  */
 
 // Enum schemas
@@ -63,12 +63,7 @@ export const conditionSchema = z.object({
   value: z.any(),
 });
 
-/**
- * Recursive targeting conditions.
- * @example { all: [{ attribute: "role", operator: "equals", value: "admin" }] }
- * @invariant Evaluation order: NOT → ALL → ANY
- * @invariant {} matches all users
- */
+// Nested targeting conditions: NOT → ALL → ANY precedence; {} matches all
 export const ruleConditionsSchema: z.ZodType<{
   all?: z.infer<typeof conditionSchema>[];
   any?: z.infer<typeof conditionSchema>[];
@@ -89,16 +84,16 @@ export const flagRuleInputSchema = z.object({
   enabled: z.boolean().default(true),
 });
 
-/** @invariant weight: 0 ≤ n ≤ 100; Σ(weights) must = 100 */
+// Variant weight distribution
 export const variantSchema = z.object({
   key: z.string(),
   value: z.any(),
-  weight: z.number().min(0).max(100), // Distribution weight, must sum to 100
+  weight: z.number().min(0).max(100),
   metadata: z.record(z.string(), z.any()).optional(),
 });
 
 export const featureFlagInputSchema = z.object({
-  key: z.string().regex(/^[a-z0-9-_]+$/i, {
+  key: z.string().refine((val) => /^[a-z0-9-_]+$/i.test(val), {
     message:
       "Key must contain only alphanumeric characters, hyphens, and underscores",
   }),
@@ -115,7 +110,7 @@ export const featureFlagInputSchema = z.object({
       (variants) => {
         if (!variants || variants.length === 0) return true;
         const totalWeight = variants.reduce((sum, v) => sum + v.weight, 0);
-        return Math.abs(totalWeight - 100) < 0.01; // Allow for floating point errors
+        return Math.abs(totalWeight - 100) < 0.01;
       },
       { message: "Variant weights must sum to 100" },
     ),
@@ -124,23 +119,50 @@ export const featureFlagInputSchema = z.object({
 
 export const evaluationContextSchema = z.object({
   userId: z.string().optional(),
-  email: z.string().email("Invalid email address").optional(),
+  email: z.string().optional(),
   role: z.string().optional(),
   organizationId: z.string().optional(),
   attributes: z.record(z.string(), z.any()).optional(),
 });
 
+// Common parameter schemas for API
+export const selectSchema = z.union([
+  z.enum(["value", "full"]),
+  z
+    .array(z.enum(["value", "variant", "reason", "metadata"]))
+    .min(1)
+    .max(4),
+]);
+
+export const environmentParamSchema = z
+  .string()
+  .min(1)
+  .max(64)
+  .refine((val) => /^[a-zA-Z0-9._-]+$/.test(val), {
+    message:
+      "Environment must contain only alphanumeric characters, dots, underscores, and hyphens",
+  });
+
+// Legacy schemas for backward compatibility (deprecated)
+export const shapeModeSchema = z.enum(["value", "full"]);
+export const fieldsSchema = z
+  .array(z.enum(["value", "variant", "reason", "metadata"]))
+  .min(1)
+  .max(4);
+
 export const flagOverrideInputSchema = z.object({
   flagId: z.string(),
   userId: z.string(),
   value: z.any(),
+  enabled: z.boolean().default(true),
+  variant: z.string().optional(),
   reason: z.string().optional(),
   expiresAt: z.date().optional(),
 });
 
-/** @intent Prevents uk_flag_user constraint violations on upsert */
+// Upsert schema with optional ID
 export const flagOverrideUpsertSchema = flagOverrideInputSchema.extend({
-  id: z.string().optional(), // Include if updating existing
+  id: z.string().optional(),
 });
 
 export const flagEvaluationInputSchema = z.object({
@@ -160,4 +182,40 @@ export const flagAuditInputSchema = z.object({
   previousValue: z.any().optional(),
   newValue: z.any().optional(),
   metadata: z.record(z.string(), z.any()).optional(),
+});
+
+// Event tracking schemas
+export const flagEventInputSchema = z.object({
+  flagKey: z.string().describe("The feature flag key that was used"),
+  event: z.string().describe("The event name to track"),
+  properties: z.union([z.number(), z.record(z.string(), z.any())]).optional(),
+  timestamp: z.string().optional().describe("RFC3339 timestamp string"),
+  sampleRate: z
+    .number()
+    .min(0)
+    .max(1)
+    .optional()
+    .describe("Client-side sampling rate (0-1). Server may clamp/override."),
+});
+
+export const flagEventBatchInputSchema = z.object({
+  events: z
+    .array(flagEventInputSchema)
+    .min(1)
+    .max(100)
+    .describe("Array of events to track (max 100 per batch)"),
+  sampleRate: z
+    .number()
+    .min(0)
+    .max(1)
+    .optional()
+    .describe(
+      "Default sampling rate applied to entire batch if individual events don't specify sampleRate",
+    ),
+  idempotencyKey: z
+    .string()
+    .optional()
+    .describe(
+      "Optional idempotency key for preventing duplicate batch processing",
+    ),
 });

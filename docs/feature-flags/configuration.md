@@ -210,6 +210,29 @@ featureFlags({
 })
 ```
 
+## Client Bundles
+
+Use separate client plugins for public and admin surfaces to keep public bundles small and avoid shipping admin-only code:
+
+```ts
+import { createAuthClient } from "better-auth/client";
+import { featureFlagsClient } from "better-auth-feature-flags/client";
+import { featureFlagsAdminClient } from "better-auth-feature-flags/admin";
+
+// Public runtime
+createAuthClient({ plugins: [featureFlagsClient()] });
+
+// Admin runtime
+createAuthClient({
+  plugins: [featureFlagsClient(), featureFlagsAdminClient()],
+});
+```
+
+Notes
+
+- Server authorization is always enforced for admin endpoints; splitting the client is for bundle hygiene and DX.
+- Do not mark admin endpoints `SERVER_ONLY: true` if you intend to expose them via the admin client; enforce access via roles/middleware.
+
 ## Storage Options
 
 ### Database Storage
@@ -324,6 +347,13 @@ featureFlags({
     },
   },
 });
+
+> Note
+> - `key` must be unique and URL‑safe (alphanumeric, `-`, `_`). Renaming keys is discouraged.
+> - `type` controls the shape of `defaultValue`, rule values, and override values.
+> - `rolloutPercentage` is an integer 0–100 and uses sticky assignment based on `userId` and `key`.
+> - `variants` must have weights that sum to 100; `EvaluationResult.variant` returns the variant key.
+> - `enabled: false` short‑circuits evaluation and returns `defaultValue` with reason `"disabled"`.
 ```
 
 ## Analytics Configuration
@@ -437,13 +467,7 @@ featureFlags({
 
 ### Cache Invalidation
 
-```typescript
-// Manual cache invalidation
-await auth.api.featureFlags.invalidateCache("flag-key");
-
-// Clear all cache
-await auth.api.featureFlags.clearCache();
-```
+Cache invalidation happens automatically on admin flag mutations (create/update/delete). No manual endpoints are required.
 
 ## Privacy & Context Collection
 
@@ -629,7 +653,7 @@ featureFlags({
   analytics: {
     enabled: process.env.FEATURE_FLAGS_ANALYTICS_ENABLED === "true",
     sampleRate: parseFloat(
-      process.env.FEATURE_FLAGS_ANALYTICS_SAMPLE_RATE || "1"
+      process.env.FEATURE_FLAGS_ANALYTICS_SAMPLE_RATE || "1",
     ),
   },
 

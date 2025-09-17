@@ -2,27 +2,22 @@
 // SPDX-License-Identifier: MIT
 
 import type { createAuthClient } from "better-auth/client";
-
-type BetterAuthClient = ReturnType<typeof createAuthClient>;
 import React, {
   createContext,
+  useCallback,
   useContext,
   useEffect,
-  useState,
   useMemo,
-  useCallback,
-  type ReactNode,
+  useState,
   type ComponentType,
+  type ReactNode,
 } from "react";
-import type {
-  FeatureFlagsClient,
-  FeatureFlagResult,
-  FeatureFlagVariant,
-  EvaluationContext,
-} from "./client";
+import type { EvaluationContext, FeatureFlagsClient } from "./client";
+
+type BetterAuthClient = ReturnType<typeof createAuthClient>;
 
 // ============================================================================
-// Types
+// Types & Interfaces
 // ============================================================================
 
 interface FeatureFlagsContextValue {
@@ -36,83 +31,50 @@ interface FeatureFlagsContextValue {
 interface FeatureFlagsProviderProps {
   client: BetterAuthClient & FeatureFlagsClient;
   children: ReactNode;
-  /**
-   * Pre-populated flags for SSR/initial render.
-   * Prevents flash of default content.
-   */
+  /** Pre-populated flags for SSR, prevents content flash */
   initialFlags?: Record<string, any>;
-  /**
-   * Fetch fresh flags on mount. Set false for SSR with initialFlags.
-   */
+  /** Fetch flags on mount (disable for SSR) */
   fetchOnMount?: boolean;
-  /**
-   * Evaluation context merged with session data.
-   * Changes trigger cache invalidation.
-   */
+  /** Evaluation context, changes trigger cache invalidation */
   context?: Partial<EvaluationContext>;
 }
 
 interface FeatureProps {
-  /**
-   * Flag key to evaluate.
-   */
+  /** Flag key to evaluate */
   flag: string;
-  /**
-   * Renders when flag is false/missing. Defaults to null.
-   */
+  /** Fallback content when flag disabled/missing */
   fallback?: ReactNode;
-  /**
-   * Secondary check after flag passes (e.g., subscription tier).
-   * Return false to show fallback despite flag=true.
-   */
+  /** Secondary validation (e.g., subscription tier) */
   validateAccess?: (flags: Record<string, any>) => boolean;
-  /**
-   * Renders when flag is true AND validateAccess passes.
-   */
+  /** Content when flag enabled and validation passes */
   children: ReactNode;
 }
 
 interface VariantProps {
-  /**
-   * The feature flag key to check for variants
-   */
+  /** Flag key for variant evaluation */
   flag: string;
-  /**
-   * Children components (Variant.Case and Variant.Default)
-   */
+  /** Variant.Case and Variant.Default components */
   children: ReactNode;
 }
 
 interface VariantCaseProps {
-  /**
-   * The variant key to match
-   */
+  /** Variant key to match */
   variant: string;
-  /**
-   * Content to render for this variant
-   */
+  /** Content for this variant */
   children: ReactNode;
 }
 
 interface VariantDefaultProps {
-  /**
-   * Content to render when no variant matches
-   */
+  /** Default content when no variant matches */
   children: ReactNode;
 }
 
 interface FeatureFlagErrorBoundaryProps {
-  /**
-   * Fallback component to render on error
-   */
+  /** Fallback component or element for errors */
   fallback: ReactNode | ComponentType<{ error: Error }>;
-  /**
-   * Error callback
-   */
+  /** Error callback for monitoring/logging */
   onError?: (error: Error) => void;
-  /**
-   * Children components
-   */
+  /** Protected children components */
   children: ReactNode;
 }
 
@@ -124,9 +86,7 @@ const FeatureFlagsContext = createContext<FeatureFlagsContextValue | null>(
   null,
 );
 
-/**
- * Enforces provider boundary. Throws if hooks used outside provider.
- */
+/** Enforces provider boundary, throws if used outside provider */
 const useFeatureFlagsContext = () => {
   const context = useContext(FeatureFlagsContext);
   if (!context) {
@@ -154,40 +114,45 @@ export function FeatureFlagsProvider({
   const [needsRefresh, setNeedsRefresh] = useState(false);
   const [lastSessionId, setLastSessionId] = useState<string | null>(null);
 
-  // Context changes invalidate cache to ensure correct evaluation.
+  // Context changes trigger cache invalidation for correct evaluation
   useEffect(() => {
     if (additionalContext) {
       client.featureFlags.setContext(additionalContext);
     }
   }, [client, additionalContext]);
 
-  // Subscribe to flag changes and cache invalidation.
+  // Subscribe to flag updates and cache invalidation events
   useEffect(() => {
-    const unsubscribe = client.featureFlags.subscribe((newFlags) => {
-      // Empty object = cache cleared (session change). Non-empty = flag update.
-      if (Object.keys(newFlags).length === 0 && Object.keys(flags).length > 0) {
-        setNeedsRefresh(true); // Defer fetch to avoid race conditions.
-      } else {
-        setFlags(newFlags);
-      }
-    });
+    const unsubscribe = client.featureFlags.subscribe(
+      (newFlags: Record<string, any>) => {
+        // Empty object = cache cleared (session change), non-empty = flag update
+        if (
+          Object.keys(newFlags).length === 0 &&
+          Object.keys(flags).length > 0
+        ) {
+          setNeedsRefresh(true); // Defer fetch to avoid race conditions
+        } else {
+          setFlags(newFlags);
+        }
+      },
+    );
 
     return unsubscribe;
   }, [client, flags]);
 
-  // Deferred refresh after cache invalidation prevents double-fetching.
+  // Deferred refresh prevents double-fetching on cache invalidation
   useEffect(() => {
     if (needsRefresh) {
       setNeedsRefresh(false);
       setLoading(true);
       client.featureFlags
-        .getAllFlags()
-        .then((fetchedFlags) => {
+        .bootstrap()
+        .then((fetchedFlags: Record<string, any>) => {
           setFlags(fetchedFlags);
           setError(null);
         })
-        .catch((err) => {
-          setError(err);
+        .catch((err: unknown) => {
+          setError(err as Error);
         })
         .finally(() => {
           setLoading(false);
@@ -200,13 +165,13 @@ export function FeatureFlagsProvider({
     if (fetchOnMount) {
       setLoading(true);
       client.featureFlags
-        .getAllFlags()
-        .then((fetchedFlags) => {
+        .bootstrap()
+        .then((fetchedFlags: Record<string, any>) => {
           setFlags(fetchedFlags);
           setError(null);
         })
-        .catch((err) => {
-          setError(err);
+        .catch((err: unknown) => {
+          setError(err as Error);
         })
         .finally(() => {
           setLoading(false);
@@ -214,15 +179,15 @@ export function FeatureFlagsProvider({
     }
   }, [client, fetchOnMount]);
 
-  // Session changes trigger flag refresh (user-specific flags).
+  // Session changes trigger flag refresh for user-specific flags
   useEffect(() => {
-    // Better Auth v1.0+ exposes reactive session via $sessionSignal.
+    // Better Auth v1.0+ reactive session via $sessionSignal
     if ("$sessionSignal" in client && (client as any).$sessionSignal) {
       const unsubscribe = (client as any).$sessionSignal.subscribe(() => {
         const currentSession = (client as any).session;
         const currentSessionId = currentSession?.session?.id || null;
 
-        // Session change = different user context = different flags.
+        // Session change = different user context = refresh flags
         if (currentSessionId !== lastSessionId) {
           setLastSessionId(currentSessionId);
           setLoading(true);
@@ -279,9 +244,9 @@ export function FeatureFlagsProvider({
 // ============================================================================
 
 /**
- * Returns boolean flag value. Fetches from server if not cached.
- * @param flag - Flag key to evaluate
- * @param defaultValue - Fallback if flag missing/errored
+ * Hook for boolean flag evaluation.
+ * @param flag Flag key to evaluate
+ * @param defaultValue Fallback for missing/errored flags
  */
 export function useFeatureFlag(flag: string, defaultValue = false): boolean {
   const { client, flags } = useFeatureFlagsContext();
@@ -291,9 +256,9 @@ export function useFeatureFlag(flag: string, defaultValue = false): boolean {
 
   useEffect(() => {
     if (flags[flag] !== undefined) {
-      setValue(Boolean(flags[flag])); // Sync with provider's cached state.
+      setValue(Boolean(flags[flag])); // Use cached value from provider
     } else {
-      // Cache miss: fetch individually (avoids blocking on getAllFlags).
+      // Cache miss: individual fetch to avoid blocking
       client.featureFlags
         .isEnabled(flag, defaultValue)
         .then(setValue)
@@ -305,9 +270,9 @@ export function useFeatureFlag(flag: string, defaultValue = false): boolean {
 }
 
 /**
- * Returns typed flag value (string, number, object, etc).
- * @param flag - Flag key to evaluate
- * @param defaultValue - Type-safe fallback
+ * Hook for typed flag values (string, number, object).
+ * @param flag Flag key to evaluate
+ * @param defaultValue Type-safe fallback value
  */
 export function useFeatureFlagValue<T = any>(
   flag: string,
@@ -332,20 +297,16 @@ export function useFeatureFlagValue<T = any>(
   return value;
 }
 
-/**
- * Get all feature flags
- */
+/** Hook returning all cached feature flags */
 export function useFeatureFlags(): Record<string, any> {
   const { flags } = useFeatureFlagsContext();
   return flags;
 }
 
-/**
- * Get the variant of a feature flag
- */
-export function useVariant(flag: string): FeatureFlagVariant | null {
+/** Hook for A/B test variant evaluation */
+export function useVariant(flag: string): string | null {
   const { client, flags } = useFeatureFlagsContext();
-  const [variant, setVariant] = useState<FeatureFlagVariant | null>(null);
+  const [variant, setVariant] = useState<string | null>(null);
 
   useEffect(() => {
     client.featureFlags
@@ -357,9 +318,7 @@ export function useVariant(flag: string): FeatureFlagVariant | null {
   return variant;
 }
 
-/**
- * Track an event for a feature flag
- */
+/** Hook for flag event tracking */
 export function useTrackEvent() {
   const { client } = useFeatureFlagsContext();
 
@@ -371,18 +330,13 @@ export function useTrackEvent() {
   );
 }
 
-/**
- * Get feature flags loading and error state
- */
+/** Hook for flag loading state and error handling */
 export function useFeatureFlagsState() {
   const { loading, error, refresh } = useFeatureFlagsContext();
   return { loading, error, refresh };
 }
 
-/**
- * Debug hook: Exposes cache state for monitoring.
- * Not for production UI - use for troubleshooting.
- */
+/** Debug hook for cache monitoring, not for production UI */
 export function useFeatureFlagsCacheInfo() {
   const { client } = useFeatureFlagsContext();
   const [cacheInfo, setCacheInfo] = useState<{
@@ -393,7 +347,7 @@ export function useFeatureFlagsCacheInfo() {
 
   useEffect(() => {
     const updateCacheInfo = () => {
-      client.featureFlags.getAllFlags().then((flags) => {
+      client.featureFlags.bootstrap().then((flags: any) => {
         setCacheInfo({
           cacheEnabled: true,
           flagCount: Object.keys(flags).length,
@@ -410,12 +364,119 @@ export function useFeatureFlagsCacheInfo() {
 }
 
 // ============================================================================
+// Suspense-Compatible Hooks (React 18+)
+// ============================================================================
+
+/** Suspense-compatible flag evaluation - throws promise during loading */
+export function useFeatureFlagSuspense(
+  flag: string,
+  defaultValue = false,
+): boolean {
+  const { client, flags } = useFeatureFlagsContext();
+
+  if (flags[flag] !== undefined) {
+    return Boolean(flags[flag]);
+  }
+
+  // Throw promise for Suspense to catch during loading
+  throw client.featureFlags.isEnabled(flag, defaultValue).then(() => {
+    // This will trigger a re-render when resolved
+    return Boolean(flags[flag] ?? defaultValue);
+  });
+}
+
+/** Suspense-compatible typed flag values */
+export function useFeatureFlagValueSuspense<T = any>(
+  flag: string,
+  defaultValue?: T,
+): T {
+  const { client, flags } = useFeatureFlagsContext();
+
+  if (flags[flag] !== undefined) {
+    return flags[flag];
+  }
+
+  // Throw promise for Suspense to catch during loading
+  throw client.featureFlags.getValue(flag, defaultValue).then(() => {
+    return flags[flag] ?? defaultValue;
+  });
+}
+
+/** Suspense-compatible all flags hook */
+export function useFeatureFlagsSuspense(): Record<string, any> {
+  const { client, flags, loading } = useFeatureFlagsContext();
+
+  if (!loading && Object.keys(flags).length > 0) {
+    return flags;
+  }
+
+  // Throw promise for Suspense to catch during initial load
+  throw client.featureFlags
+    .bootstrap()
+    .then((loadedFlags: Record<string, any>) => {
+      return loadedFlags;
+    });
+}
+
+/**
+ * Enhanced hook for flag event tracking with idempotency support
+ * @example
+ * const trackEvent = useTrackEventWithIdempotency();
+ * await trackEvent('feature', 'purchase', { amount: 99.99 }, { idempotencyKey: 'order-123' });
+ */
+export function useTrackEventWithIdempotency() {
+  const { client } = useFeatureFlagsContext();
+
+  return useCallback(
+    (
+      flag: string,
+      event: string,
+      value?: number | Record<string, any>,
+      options?: { idempotencyKey?: string },
+    ) => {
+      return client.featureFlags.track(flag, event, value, options);
+    },
+    [client],
+  );
+}
+
+/**
+ * Hook for batch event tracking - more efficient for multiple events
+ * @example
+ * const trackBatch = useTrackEventBatch();
+ * await trackBatch([
+ *   { flag: 'feature1', event: 'view', idempotencyKey: 'session-123-1' },
+ *   { flag: 'feature2', event: 'click', data: { button: 'cta' } }
+ * ]);
+ */
+export function useTrackEventBatch() {
+  const { client } = useFeatureFlagsContext();
+
+  return useCallback(
+    (
+      events: Array<{
+        flag: string;
+        event: string;
+        data?: number | Record<string, any>;
+        timestamp?: Date;
+        idempotencyKey?: string;
+      }>,
+      batchId?: string,
+    ) => {
+      return client.featureFlags.trackBatch(events, {
+        idempotencyKey: batchId,
+      });
+    },
+    [client],
+  );
+}
+
+// ============================================================================
 // Components
 // ============================================================================
 
 /**
- * Declarative flag gating. Prevents render of protected content.
- *
+ * Declarative feature gating component.
  * @example
  * <Feature flag="new-dashboard" fallback={<OldDashboard />}>
  *   <NewDashboard />
@@ -432,7 +493,7 @@ export function Feature({
 
   const hasAccess = useMemo(() => {
     if (!isEnabled) return false;
-    if (validateAccess) return validateAccess(flags); // Secondary gate.
+    if (validateAccess) return validateAccess(flags); // Secondary validation
     return true;
   }, [isEnabled, validateAccess, flags]);
 
@@ -440,8 +501,7 @@ export function Feature({
 }
 
 /**
- * A/B testing component. Renders child matching current variant.
- *
+ * A/B test variant component.
  * @example
  * <Variant flag="checkout-flow">
  *   <Variant.Case variant="v1"><CheckoutV1 /></Variant.Case>
@@ -464,7 +524,7 @@ export const Variant = React.memo(function Variant({
 
       if (child.type === VariantCase) {
         const caseProps = child.props as any;
-        if (variant && caseProps.variant === variant.key) {
+        if (variant && caseProps.variant === variant) {
           matchedChild = caseProps.children;
         }
       } else if (child.type === VariantDefault) {
@@ -478,23 +538,92 @@ export const Variant = React.memo(function Variant({
   return <>{selectedChild}</>;
 });
 
-/**
- * Variant case component (used with Variant)
- */
+/** Variant case component for specific variants */
 function VariantCase({ children }: VariantCaseProps) {
   return <>{children}</>;
 }
 
-/**
- * Default variant component (used with Variant)
- */
+/** Default variant component when no match */
 function VariantDefault({ children }: VariantDefaultProps) {
   return <>{children}</>;
 }
 
-// Attach sub-components to Variant
+// Attach sub-components for dot notation access
 (Variant as any).Case = VariantCase;
 (Variant as any).Default = VariantDefault;
+
+/**
+ * Suspense-compatible feature gating component.
+ * Requires <Suspense> boundary to handle loading states.
+ * @example
+ * <Suspense fallback={<Loading />}>
+ *   <FeatureSuspense flag="new-dashboard" fallback={<OldDashboard />}>
+ *     <NewDashboard />
+ *   </FeatureSuspense>
+ * </Suspense>
+ */
+export function FeatureSuspense({
+  flag,
+  fallback = null,
+  validateAccess,
+  children,
+}: FeatureProps) {
+  const isEnabled = useFeatureFlagSuspense(flag);
+  const flags = useFeatureFlagsSuspense();
+
+  const hasAccess = useMemo(() => {
+    if (!isEnabled) return false;
+    if (validateAccess) return validateAccess(flags);
+    return true;
+  }, [isEnabled, validateAccess, flags]);
+
+  return <>{hasAccess ? children : fallback}</>;
+}
+
+/**
+ * Suspense-compatible variant component.
+ * Requires <Suspense> boundary to handle loading states.
+ * @example
+ * <Suspense fallback={<Loading />}>
+ *   <VariantSuspense flag="checkout-flow">
+ *     <Variant.Case variant="v1"><CheckoutV1 /></Variant.Case>
+ *     <Variant.Case variant="v2"><CheckoutV2 /></Variant.Case>
+ *     <Variant.Default><CheckoutOriginal /></Variant.Default>
+ *   </VariantSuspense>
+ * </Suspense>
+ */
+export const VariantSuspense = React.memo(function VariantSuspense({
+  flag,
+  children,
+}: VariantProps) {
+  const variant = useVariant(flag); // Use regular hook since getVariant is fast
+
+  const selectedChild = useMemo(() => {
+    let defaultChild: ReactNode = null;
+    let matchedChild: ReactNode = null;
+
+    React.Children.forEach(children, (child) => {
+      if (!React.isValidElement(child)) return;
+
+      if (child.type === VariantCase) {
+        const caseProps = child.props as any;
+        if (variant && caseProps.variant === variant) {
+          matchedChild = caseProps.children;
+        }
+      } else if (child.type === VariantDefault) {
+        defaultChild = (child.props as any).children;
+      }
+    });
+
+    return matchedChild || defaultChild;
+  }, [children, variant]);
+
+  return <>{selectedChild}</>;
+});
+
+// Attach sub-components for dot notation access
+(VariantSuspense as any).Case = VariantCase;
+(VariantSuspense as any).Default = VariantDefault;
 
 // ============================================================================
 // Error Boundary
@@ -505,10 +634,7 @@ interface ErrorBoundaryState {
   error: Error | null;
 }
 
-/**
- * Catches errors in flag evaluation/rendering.
- * Prevents entire app crash from flag service issues.
- */
+/** Error boundary for flag evaluation, prevents app crashes */
 export class FeatureFlagErrorBoundary extends React.Component<
   FeatureFlagErrorBoundaryProps,
   ErrorBoundaryState
@@ -523,7 +649,7 @@ export class FeatureFlagErrorBoundary extends React.Component<
   }
 
   override componentDidCatch(error: Error) {
-    this.props.onError?.(error); // Log to monitoring service.
+    this.props.onError?.(error); // Report to monitoring service
   }
 
   override render() {
@@ -544,10 +670,7 @@ export class FeatureFlagErrorBoundary extends React.Component<
 // Utilities
 // ============================================================================
 
-/**
- * HOC for class components or prop drilling.
- * Prefer hooks (useFeatureFlags) for new code.
- */
+/** HOC for class components, prefer hooks for new code */
 export function withFeatureFlags<P extends object>(
   Component: ComponentType<P & { featureFlags: Record<string, any> }>,
 ): ComponentType<P> {
@@ -558,8 +681,7 @@ export function withFeatureFlags<P extends object>(
 }
 
 /**
- * HOC for feature gating at component definition.
- *
+ * HOC for component-level feature gating.
  * @example
  * export default withFeatureFlag('beta-ui', LegacyComponent)(BetaComponent);
  */
@@ -586,10 +708,10 @@ export function withFeatureFlag<P extends object>(
 // ============================================================================
 
 export type {
+  FeatureFlagErrorBoundaryProps,
   FeatureFlagsProviderProps,
   FeatureProps,
-  VariantProps,
   VariantCaseProps,
   VariantDefaultProps,
-  FeatureFlagErrorBoundaryProps,
+  VariantProps,
 };

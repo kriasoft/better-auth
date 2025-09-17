@@ -88,7 +88,7 @@ export const auth = betterAuth({
         "new-dashboard": {
           enabled: true,
           default: false,
-          rollout: 20, // 20% rollout
+          rolloutPercentage: 20, // 20% rollout
           targeting: {
             roles: ["beta-tester"],
           },
@@ -143,10 +143,15 @@ export async function handleRequest(request: Request) {
   // 4. Enforce size and format constraints
   // 5. Log any security violations
 
-  // Use the auth API with secure context
-  const response = await auth.api.evaluateFlag({
+  // Use the auth API with secure context (flat server API)
+  const response = await auth.api.getFlag({
     body: {
       key: "new-dashboard",
+      context: {
+        // Additional context beyond what's automatically collected
+        userAgent: request.headers.get("user-agent"),
+        // Headers are automatically validated and sanitized by middleware
+      },
     },
     headers: request.headers,
   });
@@ -191,6 +196,85 @@ export const strictApiHeaders: HeaderConfig[] = [
 ];
 
 /**
+ * Example: Complete server-side API usage demonstration
+ * Note: Server-side auth.api uses flat methods (not nested)
+ */
+export async function demonstrateServerApiUsage() {
+  // Get a single flag
+  const singleFlag = await auth.api.getFlag({
+    body: {
+      key: "new-dashboard",
+      context: { userId: "123", plan: "pro" },
+      default: false,
+    },
+  });
+
+  // Get multiple flags in batch
+  const batchFlags = await auth.api.getFlags({
+    body: {
+      keys: ["new-dashboard", "ai-features", "dark-mode"],
+      context: { userId: "123", plan: "pro" },
+      defaults: {
+        "new-dashboard": false,
+        "ai-features": false,
+        "dark-mode": true,
+      },
+    },
+  });
+
+  // Get all available flags for a user
+  const allFlags = await auth.api.getAllFlags({
+    body: {
+      context: { userId: "123", plan: "pro" },
+    },
+  });
+
+  // Track flag usage event
+  await auth.api.trackEvent({
+    body: {
+      flagKey: "new-dashboard",
+      event: "feature_used",
+      data: { action: "clicked_button", timestamp: Date.now() },
+    },
+  });
+
+  // Admin operations (require admin role)
+  const adminUser = { roles: ["admin"] };
+
+  // List all flags
+  const flagsList = await auth.api.listFlags({
+    body: {
+      organizationId: "org-123",
+      includeStats: true,
+      limit: 50,
+      offset: 0,
+    },
+  });
+
+  // Create a new flag
+  const newFlag = await auth.api.createFlag({
+    body: {
+      key: "beta-feature",
+      name: "Beta Feature",
+      description: "New experimental feature",
+      enabled: true,
+      type: "boolean",
+      defaultValue: false,
+      rolloutPercentage: 10,
+    },
+  });
+
+  return {
+    singleFlag,
+    batchFlags,
+    allFlags,
+    flagsList,
+    newFlag,
+    adminUser, // Just to silence unused variable warning
+  };
+}
+
+/**
  * Security benefits of this approach:
  *
  * 1. **Whitelist-based**: Only explicitly allowed headers are processed
@@ -203,4 +287,6 @@ export const strictApiHeaders: HeaderConfig[] = [
  * 8. **Custom sanitization**: Apply domain-specific cleaning logic
  * 9. **Strict mode**: Optionally reject requests with unknown headers
  * 10. **Performance**: Validation is done once and cached
+ * 11. **Type safety**: Full TypeScript support with auto-completion
+ * 12. **Consistent API**: Server API is flat (auth.api.*) while client API is namespaced (authClient.featureFlags.*)
  */

@@ -26,13 +26,20 @@ Roll out new features gradually to minimize risk:
 
 ```typescript
 // Start with 10% of users
-await updateFlag("new-feature", { rolloutPercentage: 10 });
+await authClient.featureFlags.admin.flags.update("<flag-id>", {
+  rolloutPercentage: 10,
+});
 
 // Monitor metrics, then increase
-await updateFlag("new-feature", { rolloutPercentage: 50 });
+await authClient.featureFlags.admin.flags.update("<flag-id>", {
+  rolloutPercentage: 50,
+});
 
 // Full rollout when confident
-await updateFlag("new-feature", { enabled: true, rolloutPercentage: 100 });
+await authClient.featureFlags.admin.flags.update("<flag-id>", {
+  enabled: true,
+  rolloutPercentage: 100,
+});
 ```
 
 ### Instant Kill Switch
@@ -41,7 +48,9 @@ Disable problematic features immediately:
 
 ```typescript
 // Emergency disable
-await updateFlag("problematic-feature", { enabled: false });
+await authClient.featureFlags.admin.flags.update("<flag-id>", {
+  enabled: false,
+});
 ```
 
 ### Targeted Experiences
@@ -50,18 +59,14 @@ Deliver personalized features based on user attributes:
 
 ```typescript
 // Premium features for paid users
-{
-  rules: [
-    {
-      conditions: {
-        attribute: "subscription",
-        operator: "equals",
-        value: "premium",
-      },
-      value: true,
-    },
-  ];
-}
+await authClient.featureFlags.admin.rules.create({
+  flagId: "<flag-id>",
+  priority: 0,
+  conditions: {
+    all: [{ attribute: "subscription", operator: "equals", value: "premium" }],
+  },
+  value: true,
+});
 ```
 
 ## How It Works
@@ -251,13 +256,17 @@ await createFlag({
 
 ```typescript
 // Test different variations
-await createFlag({
+await authClient.featureFlags.admin.flags.create({
   key: "checkout-flow",
-  variants: {
-    control: { buttonText: "Buy Now" },
-    variant_a: { buttonText: "Purchase" },
-    variant_b: { buttonText: "Get Started" },
-  },
+  name: "Checkout Flow",
+  type: "json",
+  enabled: true,
+  defaultValue: { buttonText: "Buy Now" },
+  variants: [
+    { key: "control", value: { buttonText: "Buy Now" }, weight: 34 },
+    { key: "variant_a", value: { buttonText: "Purchase" }, weight: 33 },
+    { key: "variant_b", value: { buttonText: "Get Started" }, weight: 33 },
+  ],
 });
 ```
 
@@ -265,30 +274,30 @@ await createFlag({
 
 ```typescript
 // Limited access for beta testers
-await createFlag({
+const flag = await authClient.featureFlags.admin.flags.create({
   key: "beta-feature",
-  rules: [
-    {
-      conditions: {
-        attribute: "role",
-        operator: "equals",
-        value: "beta-tester",
-      },
-      value: true,
-    },
-  ],
+  name: "Beta Feature",
+  type: "boolean",
+  enabled: false,
   defaultValue: false,
+});
+
+await authClient.featureFlags.admin.rules.create({
+  flagId: flag.id,
+  priority: 0,
+  conditions: {
+    all: [{ attribute: "role", operator: "equals", value: "beta-tester" }],
+  },
+  value: true,
 });
 ```
 
 ### Maintenance Mode
 
 ```typescript
-// Instant feature disable for emergencies
-await createFlag({
-  key: "payment-processing",
-  enabled: false, // Kill switch
-  defaultValue: true,
+// Instant feature disable for emergencies (kill switch)
+await authClient.featureFlags.admin.flags.update("<flag-id>", {
+  enabled: false,
 });
 ```
 
@@ -304,8 +313,8 @@ featureFlags({
   },
 });
 
-// Flags are isolated per organization
-const orgFlag = await getFlag("feature", "org-123");
+// Flags are isolated per organization when configured; admin APIs support organization scoping
+await authClient.featureFlags.admin.flags.list({ organizationId: "org-123" });
 ```
 
 ## Analytics Integration
@@ -321,7 +330,8 @@ featureFlags({
 });
 
 // Query usage data
-const stats = await getFlagStats("new-feature");
+const stats =
+  await authClient.featureFlags.admin.analytics.stats.get("<flag-id>");
 // { evaluations: 10000, enabled: 6000, conversion: 0.15 }
 ```
 

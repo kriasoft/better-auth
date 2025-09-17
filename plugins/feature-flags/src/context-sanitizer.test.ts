@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2025-present Kriasoft
 // SPDX-License-Identifier: MIT
 
-import { describe, it, expect } from "bun:test";
+import { describe, expect, it } from "bun:test";
 import { ContextSanitizer } from "./context-sanitizer";
 
 describe("ContextSanitizer", () => {
@@ -110,7 +110,7 @@ describe("ContextSanitizer", () => {
       };
 
       const sanitized = sanitizer.sanitizeForUrl(context);
-      // Should drop fields or return undefined if too large
+      // Should gracefully handle oversized content
       expect(sanitized).toBeDefined();
       if (sanitized) {
         expect(sanitized.length).toBeLessThanOrEqual(100);
@@ -129,7 +129,7 @@ describe("ContextSanitizer", () => {
 
       const sanitized = sanitizer.sanitizeForBody(context) as any;
       expect(sanitized?.description).toEndWith("...");
-      expect(sanitized?.description?.length).toBeLessThanOrEqual(203); // 200 + "..."
+      expect(sanitized?.description?.length).toBeLessThanOrEqual(203); // 200 chars + "..."
     });
 
     it("should limit array length", () => {
@@ -143,7 +143,7 @@ describe("ContextSanitizer", () => {
       };
 
       const sanitized = sanitizer.sanitizeForBody(context) as any;
-      expect(sanitized?.items).toHaveLength(10); // Max 10 items
+      expect(sanitized?.items).toHaveLength(10); // Anti-bloat: max 10 items per array
     });
 
     it("should progressively drop fields when too large", () => {
@@ -162,7 +162,7 @@ describe("ContextSanitizer", () => {
       const sanitized = sanitizer.sanitizeForBody(context);
       expect(sanitized).toBeDefined();
       expect(JSON.stringify(sanitized!).length).toBeLessThanOrEqual(50);
-      // Should keep most important fields
+      // Priority-based retention: essential fields preserved
       expect(sanitized).toHaveProperty("userId");
     });
   });
@@ -202,26 +202,30 @@ describe("ContextSanitizer", () => {
     it("should detect forbidden fields", () => {
       const warnings = ContextSanitizer.validate({
         userId: "user123",
-        password: "secret",
-        metadata: {
-          token: "jwt",
+        attributes: {
+          password: "secret",
+          metadata: {
+            token: "jwt",
+          },
         },
-      });
+      } as any);
 
       expect(warnings).toContain(
-        'Forbidden field "password" detected - will be removed',
+        'Forbidden field "attributes.password" detected - will be removed',
       );
       expect(warnings).toContain(
-        'Forbidden field "metadata.token" detected - will be removed',
+        'Forbidden field "attributes.metadata.token" detected - will be removed',
       );
     });
 
     it("should detect sensitive patterns", () => {
       const warnings = ContextSanitizer.validate({
         userId: "user123",
-        myPrivateKey: "key",
-        userSecret: "secret",
-      });
+        attributes: {
+          myPrivateKey: "key",
+          userSecret: "secret",
+        },
+      } as any);
 
       expect(warnings.length).toBeGreaterThan(0);
       expect(warnings.some((w) => w.includes("myPrivateKey"))).toBe(true);
