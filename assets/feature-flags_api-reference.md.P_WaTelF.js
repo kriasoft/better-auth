@@ -1,58 +1,9 @@
-<!DOCTYPE html>
-<html lang="en-US" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>API Reference | 🧩  Better Auth Plugins</title>
-    <meta name="description" content="Better Auth Plugins">
-    <meta name="generator" content="VitePress v1.6.4">
-    <link rel="preload stylesheet" href="/better-auth/assets/style.CnM-lcdj.css" as="style">
-    <link rel="preload stylesheet" href="/better-auth/vp-icons.css" as="style">
-    
-    <script type="module" src="/better-auth/assets/app.CZyjG0Hp.js"></script>
-    <link rel="preload" href="/better-auth/assets/inter-roman-latin.Di8DUHzh.woff2" as="font" type="font/woff2" crossorigin="">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/framework.47HnsahZ.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/theme.B7so7Dpn.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/katex.ChWnQ-fc.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/dagre-5GWH7T2D.BYV3ZyqN.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/cose-bilkent-S5V4N54A.E9ToiRkR.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/c4Diagram-FPNF74CW.7R0zy9EZ.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/flowDiagram-PVAE7QVJ.BtNHx5gI.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/erDiagram-AWTI2OKA.TigxerkA.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/gitGraphDiagram-NY62KEGX.BmvQ5Ziz.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/ganttDiagram-OWAHRB6G.7sX6fz0F.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/infoDiagram-STP46IZ2.CSjQSOAe.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/pieDiagram-ADFJNKIX.5YNlVWxm.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/quadrantDiagram-LMRXKWRM.BG3leCgI.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/xychartDiagram-6GGTOJPD.DHnkbb4o.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/requirementDiagram-4UW4RH46.SOreXlLb.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/sequenceDiagram-C3RYC4MD.F-ZnZBW6.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/classDiagram-KNZD7YFC.DWCBQc5P.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/classDiagram-v2-RKCZMP56.DWCBQc5P.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/stateDiagram-KXAO66HF.NNJpvEf9.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/stateDiagram-v2-UMBNRL4Z.DfraCH3k.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/journeyDiagram-BIP6EPQ6.otrA_naA.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/timeline-definition-XQNQX7LJ.YftmIQle.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/mindmap-definition-Q6HEUPPD.CLcjmsmy.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/kanban-definition-6OIFK2YF.Qc-wc25T.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/sankeyDiagram-GR3RE2ED.DUZ7ZYwR.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/diagram-S2PKOQOG.BHkXzY9L.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/diagram-QEK2KX5R.BfZwJ7U4.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/blockDiagram-QIGZ2CNN.Ciw0OeFH.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/architectureDiagram-W76B3OCA.CTIRoJBo.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/diagram-N5W7TBWH.BOAMl1eU.js">
-    <link rel="modulepreload" href="/better-auth/assets/chunks/virtual_mermaid-config.DDnGl6nM.js">
-    <link rel="modulepreload" href="/better-auth/assets/feature-flags_api-reference.md.P_WaTelF.lean.js">
-    <script id="check-dark-mode">(()=>{const e=localStorage.getItem("vitepress-theme-appearance")||"auto",a=window.matchMedia("(prefers-color-scheme: dark)").matches;(!e||e==="auto"?a:e==="dark")&&document.documentElement.classList.add("dark")})();</script>
-    <script id="check-mac-os">document.documentElement.classList.toggle("mac",/Mac|iPhone|iPod|iPad/i.test(navigator.platform));</script>
-  </head>
-  <body>
-    <div id="app"><div class="Layout" data-v-5d98c3a5><!--[--><!--]--><!--[--><span tabindex="-1" data-v-0b0ada53></span><a href="#VPContent" class="VPSkipLink visually-hidden" data-v-0b0ada53>Skip to content</a><!--]--><!----><header class="VPNav" data-v-5d98c3a5 data-v-ae24b3ad><div class="VPNavBar" data-v-ae24b3ad data-v-6aa21345><div class="wrapper" data-v-6aa21345><div class="container" data-v-6aa21345><div class="title" data-v-6aa21345><div class="VPNavBarTitle has-sidebar" data-v-6aa21345 data-v-1168a8e4><a class="title" href="/better-auth/" data-v-1168a8e4><!--[--><!--]--><!----><span data-v-1168a8e4>🧩  Better Auth Plugins</span><!--[--><!--]--></a></div></div><div class="content" data-v-6aa21345><div class="content-body" data-v-6aa21345><!--[--><!--]--><div class="VPNavBarSearch search" data-v-6aa21345><!----></div><nav aria-labelledby="main-nav-aria-label" class="VPNavBarMenu menu" data-v-6aa21345 data-v-dc692963><span id="main-nav-aria-label" class="visually-hidden" data-v-dc692963> Main Navigation </span><!--[--><!--[--><a class="VPLink link VPNavBarMenuLink" href="/better-auth/getting-started.html" tabindex="0" data-v-dc692963 data-v-e56f3d57><!--[--><span data-v-e56f3d57>Guide</span><!--]--></a><!--]--><!--]--></nav><!----><div class="VPNavBarAppearance appearance" data-v-6aa21345 data-v-6c893767><button class="VPSwitch VPSwitchAppearance" type="button" role="switch" title aria-checked="false" data-v-6c893767 data-v-5337faa4 data-v-1d5665e3><span class="check" data-v-1d5665e3><span class="icon" data-v-1d5665e3><!--[--><span class="vpi-sun sun" data-v-5337faa4></span><span class="vpi-moon moon" data-v-5337faa4></span><!--]--></span></span></button></div><div class="VPSocialLinks VPNavBarSocialLinks social-links" data-v-6aa21345 data-v-0394ad82 data-v-7bc22406><!--[--><a class="VPSocialLink no-icon" href="https://github.com/kriasoft/better-auth" aria-label="github" target="_blank" rel="noopener" data-v-7bc22406 data-v-bd121fe5><span class="vpi-social-github"></span></a><a class="VPSocialLink no-icon" href="https://discord.gg/SBwX6VeqCY" aria-label="discord" target="_blank" rel="noopener" data-v-7bc22406 data-v-bd121fe5><span class="vpi-social-discord"></span></a><a class="VPSocialLink no-icon" href="https://x.com/kriasoft" aria-label="x" target="_blank" rel="noopener" data-v-7bc22406 data-v-bd121fe5><span class="vpi-social-x"></span></a><!--]--></div><div class="VPFlyout VPNavBarExtra extra" data-v-6aa21345 data-v-bb2aa2f0 data-v-cf11d7a2><button type="button" class="button" aria-haspopup="true" aria-expanded="false" aria-label="extra navigation" data-v-cf11d7a2><span class="vpi-more-horizontal icon" data-v-cf11d7a2></span></button><div class="menu" data-v-cf11d7a2><div class="VPMenu" data-v-cf11d7a2 data-v-b98bc113><!----><!--[--><!--[--><!----><div class="group" data-v-bb2aa2f0><div class="item appearance" data-v-bb2aa2f0><p class="label" data-v-bb2aa2f0>Appearance</p><div class="appearance-action" data-v-bb2aa2f0><button class="VPSwitch VPSwitchAppearance" type="button" role="switch" title aria-checked="false" data-v-bb2aa2f0 data-v-5337faa4 data-v-1d5665e3><span class="check" data-v-1d5665e3><span class="icon" data-v-1d5665e3><!--[--><span class="vpi-sun sun" data-v-5337faa4></span><span class="vpi-moon moon" data-v-5337faa4></span><!--]--></span></span></button></div></div></div><div class="group" data-v-bb2aa2f0><div class="item social-links" data-v-bb2aa2f0><div class="VPSocialLinks social-links-list" data-v-bb2aa2f0 data-v-7bc22406><!--[--><a class="VPSocialLink no-icon" href="https://github.com/kriasoft/better-auth" aria-label="github" target="_blank" rel="noopener" data-v-7bc22406 data-v-bd121fe5><span class="vpi-social-github"></span></a><a class="VPSocialLink no-icon" href="https://discord.gg/SBwX6VeqCY" aria-label="discord" target="_blank" rel="noopener" data-v-7bc22406 data-v-bd121fe5><span class="vpi-social-discord"></span></a><a class="VPSocialLink no-icon" href="https://x.com/kriasoft" aria-label="x" target="_blank" rel="noopener" data-v-7bc22406 data-v-bd121fe5><span class="vpi-social-x"></span></a><!--]--></div></div></div><!--]--><!--]--></div></div></div><!--[--><!--]--><button type="button" class="VPNavBarHamburger hamburger" aria-label="mobile navigation" aria-expanded="false" aria-controls="VPNavScreen" data-v-6aa21345 data-v-e5dd9c1c><span class="container" data-v-e5dd9c1c><span class="top" data-v-e5dd9c1c></span><span class="middle" data-v-e5dd9c1c></span><span class="bottom" data-v-e5dd9c1c></span></span></button></div></div></div></div><div class="divider" data-v-6aa21345><div class="divider-line" data-v-6aa21345></div></div></div><!----></header><div class="VPLocalNav has-sidebar empty" data-v-5d98c3a5 data-v-a6f0e41e><div class="container" data-v-a6f0e41e><button class="menu" aria-expanded="false" aria-controls="VPSidebarNav" data-v-a6f0e41e><span class="vpi-align-left menu-icon" data-v-a6f0e41e></span><span class="menu-text" data-v-a6f0e41e>Menu</span></button><div class="VPLocalNavOutlineDropdown" style="--vp-vh:0px;" data-v-a6f0e41e data-v-8a42e2b4><button data-v-8a42e2b4>Return to top</button><!----></div></div></div><aside class="VPSidebar" data-v-5d98c3a5 data-v-319d5ca6><div class="curtain" data-v-319d5ca6></div><nav class="nav" id="VPSidebarNav" aria-labelledby="sidebar-aria-label" tabindex="-1" data-v-319d5ca6><span class="visually-hidden" id="sidebar-aria-label" data-v-319d5ca6> Sidebar Navigation </span><!--[--><!--]--><!--[--><div class="no-transition group" data-v-c40bc020><section class="VPSidebarItem level-0" data-v-c40bc020 data-v-b3fd67f8><div class="item" role="button" tabindex="0" data-v-b3fd67f8><div class="indicator" data-v-b3fd67f8></div><h2 class="text" data-v-b3fd67f8>Guide</h2><!----></div><div class="items" data-v-b3fd67f8><!--[--><div class="VPSidebarItem level-1 is-link" data-v-b3fd67f8 data-v-b3fd67f8><div class="item" data-v-b3fd67f8><div class="indicator" data-v-b3fd67f8></div><a class="VPLink link link" href="/better-auth/getting-started.html" data-v-b3fd67f8><!--[--><p class="text" data-v-b3fd67f8>Getting Started</p><!--]--></a><!----></div><!----></div><!--]--></div></section></div><div class="no-transition group" data-v-c40bc020><section class="VPSidebarItem level-0 collapsible has-active" data-v-c40bc020 data-v-b3fd67f8><div class="item" role="button" tabindex="0" data-v-b3fd67f8><div class="indicator" data-v-b3fd67f8></div><h2 class="text" data-v-b3fd67f8>Feature Flags</h2><div class="caret" role="button" aria-label="toggle section" tabindex="0" data-v-b3fd67f8><span class="vpi-chevron-right caret-icon" data-v-b3fd67f8></span></div></div><div class="items" data-v-b3fd67f8><!--[--><div class="VPSidebarItem level-1 is-link" data-v-b3fd67f8 data-v-b3fd67f8><div class="item" data-v-b3fd67f8><div class="indicator" data-v-b3fd67f8></div><a class="VPLink link link" href="/better-auth/feature-flags/overview.html" data-v-b3fd67f8><!--[--><p class="text" data-v-b3fd67f8>Overview</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-1 is-link" data-v-b3fd67f8 data-v-b3fd67f8><div class="item" data-v-b3fd67f8><div class="indicator" data-v-b3fd67f8></div><a class="VPLink link link" href="/better-auth/feature-flags/quickstart.html" data-v-b3fd67f8><!--[--><p class="text" data-v-b3fd67f8>Quickstart</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-1 is-link" data-v-b3fd67f8 data-v-b3fd67f8><div class="item" data-v-b3fd67f8><div class="indicator" data-v-b3fd67f8></div><a class="VPLink link link" href="/better-auth/feature-flags/configuration.html" data-v-b3fd67f8><!--[--><p class="text" data-v-b3fd67f8>Configuration</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-1 is-link" data-v-b3fd67f8 data-v-b3fd67f8><div class="item" data-v-b3fd67f8><div class="indicator" data-v-b3fd67f8></div><a class="VPLink link link" href="/better-auth/feature-flags/api-reference.html" data-v-b3fd67f8><!--[--><p class="text" data-v-b3fd67f8>API Reference</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-1 is-link" data-v-b3fd67f8 data-v-b3fd67f8><div class="item" data-v-b3fd67f8><div class="indicator" data-v-b3fd67f8></div><a class="VPLink link link" href="/better-auth/feature-flags/client-sdk.html" data-v-b3fd67f8><!--[--><p class="text" data-v-b3fd67f8>Client SDK</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-1 is-link" data-v-b3fd67f8 data-v-b3fd67f8><div class="item" data-v-b3fd67f8><div class="indicator" data-v-b3fd67f8></div><a class="VPLink link link" href="/better-auth/feature-flags/device-detection.html" data-v-b3fd67f8><!--[--><p class="text" data-v-b3fd67f8>Device Detection</p><!--]--></a><!----></div><!----></div><div class="VPSidebarItem level-1 is-link" data-v-b3fd67f8 data-v-b3fd67f8><div class="item" data-v-b3fd67f8><div class="indicator" data-v-b3fd67f8></div><a class="VPLink link link" href="/better-auth/feature-flags/troubleshooting.html" data-v-b3fd67f8><!--[--><p class="text" data-v-b3fd67f8>Troubleshooting</p><!--]--></a><!----></div><!----></div><!--]--></div></section></div><!--]--><!--[--><!--]--></nav></aside><div class="VPContent has-sidebar" id="VPContent" data-v-5d98c3a5 data-v-1428d186><div class="VPDoc has-sidebar has-aside" data-v-1428d186 data-v-39a288b8><!--[--><!--]--><div class="container" data-v-39a288b8><div class="aside" data-v-39a288b8><div class="aside-curtain" data-v-39a288b8></div><div class="aside-container" data-v-39a288b8><div class="aside-content" data-v-39a288b8><div class="VPDocAside" data-v-39a288b8 data-v-3f215769><!--[--><!--]--><!--[--><!--]--><nav aria-labelledby="doc-outline-aria-label" class="VPDocAsideOutline" data-v-3f215769 data-v-a5bbad30><div class="content" data-v-a5bbad30><div class="outline-marker" data-v-a5bbad30></div><div aria-level="2" class="outline-title" id="doc-outline-aria-label" role="heading" data-v-a5bbad30>On this page</div><ul class="VPDocOutlineItem root" data-v-a5bbad30 data-v-b933a997><!--[--><!--]--></ul></div></nav><!--[--><!--]--><div class="spacer" data-v-3f215769></div><!--[--><!--]--><!----><!--[--><!--]--><!--[--><!--]--></div></div></div></div><div class="content" data-v-39a288b8><div class="content-container" data-v-39a288b8><!--[--><!--]--><main class="main" data-v-39a288b8><div style="position:relative;" class="vp-doc _better-auth_feature-flags_api-reference" data-v-39a288b8><div><h1 id="api-reference" tabindex="-1">API Reference <a class="header-anchor" href="#api-reference" aria-label="Permalink to &quot;API Reference&quot;">​</a></h1><p>Complete API documentation for the Better Auth Feature Flags plugin.</p><h2 id="api-architecture" tabindex="-1">API Architecture <a class="header-anchor" href="#api-architecture" aria-label="Permalink to &quot;API Architecture&quot;">​</a></h2><p>The feature flags plugin follows Better Auth&#39;s architectural pattern:</p><ul><li>Server API: flat methods on <code>auth.api.*</code> (e.g., <code>auth.api.evaluateFeatureFlag</code>, <code>auth.api.createFeatureFlag</code>)</li><li>Client API: namespaced methods on <code>authClient.featureFlags.*</code> (e.g., <code>authClient.featureFlags.evaluate</code>, <code>authClient.featureFlags.admin.flags.create</code>)</li></ul><p>Server methods are exported using keys from the plugin’s endpoints object. Client methods are derived from endpoint paths and organized under the feature-flags namespace for clarity.</p><h2 id="server-api" tabindex="-1">Server API <a class="header-anchor" href="#server-api" aria-label="Permalink to &quot;Server API&quot;">​</a></h2><h3 id="plugin-initialization" tabindex="-1">Plugin Initialization <a class="header-anchor" href="#plugin-initialization" aria-label="Permalink to &quot;Plugin Initialization&quot;">​</a></h3><div class="language-typescript vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">typescript</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> { betterAuth } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;better-auth&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
+import{_ as i,c as a,o as n,a0 as l}from"./chunks/framework.47HnsahZ.js";const d=JSON.parse('{"title":"API Reference","description":"","frontmatter":{},"headers":[],"relativePath":"feature-flags/api-reference.md","filePath":"feature-flags/api-reference.md"}'),p={name:"feature-flags/api-reference.md"};function t(e,s,h,k,r,E){return n(),a("div",null,[...s[0]||(s[0]=[l(`<h1 id="api-reference" tabindex="-1">API Reference <a class="header-anchor" href="#api-reference" aria-label="Permalink to &quot;API Reference&quot;">​</a></h1><p>Complete API documentation for the Better Auth Feature Flags plugin.</p><h2 id="api-architecture" tabindex="-1">API Architecture <a class="header-anchor" href="#api-architecture" aria-label="Permalink to &quot;API Architecture&quot;">​</a></h2><p>The feature flags plugin follows Better Auth&#39;s architectural pattern:</p><ul><li>Server API: flat methods on <code>auth.api.*</code> (e.g., <code>auth.api.evaluateFeatureFlag</code>, <code>auth.api.createFeatureFlag</code>)</li><li>Client API: namespaced methods on <code>authClient.featureFlags.*</code> (e.g., <code>authClient.featureFlags.evaluate</code>, <code>authClient.featureFlags.admin.flags.create</code>)</li></ul><p>Server methods are exported using keys from the plugin’s endpoints object. Client methods are derived from endpoint paths and organized under the feature-flags namespace for clarity.</p><h2 id="server-api" tabindex="-1">Server API <a class="header-anchor" href="#server-api" aria-label="Permalink to &quot;Server API&quot;">​</a></h2><h3 id="plugin-initialization" tabindex="-1">Plugin Initialization <a class="header-anchor" href="#plugin-initialization" aria-label="Permalink to &quot;Plugin Initialization&quot;">​</a></h3><div class="language-typescript vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">typescript</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> { betterAuth } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;better-auth&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> { featureFlags } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">from</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;better-auth-feature-flags&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> auth</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> betterAuth</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">({</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  plugins: [</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">featureFlags</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(options)],</span></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">});</span></span></code></pre></div><h3 id="evaluation-api" tabindex="-1">Evaluation API <a class="header-anchor" href="#evaluation-api" aria-label="Permalink to &quot;Evaluation API&quot;">​</a></h3><h4 id="evaluatefeatureflag" tabindex="-1"><code>evaluateFeatureFlag()</code> <a class="header-anchor" href="#evaluatefeatureflag" aria-label="Permalink to &quot;`evaluateFeatureFlag()`&quot;">​</a></h4><p>Evaluate a single feature flag for the current context.</p><div class="language-typescript vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">typescript</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> result</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> auth.api.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">evaluateFeatureFlag</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">({</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">});</span></span></code></pre></div><h3 id="evaluation-api" tabindex="-1">Evaluation API <a class="header-anchor" href="#evaluation-api" aria-label="Permalink to &quot;Evaluation API&quot;">​</a></h3><h4 id="evaluatefeatureflag" tabindex="-1"><code>evaluateFeatureFlag()</code> <a class="header-anchor" href="#evaluatefeatureflag" aria-label="Permalink to &quot;\`evaluateFeatureFlag()\`&quot;">​</a></h4><p>Evaluate a single feature flag for the current context.</p><div class="language-typescript vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">typescript</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> result</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> auth.api.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">evaluateFeatureFlag</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">({</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  body: {</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    flagKey: string,</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    context?: { userId?: string; organizationId</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">?:</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> string; attributes</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">?:</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Record</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">string, any&gt; },</span></span>
@@ -65,7 +16,7 @@
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  },</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">});</span></span>
 <span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Returns (default): { value, variant?, reason, metadata?, evaluatedAt, context? }</span></span>
-<span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Returns (select: &#39;value&#39;): { value, evaluatedAt, context? }</span></span></code></pre></div><p><strong>Evaluation Reasons:</strong></p><ul><li><code>&quot;rule_match&quot;</code> - A targeting rule matched</li><li><code>&quot;override&quot;</code> - User has an override</li><li><code>&quot;percentage_rollout&quot;</code> - Percentage rollout matched</li><li><code>&quot;default&quot;</code> - Default value returned</li><li><code>&quot;disabled&quot;</code> - Flag is disabled</li><li><code>&quot;not_found&quot;</code> - Flag doesn&#39;t exist</li></ul><h4 id="evaluatefeatureflags" tabindex="-1"><code>evaluateFeatureFlags()</code> <a class="header-anchor" href="#evaluatefeatureflags" aria-label="Permalink to &quot;`evaluateFeatureFlags()`&quot;">​</a></h4><p>Evaluate multiple flags in a single request.</p><div class="language-typescript vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">typescript</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> { </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">flags</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> auth.api.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">evaluateFeatureFlags</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">({</span></span>
+<span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Returns (select: &#39;value&#39;): { value, evaluatedAt, context? }</span></span></code></pre></div><p><strong>Evaluation Reasons:</strong></p><ul><li><code>&quot;rule_match&quot;</code> - A targeting rule matched</li><li><code>&quot;override&quot;</code> - User has an override</li><li><code>&quot;percentage_rollout&quot;</code> - Percentage rollout matched</li><li><code>&quot;default&quot;</code> - Default value returned</li><li><code>&quot;disabled&quot;</code> - Flag is disabled</li><li><code>&quot;not_found&quot;</code> - Flag doesn&#39;t exist</li></ul><h4 id="evaluatefeatureflags" tabindex="-1"><code>evaluateFeatureFlags()</code> <a class="header-anchor" href="#evaluatefeatureflags" aria-label="Permalink to &quot;\`evaluateFeatureFlags()\`&quot;">​</a></h4><p>Evaluate multiple flags in a single request.</p><div class="language-typescript vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">typescript</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> { </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">flags</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> auth.api.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">evaluateFeatureFlags</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">({</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  body: {</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    flagKeys: string[],</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    defaults?: Record</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">string, any&gt;,</span></span>
@@ -77,7 +28,7 @@
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    contextInResponse?: boolean,</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  },</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">});</span></span>
-<span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Returns: { flags: Record&lt;string, { value: any; variant?: string; reason: string; metadata?: any }&gt;, evaluatedAt: string, context?: object }</span></span></code></pre></div><h4 id="bootstrapfeatureflags" tabindex="-1"><code>bootstrapFeatureFlags()</code> <a class="header-anchor" href="#bootstrapfeatureflags" aria-label="Permalink to &quot;`bootstrapFeatureFlags()`&quot;">​</a></h4><p>Get all enabled flags for a user.</p><div class="language-typescript vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">typescript</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> { </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">flags</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">evaluatedAt</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">context</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> auth.api.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">bootstrapFeatureFlags</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">({</span></span>
+<span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Returns: { flags: Record&lt;string, { value: any; variant?: string; reason: string; metadata?: any }&gt;, evaluatedAt: string, context?: object }</span></span></code></pre></div><h4 id="bootstrapfeatureflags" tabindex="-1"><code>bootstrapFeatureFlags()</code> <a class="header-anchor" href="#bootstrapfeatureflags" aria-label="Permalink to &quot;\`bootstrapFeatureFlags()\`&quot;">​</a></h4><p>Get all enabled flags for a user.</p><div class="language-typescript vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">typescript</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> { </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">flags</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">evaluatedAt</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">context</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> auth.api.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">bootstrapFeatureFlags</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">({</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  body: {</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    context?: { userId?: string; organizationId</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">?:</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> string; attributes</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">?:</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Record</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">string, any&gt; },</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    include?: string[],</span></span>
@@ -89,7 +40,7 @@
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  },</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">});</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Returns: { flags: Record&lt;string, { value: any; variant?: string; reason: string }&gt;|Record&lt;string, any&gt;, evaluatedAt: string, context: object }</span></span></code></pre></div><p>Note: High-level helpers like <code>isEnabled()</code> and <code>getVariant()</code> are available on the client SDK.</p><h3 id="admin-api" tabindex="-1">Admin API <a class="header-anchor" href="#admin-api" aria-label="Permalink to &quot;Admin API&quot;">​</a></h3><h4 id="flag-management" tabindex="-1">Flag Management <a class="header-anchor" href="#flag-management" aria-label="Permalink to &quot;Flag Management&quot;">​</a></h4><h5 id="createfeatureflag" tabindex="-1"><code>createFeatureFlag()</code> <a class="header-anchor" href="#createfeatureflag" aria-label="Permalink to &quot;`createFeatureFlag()`&quot;">​</a></h5><p>Create a new feature flag.</p><div class="language-typescript vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">typescript</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> flag</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> auth.api.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">createFeatureFlag</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">({</span></span>
+<span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Returns: { flags: Record&lt;string, { value: any; variant?: string; reason: string }&gt;|Record&lt;string, any&gt;, evaluatedAt: string, context: object }</span></span></code></pre></div><p>Note: High-level helpers like <code>isEnabled()</code> and <code>getVariant()</code> are available on the client SDK.</p><h3 id="admin-api" tabindex="-1">Admin API <a class="header-anchor" href="#admin-api" aria-label="Permalink to &quot;Admin API&quot;">​</a></h3><h4 id="flag-management" tabindex="-1">Flag Management <a class="header-anchor" href="#flag-management" aria-label="Permalink to &quot;Flag Management&quot;">​</a></h4><h5 id="createfeatureflag" tabindex="-1"><code>createFeatureFlag()</code> <a class="header-anchor" href="#createfeatureflag" aria-label="Permalink to &quot;\`createFeatureFlag()\`&quot;">​</a></h5><p>Create a new feature flag.</p><div class="language-typescript vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">typescript</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> flag</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> auth.api.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">createFeatureFlag</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">({</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  body: {</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    key: string,</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    name: string,</span></span>
@@ -104,7 +55,7 @@
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  },</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">});</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Returns: FeatureFlag</span></span></code></pre></div><h5 id="listfeatureflags" tabindex="-1"><code>listFeatureFlags()</code> <a class="header-anchor" href="#listfeatureflags" aria-label="Permalink to &quot;`listFeatureFlags()`&quot;">​</a></h5><p>List all flags with pagination.</p><div class="language-typescript vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">typescript</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> { </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">flags</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">page</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> auth.api.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">listFeatureFlags</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">({</span></span>
+<span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Returns: FeatureFlag</span></span></code></pre></div><h5 id="listfeatureflags" tabindex="-1"><code>listFeatureFlags()</code> <a class="header-anchor" href="#listfeatureflags" aria-label="Permalink to &quot;\`listFeatureFlags()\`&quot;">​</a></h5><p>List all flags with pagination.</p><div class="language-typescript vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">typescript</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> { </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">flags</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">page</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> auth.api.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">listFeatureFlags</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">({</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  query: {</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    organizationId?: string,</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    cursor?: string,</span></span>
@@ -118,13 +69,13 @@
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  },</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">});</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Returns: { flags: FeatureFlag[], page: { nextCursor?: string, limit: number, hasMore: boolean } }</span></span></code></pre></div><h5 id="updatefeatureflag" tabindex="-1"><code>updateFeatureFlag()</code> <a class="header-anchor" href="#updatefeatureflag" aria-label="Permalink to &quot;`updateFeatureFlag()`&quot;">​</a></h5><p>Update an existing flag.</p><div class="language-typescript vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">typescript</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> updated</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> auth.api.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">updateFeatureFlag</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">({</span></span>
+<span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Returns: { flags: FeatureFlag[], page: { nextCursor?: string, limit: number, hasMore: boolean } }</span></span></code></pre></div><h5 id="updatefeatureflag" tabindex="-1"><code>updateFeatureFlag()</code> <a class="header-anchor" href="#updatefeatureflag" aria-label="Permalink to &quot;\`updateFeatureFlag()\`&quot;">​</a></h5><p>Update an existing flag.</p><div class="language-typescript vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">typescript</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> updated</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> auth.api.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">updateFeatureFlag</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">({</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  body: { id: string, key?: string, name?: string, description?: string, enabled?: boolean, type?: FlagType, defaultValue?: any, rolloutPercentage?: number },</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">});</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Returns: FeatureFlag</span></span></code></pre></div><h5 id="deletefeatureflag" tabindex="-1"><code>deleteFeatureFlag()</code> <a class="header-anchor" href="#deletefeatureflag" aria-label="Permalink to &quot;`deleteFeatureFlag()`&quot;">​</a></h5><p>Delete a flag and all associated data.</p><div class="language-typescript vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">typescript</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> auth.api.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">deleteFeatureFlag</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">({ body: { id } });</span></span>
+<span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Returns: FeatureFlag</span></span></code></pre></div><h5 id="deletefeatureflag" tabindex="-1"><code>deleteFeatureFlag()</code> <a class="header-anchor" href="#deletefeatureflag" aria-label="Permalink to &quot;\`deleteFeatureFlag()\`&quot;">​</a></h5><p>Delete a flag and all associated data.</p><div class="language-typescript vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">typescript</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> auth.api.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">deleteFeatureFlag</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">({ body: { id } });</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Returns: void</span></span></code></pre></div><h4 id="rule-management" tabindex="-1">Rule Management <a class="header-anchor" href="#rule-management" aria-label="Permalink to &quot;Rule Management&quot;">​</a></h4><h5 id="createfeatureflagrule" tabindex="-1"><code>createFeatureFlagRule()</code> <a class="header-anchor" href="#createfeatureflagrule" aria-label="Permalink to &quot;`createFeatureFlagRule()`&quot;">​</a></h5><p>Add a targeting rule to a flag.</p><div class="language-typescript vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">typescript</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> rule</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> auth.api.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">createFeatureFlagRule</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">({</span></span>
+<span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Returns: void</span></span></code></pre></div><h4 id="rule-management" tabindex="-1">Rule Management <a class="header-anchor" href="#rule-management" aria-label="Permalink to &quot;Rule Management&quot;">​</a></h4><h5 id="createfeatureflagrule" tabindex="-1"><code>createFeatureFlagRule()</code> <a class="header-anchor" href="#createfeatureflagrule" aria-label="Permalink to &quot;\`createFeatureFlagRule()\`&quot;">​</a></h5><p>Add a targeting rule to a flag.</p><div class="language-typescript vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">typescript</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> rule</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> auth.api.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">createFeatureFlagRule</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">({</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  body: { flagId: string, priority: number, conditions: RuleConditions, value: any, variant?: string },</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">});</span></span>
 <span class="line"></span>
@@ -155,15 +106,15 @@
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  |</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;less_than&quot;</span></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  |</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;greater_than_or_equal&quot;</span></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  |</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;less_than_or_equal&quot;</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  |</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;regex&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span></code></pre></div><h5 id="listfeatureflagrules" tabindex="-1"><code>listFeatureFlagRules()</code> <a class="header-anchor" href="#listfeatureflagrules" aria-label="Permalink to &quot;`listFeatureFlagRules()`&quot;">​</a></h5><p>Get all rules for a flag.</p><div class="language-typescript vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">typescript</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> { </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rules</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> auth.api.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">listFeatureFlagRules</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">({</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  |</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;regex&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">;</span></span></code></pre></div><h5 id="listfeatureflagrules" tabindex="-1"><code>listFeatureFlagRules()</code> <a class="header-anchor" href="#listfeatureflagrules" aria-label="Permalink to &quot;\`listFeatureFlagRules()\`&quot;">​</a></h5><p>Get all rules for a flag.</p><div class="language-typescript vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">typescript</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> { </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">rules</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> auth.api.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">listFeatureFlagRules</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">({</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  params: { flagId: string },</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">});</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Returns: { rules: FlagRule[] }</span></span></code></pre></div><h4 id="override-management" tabindex="-1">Override Management <a class="header-anchor" href="#override-management" aria-label="Permalink to &quot;Override Management&quot;">​</a></h4><div class="warning custom-block"><p class="custom-block-title">Server-Side Overrides</p><p>These are server-side overrides for specific users, different from client-side local overrides. Server overrides persist across sessions while client overrides are temporary and blocked in production.</p></div><h5 id="createfeatureflagoverride" tabindex="-1"><code>createFeatureFlagOverride()</code> <a class="header-anchor" href="#createfeatureflagoverride" aria-label="Permalink to &quot;`createFeatureFlagOverride()`&quot;">​</a></h5><p>Create a user-specific override.</p><div class="language-typescript vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">typescript</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> override</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> auth.api.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">createFeatureFlagOverride</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">({</span></span>
+<span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Returns: { rules: FlagRule[] }</span></span></code></pre></div><h4 id="override-management" tabindex="-1">Override Management <a class="header-anchor" href="#override-management" aria-label="Permalink to &quot;Override Management&quot;">​</a></h4><div class="warning custom-block"><p class="custom-block-title">Server-Side Overrides</p><p>These are server-side overrides for specific users, different from client-side local overrides. Server overrides persist across sessions while client overrides are temporary and blocked in production.</p></div><h5 id="createfeatureflagoverride" tabindex="-1"><code>createFeatureFlagOverride()</code> <a class="header-anchor" href="#createfeatureflagoverride" aria-label="Permalink to &quot;\`createFeatureFlagOverride()\`&quot;">​</a></h5><p>Create a user-specific override.</p><div class="language-typescript vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">typescript</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> override</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> =</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> auth.api.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">createFeatureFlagOverride</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">({</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  body: { flagId: string, userId: string, value: any, enabled?: boolean, variant?: string, expiresAt?: string },</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">});</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Returns: FlagOverride</span></span></code></pre></div><h5 id="listfeatureflagoverrides" tabindex="-1"><code>listFeatureFlagOverrides()</code> <a class="header-anchor" href="#listfeatureflagoverrides" aria-label="Permalink to &quot;`listFeatureFlagOverrides()`&quot;">​</a></h5><p>Get overrides for a flag or user.</p><div class="language-typescript vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">typescript</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> { </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">overrides</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">page</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> auth.api.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">listFeatureFlagOverrides</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">({</span></span>
+<span class="line"><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">// Returns: FlagOverride</span></span></code></pre></div><h5 id="listfeatureflagoverrides" tabindex="-1"><code>listFeatureFlagOverrides()</code> <a class="header-anchor" href="#listfeatureflagoverrides" aria-label="Permalink to &quot;\`listFeatureFlagOverrides()\`&quot;">​</a></h5><p>Get overrides for a flag or user.</p><div class="language-typescript vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">typescript</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">const</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> { </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">overrides</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">page</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> } </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> await</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> auth.api.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">listFeatureFlagOverrides</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">({</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  query: { flagId?: string, userId?: string, cursor?: string, limit?: number, q?: string, sort?: string },</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">});</span></span>
 <span class="line"></span>
@@ -171,11 +122,11 @@
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">### Analytics </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">API</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`createFeatureFlagEvent()`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`createFeatureFlagEvent()\`</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Track custom events for analytics. (Canonical method, replaces deprecated </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`trackEvent()`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Track custom events for analytics. (Canonical method, replaces deprecated </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`trackEvent()\`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```typescript</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`typescript</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">// Single event tracking with idempotency support</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">await auth.api.createFeatureFlagEvent({</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  body: {</span></span>
@@ -190,13 +141,13 @@
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">});</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">// Returns: { success: boolean, eventId: string }</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`createFeatureFlagEventBatch()`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`createFeatureFlagEventBatch()\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Track multiple events at once.</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```typescript</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`typescript</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">// Batch event tracking</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">await auth.api.createFeatureFlagEventBatch({</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  body: {</span></span>
@@ -213,22 +164,22 @@
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">});</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">// Returns: { success: number, failed: number, batchId: string }</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Idempotency </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Support</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Use </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`Idempotency-Key`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> header for single</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">event requests</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Use top</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">level </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`idempotencyKey`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> for batch requests</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Use </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`Idempotency-Key\`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> header for single</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">event requests</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Use top</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">level </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`idempotencyKey\`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> for batch requests</span></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Recommended for payment events, conversions, and critical analytics</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">&lt;!--</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Use adminGetStats endpoint documented </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">in</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> the server </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">API</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> section. </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">--&gt;</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">### Audit </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">API</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`listFeatureFlagAuditEntries()`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`listFeatureFlagAuditEntries()\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Retrieve audit log entries.</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```typescript</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`typescript</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">const { entries } = await auth.api.listFeatureFlagAuditEntries({</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  query: {</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    flagId?: string,</span></span>
@@ -242,18 +193,18 @@
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">});</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">// Returns: { entries: AuditEntry[] }</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Audit </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Actions</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> `&quot;flag.created&quot;`</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> `&quot;flag.updated&quot;`</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> `&quot;flag.deleted&quot;`</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> `&quot;rule.created&quot;`</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> `&quot;rule.updated&quot;`</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> `&quot;rule.deleted&quot;`</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> `&quot;override.created&quot;`</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> `&quot;override.deleted&quot;`</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> \`&quot;flag.created&quot;\`</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> \`&quot;flag.updated&quot;\`</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> \`&quot;flag.deleted&quot;\`</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> \`&quot;rule.created&quot;\`</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> \`&quot;rule.updated&quot;\`</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> \`&quot;rule.deleted&quot;\`</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> \`&quot;override.created&quot;\`</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> \`&quot;override.deleted&quot;\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">### Cache Management</span></span>
 <span class="line"></span>
@@ -263,64 +214,64 @@
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">### Client Initialization</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```typescript</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`typescript</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">import { createAuthClient } from &quot;better-auth/client&quot;;</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">import { featureFlagsClient } from &quot;better-auth-feature-flags/client&quot;;</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">const client = createAuthClient({</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  plugins: [featureFlagsClient(options)],</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">});</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">### Client Methods</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`isEnabled()`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`isEnabled()\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Check </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> a feature is enabled for the current user.</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```typescript</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`typescript</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">const enabled: boolean = await client.featureFlags.isEnabled(</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  key: string,</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  defaultValue?: boolean</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">);</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`getValue()`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`getValue()\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Get the value </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">of</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> any flag type.</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```typescript</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`typescript</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">const value: T = await client.featureFlags.getValue&lt;T&gt;(</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  key: string,</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  defaultValue?: T</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">);</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`getVariant()`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`getVariant()\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Get </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">A</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">/</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">B</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> test variant assignment.</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```typescript</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`typescript</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">const variant = await client.featureFlags.getVariant(</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  key: string</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">);</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">// Returns: string | null (variant key)</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`bootstrap()`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`bootstrap()\`</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Get all evaluated flags for the current user. (Canonical method, replaces deprecated </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`getAllFlags()`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Get all evaluated flags for the current user. (Canonical method, replaces deprecated </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`getAllFlags()\`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```typescript</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`typescript</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">const flags: Record&lt;string, any&gt; = await client.featureFlags.bootstrap();</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`track()`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`track()\`</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Track conversion or custom events </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">with</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> idempotency support. (Canonical method, replaces deprecated </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`trackEvent()`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Track conversion or custom events </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">with</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> idempotency support. (Canonical method, replaces deprecated </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`trackEvent()\`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```typescript</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`typescript</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">// Basic event tracking</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">await client.featureFlags.track(</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  flagKey: string,</span></span>
@@ -346,13 +297,13 @@
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    idempotencyKey?: string,</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  }</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">], batchId?: string);</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">### Admin Client </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">API</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">NEW</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> in</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> v0.</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">2.0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">The client </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">SDK</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> now includes organized admin operations under the </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`authClient.featureFlags.admin`</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> namespace</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">The client </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">SDK</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> now includes organized admin operations under the </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`authClient.featureFlags.admin\`</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> namespace</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```typescript</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`typescript</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">// Admin flag management</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">await authClient.featureFlags.admin.flags.create({ key: &quot;new-flag&quot;, type: &quot;boolean&quot; });</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">await authClient.featureFlags.admin.flags.list();</span></span>
@@ -373,9 +324,9 @@
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">// Admin audit</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">await authClient.featureFlags.admin.audit.list({ flagId: &quot;flag-id&quot; });</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`setOverride()`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`setOverride()\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Set a local override for </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">testing</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (development only).</span></span>
 <span class="line"></span>
@@ -383,27 +334,27 @@
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Overrides are automatically disabled </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">in</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> production environments to prevent debug features from being exposed.</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:::</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```typescript</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`typescript</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">// Development only - no effect in production</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">client.featureFlags.setOverride(</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  flag: string,</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  value: any</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">);</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`clearOverrides()`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`clearOverrides()\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Clear all local overrides.</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```typescript</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`typescript</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">client.featureFlags.clearOverrides();</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">## React Hooks</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">### Setup</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```tsx</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`tsx</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">import { FeatureFlagsProvider } from &quot;better-auth-feature-flags/react&quot;;</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">function App() {</span></span>
@@ -413,13 +364,13 @@
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &lt;/FeatureFlagsProvider&gt;</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  );</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">}</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">### Hooks</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`useFeatureFlag()`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`useFeatureFlag()\`</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```tsx</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`tsx</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">import { useFeatureFlag } from &quot;better-auth-feature-flags/react&quot;;</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">function Component() {</span></span>
@@ -427,11 +378,11 @@
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  return isEnabled ? &lt;NewFeature /&gt; : &lt;OldFeature /&gt;;</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">}</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`useFeatureFlags()`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`useFeatureFlags()\`</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```tsx</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`tsx</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">import { useFeatureFlags } from &quot;better-auth-feature-flags/react&quot;;</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">function Component() {</span></span>
@@ -444,11 +395,11 @@
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &lt;/div&gt;</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  );</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">}</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`useVariant()`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`useVariant()\`</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```tsx</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`tsx</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">import { useVariant } from &quot;better-auth-feature-flags/react&quot;;</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">function Component() {</span></span>
@@ -463,53 +414,53 @@
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">      return &lt;DefaultVersion /&gt;;</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  }</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">}</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">## </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">REST</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> API</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Endpoints</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">All endpoints are prefixed </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">with</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> your Better Auth </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">API</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> path</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (default: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`/api/auth`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">).</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">All endpoints are prefixed </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">with</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> your Better Auth </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">API</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;"> path</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (default: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`/api/auth\`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">).</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">### Public Endpoints</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`POST /feature-flags/evaluate`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`POST /feature-flags/evaluate\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Evaluate a single flag.</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Headers</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">Authorization: Bearer &lt;token&gt;</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">x-organization-id: &lt;org-id&gt; (optional)</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Response</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```json</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`json</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">{</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;value&quot;: true,</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;variant&quot;: &quot;control&quot;,</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;reason&quot;: &quot;rule_match&quot;</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">}</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`POST /feature-flags/evaluate-batch`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`POST /feature-flags/evaluate-batch\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Evaluate multiple flags.</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Request </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Body</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```json</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`json</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">{</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;flagKeys&quot;: [&quot;flag-1&quot;, &quot;flag-2&quot;],</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;defaults&quot;: {</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;flag-1&quot;: false</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  }</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">}</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Response</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```json</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`json</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">{</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;flag-1&quot;: {</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;value&quot;: true,</span></span>
@@ -520,60 +471,60 @@
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;reason&quot;: &quot;default&quot;</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  }</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">}</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`POST /feature-flags/bootstrap`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`POST /feature-flags/bootstrap\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Get all enabled flags for bootstrap.</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Response</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```json</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`json</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">{</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;feature-1&quot;: true,</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;feature-2&quot;: &quot;value&quot;,</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;feature-3&quot;: { &quot;nested&quot;: &quot;data&quot; }</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">}</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`POST /feature-flags/events`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`POST /feature-flags/events\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Track a single event.</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Request </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Body</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```json</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`json</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">{</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;flagKey&quot;: &quot;checkout-test&quot;,</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;event&quot;: &quot;purchase&quot;,</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;value&quot;: 99.99</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">}</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">### Admin Endpoints</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">All admin endpoints require authentication and appropriate permissions.</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Admin endpoints are under </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`/feature-flags/admin/...`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Admin endpoints are under </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`/feature-flags/admin/...\`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`GET /feature-flags/admin/flags`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`GET /feature-flags/admin/flags\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">List all flags.</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Query </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Parameters</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> `page`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (number): Page number</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> `limit`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (number): Items per page</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> `enabled`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (boolean): Filter by status</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> `search`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (string): Search term</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> \`page\`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (number): Page number</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> \`limit\`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (number): Items per page</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> \`enabled\`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (boolean): Filter by status</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> \`search\`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (string): Search term</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`POST /feature-flags/admin/flags`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`POST /feature-flags/admin/flags\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Create a </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> flag.</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Request </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Body</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```json</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`json</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">{</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;key&quot;: &quot;new-feature&quot;,</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;type&quot;: &quot;boolean&quot;,</span></span>
@@ -581,53 +532,53 @@
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;defaultValue&quot;: false,</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;rolloutPercentage&quot;: 25</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">}</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`GET /feature-flags/admin/flags/:id`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`GET /feature-flags/admin/flags/:id\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Get flag details.</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`PATCH /feature-flags/admin/flags/:id`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`PATCH /feature-flags/admin/flags/:id\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Update a flag.</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`DELETE /feature-flags/admin/flags/:id`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`DELETE /feature-flags/admin/flags/:id\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Delete a flag.</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`GET /feature-flags/admin/flags/:flagId/rules`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`GET /feature-flags/admin/flags/:flagId/rules\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Get flag rules.</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`POST /feature-flags/admin/flags/:flagId/rules`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`POST /feature-flags/admin/flags/:flagId/rules\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Create a rule.</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`PATCH /feature-flags/admin/flags/:flagId/rules/:ruleId`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`PATCH /feature-flags/admin/flags/:flagId/rules/:ruleId\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Update a rule.</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`DELETE /feature-flags/admin/flags/:flagId/rules/:ruleId`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`DELETE /feature-flags/admin/flags/:flagId/rules/:ruleId\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Delete a rule.</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`GET /feature-flags/admin/overrides`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`GET /feature-flags/admin/overrides\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Get flag overrides.</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`POST /feature-flags/admin/overrides`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`POST /feature-flags/admin/overrides\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Create an override.</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`DELETE /feature-flags/admin/overrides/:id`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`DELETE /feature-flags/admin/overrides/:id\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Delete an override.</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`GET /feature-flags/admin/flags/:id/stats`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`GET /feature-flags/admin/flags/:id/stats\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Get flag statistics.</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`GET /feature-flags/admin/audit`</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`GET /feature-flags/admin/audit\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Get audit log.</span></span>
 <span class="line"></span>
@@ -635,7 +586,7 @@
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Real</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">time flag updates via WebSocket.</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```typescript</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`typescript</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">// Connect to WebSocket</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">const ws = client.featureFlags.subscribe();</span></span>
 <span class="line"></span>
@@ -650,13 +601,13 @@
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">// Unsubscribe</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">ws.close();</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">## Error Handling</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">### Error Types</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```typescript</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`typescript</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">class FeatureFlagError extends Error {</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  code: ErrorCode;</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  details?: any;</span></span>
@@ -671,11 +622,11 @@
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  STORAGE_ERROR = &quot;STORAGE_ERROR&quot;,</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  RATE_LIMIT_EXCEEDED = &quot;RATE_LIMIT_EXCEEDED&quot;,</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">}</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">### Error Handling Example</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```typescript</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`typescript</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">try {</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  const result = await auth.api.evaluateFeatureFlag({</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    body: { flagKey: &quot;my-flag&quot; },</span></span>
@@ -694,13 +645,13 @@
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    }</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  }</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">}</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">## Type Definitions</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">### Core Types</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```typescript</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`typescript</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">interface FeatureFlag {</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  id: string;</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  key: string;</span></span>
@@ -772,28 +723,28 @@
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  device?: DeviceInfo;</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  geo?: GeoInfo;</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">}</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">### Field </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Semantics</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (Authoritative)</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> key</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Unique, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">URL</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">‑safe </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">identifier</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (alphanumeric, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`-`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`_`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">); recommended immutable.</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Used </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">in</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> consistent hashing </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">with</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> `userId`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> for sticky rollout</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">/</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">variants.</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Unique, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">URL</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">‑safe </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">identifier</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (alphanumeric, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`-\`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`_\`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">); recommended immutable.</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Used </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">in</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> consistent hashing </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">with</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> \`userId\`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> for sticky rollout</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">/</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">variants.</span></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> name</span></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Human‑readable display name; safe to change without affecting evaluation.</span></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> description</span></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Optional long text for docs</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">/</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">discovery; not used </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">in</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> evaluation.</span></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> type</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> One </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">of</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> `boolean | string | number | json`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">. </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`defaultValue`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> and rule values should match </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">this</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> type.</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> One </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">of</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> \`boolean | string | number | json\`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">. </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`defaultValue\`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> and rule values should match </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">this</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> type.</span></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> enabled</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> When </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`false`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, evaluation returns </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`defaultValue`</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> with</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> reason </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`&quot;disabled&quot;`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> When </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`false\`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, evaluation returns </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`defaultValue\`</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> with</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> reason </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`&quot;disabled&quot;\`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.</span></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> defaultValue</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Safe fallback when no rule</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">/</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">override</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">/</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">rollout applies. Must be compatible </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">with</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> `type`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Safe fallback when no rule</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">/</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">override</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">/</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">rollout applies. Must be compatible </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">with</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> \`type\`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.</span></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> rolloutPercentage</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Integer </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">–</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">100.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Sticky assignment via consistent hashing </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">of</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> `userId:key`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> If no </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`userId`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, assignment is consistent for anonymous </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">cohort</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (same hash seed).</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Integer </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">–</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">100.</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Sticky assignment via consistent hashing </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">of</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> \`userId:key\`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> If no </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`userId\`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, assignment is consistent for anonymous </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">cohort</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (same hash seed).</span></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> variants</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Array </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">of</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> `{ key, value, weight }`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">. Weights must sum to </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">100.</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Array </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">of</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> \`{ key, value, weight }\`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">. Weights must sum to </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">100.</span></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> EvaluationResult.variant is the variant </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">key</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (string).</span></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> metadata</span></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">  -</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Free‑form </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">JSON</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> for tooling and </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">UI</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">. Not part </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">of</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> evaluation logic.</span></span>
@@ -810,11 +761,11 @@
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Endpoint Path                        </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Limit    </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Window </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> ------------------------------------</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> |</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> --------</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> |</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> ------</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;"> |</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> `/feature-flags/evaluate*`</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">           |</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 100</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">/</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">min  </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> 60s    </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> `/feature-flags/evaluate-batch`</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">      |</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 1000</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">/</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">min </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> 60s    </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> `/feature-flags/admin/*`</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">             |</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 20</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">/</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">min   </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> 60s    </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> \`/feature-flags/evaluate*\`</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">           |</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 100</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">/</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">min  </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> 60s    </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> \`/feature-flags/evaluate-batch\`</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">      |</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 1000</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">/</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">min </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> 60s    </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> \`/feature-flags/admin/*\`</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">             |</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;"> 20</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">/</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">min   </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> 60s    </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">|</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Note</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: These defaults are defined by the plugin’s </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`rateLimit`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> settings.</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Note</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: These defaults are defined by the plugin’s </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`rateLimit\`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> settings.</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">## Response Codes</span></span>
 <span class="line"></span>
@@ -847,7 +798,7 @@
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">### From v0.1.x to v0.</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">2.0</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```typescript</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`typescript</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">// Old API (v0.1.x) - basic setup</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">const enabled = await featureFlags.isEnabled(&quot;flag&quot;);</span></span>
 <span class="line"></span>
@@ -856,7 +807,7 @@
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  body: { flagKey: &quot;flag&quot; },</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">});</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">const enabled = result.value;</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">## Performance Benchmarks</span></span>
 <span class="line"></span>
@@ -874,10 +825,10 @@
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Discord: [Community support](https:</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">//discord.gg/better-auth)</span></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Admin client plugin</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Public runtime uses </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`better-auth-feature-flags/client`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> only.</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Admin surfaces should add </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`better-auth-feature-flags/admin`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> alongside the public client.</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Public runtime uses </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`better-auth-feature-flags/client\`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> only.</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Admin surfaces should add </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`better-auth-feature-flags/admin\`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> alongside the public client.</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```ts</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`ts</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">import { createAuthClient } from &quot;better-auth/client&quot;;</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">import { featureFlagsClient } from &quot;better-auth-feature-flags/client&quot;;</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">import { featureFlagsAdminClient } from &quot;better-auth-feature-flags/admin&quot;;</span></span>
@@ -887,8 +838,4 @@
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">// Admin runtime</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">createAuthClient({ plugins: [featureFlagsClient(), featureFlagsAdminClient()] });</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span></code></pre></div></div></div></main><footer class="VPDocFooter" data-v-39a288b8 data-v-e257564d><!--[--><!--]--><!----><nav class="prev-next" aria-labelledby="doc-footer-aria-label" data-v-e257564d><span class="visually-hidden" id="doc-footer-aria-label" data-v-e257564d>Pager</span><div class="pager" data-v-e257564d><a class="VPLink link pager-link prev" href="/better-auth/feature-flags/configuration.html" data-v-e257564d><!--[--><span class="desc" data-v-e257564d>Previous page</span><span class="title" data-v-e257564d>Configuration</span><!--]--></a></div><div class="pager" data-v-e257564d><a class="VPLink link pager-link next" href="/better-auth/feature-flags/client-sdk.html" data-v-e257564d><!--[--><span class="desc" data-v-e257564d>Next page</span><span class="title" data-v-e257564d>Client SDK</span><!--]--></a></div></nav></footer><!--[--><!--]--></div></div></div><!--[--><!--]--></div></div><!----><!--[--><!--]--></div></div>
-    <script>window.__VP_HASH_MAP__=JSON.parse("{\"feature-flags_adrs_01-device-detection.md\":\"CkBb3s4e\",\"feature-flags_api-reference.md\":\"P_WaTelF\",\"feature-flags_client-sdk.md\":\"C_t9DiWw\",\"feature-flags_configuration.md\":\"CxYaq8X1\",\"feature-flags_device-detection.md\":\"B1IeWgCq\",\"feature-flags_overview.md\":\"BWxmBavL\",\"feature-flags_quickstart.md\":\"DNgvBnLA\",\"feature-flags_troubleshooting.md\":\"B4EK6o6V\",\"getting-started.md\":\"_qd8M11D\",\"index.md\":\"C6Vymeaz\"}");window.__VP_SITE_DATA__=JSON.parse("{\"lang\":\"en-US\",\"dir\":\"ltr\",\"title\":\"🧩  Better Auth Plugins\",\"description\":\"Better Auth Plugins\",\"base\":\"/better-auth/\",\"head\":[],\"router\":{\"prefetchLinks\":true},\"appearance\":true,\"themeConfig\":{\"nav\":[{\"text\":\"Guide\",\"link\":\"/getting-started\"}],\"sidebar\":[{\"text\":\"Guide\",\"items\":[{\"text\":\"Getting Started\",\"link\":\"/getting-started\"}]},{\"text\":\"Feature Flags\",\"collapsed\":false,\"items\":[{\"text\":\"Overview\",\"link\":\"/feature-flags/overview\"},{\"text\":\"Quickstart\",\"link\":\"/feature-flags/quickstart\"},{\"text\":\"Configuration\",\"link\":\"/feature-flags/configuration\"},{\"text\":\"API Reference\",\"link\":\"/feature-flags/api-reference\"},{\"text\":\"Client SDK\",\"link\":\"/feature-flags/client-sdk\"},{\"text\":\"Device Detection\",\"link\":\"/feature-flags/device-detection\"},{\"text\":\"Troubleshooting\",\"link\":\"/feature-flags/troubleshooting\"}]}],\"socialLinks\":[{\"icon\":\"github\",\"link\":\"https://github.com/kriasoft/better-auth\"},{\"icon\":\"discord\",\"link\":\"https://discord.gg/SBwX6VeqCY\"},{\"icon\":\"x\",\"link\":\"https://x.com/kriasoft\"}]},\"locales\":{},\"scrollOffset\":134,\"cleanUrls\":false}");</script>
-    
-  </body>
-</html>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">\`\`\`</span></span></code></pre></div>`,53)])])}const g=i(p,[["render",t]]);export{d as __pageData,g as default};
