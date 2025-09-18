@@ -9,26 +9,25 @@ Install the feature flags plugin alongside Better Auth:
 ::: code-group
 
 ```bash [bun]
-bun add better-auth better-call better-auth-feature-flags
+bun add better-auth better-auth-feature-flags
 ```
 
 ```bash [npm]
-npm install better-auth better-call better-auth-feature-flags
+npm install better-auth better-auth-feature-flags
 ```
 
 ```bash [pnpm]
-pnpm add better-auth better-call better-auth-feature-flags
+pnpm add better-auth better-auth-feature-flags
 ```
 
 ```bash [yarn]
-yarn add better-auth better-call better-auth-feature-flags
+yarn add better-auth better-auth-feature-flags
 ```
 
 > Note
 >
-> - `better-auth` and `better-call` are peer dependencies of the feature flags plugin.
-> - `better-call` is the HTTP API/middleware foundation used by Better Auth and this plugin. Better Auth depends on it and re-exports some of its types.
-> - Install matching versions (e.g., `better-auth@^1.3.11`, `better-call@^1.0.19`) to avoid package resolution issues.
+> - `better-auth` is a peer dependency of the feature flags plugin.
+> - Install a matching version (e.g., `better-auth@^1.3.11`) to avoid package resolution issues.
 
 :::
 

@@ -46,23 +46,22 @@ Enterprise-grade feature flag management integrated with Better Auth. Control fe
 
 ```bash
 # npm
-npm install better-auth better-call better-auth-feature-flags
+npm install better-auth better-auth-feature-flags
 
 # bun
-bun add better-auth better-call better-auth-feature-flags
+bun add better-auth better-auth-feature-flags
 
 # pnpm
-pnpm add better-auth better-call better-auth-feature-flags
+pnpm add better-auth better-auth-feature-flags
 
 # yarn
-yarn add better-auth better-call better-auth-feature-flags
+yarn add better-auth better-auth-feature-flags
 ```
 
 ### Peer Dependencies
 
-- This plugin lists `better-auth` and `better-call` as peer dependencies.
-- `better-call` is the request/response + middleware layer Better Auth builds on and is also used by this plugin’s server middleware. Better Auth depends on it and re-exports some of its types.
-- Installing both `better-auth@^1.3.11` and `better-call@^1.0.19` ensures consistent versions and avoids hoisting/resolution issues under pnpm and other strict package managers.
+- This plugin requires `better-auth` as a peer dependency.
+- Install a compatible version (e.g., `better-auth@^1.3.11`) to ensure proper type and runtime alignment.
 
 ## Quick Start
 
