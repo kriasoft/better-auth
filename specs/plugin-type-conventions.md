@@ -36,16 +36,47 @@ export type GoodEndpoints = ReturnType<typeof createPublicEndpoints> &
 
 ### Plugin Surface Pattern
 
-Export plugins with controlled type boundaries:
+Export plugins with controlled type boundaries and type inference support:
 
 ```typescript
 // plugins/{name}/src/index.ts
-export function myPlugin(
-  options: MyPluginOptions = {},
-): BetterAuthPlugin & { endpoints: MyEndpoints } {
-  return definePlugin<MyEndpoints>(createMyPlugin(options));
+export function myPlugin<
+  TSchema extends Record<string, any> = Record<string, any>,
+>(options: MyPluginOptions = {}) {
+  const plugin = definePlugin<MyEndpoints>(createMyPlugin(options));
+  return {
+    ...plugin,
+    $Infer: {
+      MyType: {} as MyType,
+      AnotherType: {} as AnotherType,
+    },
+  } satisfies BetterAuthPlugin;
 }
 ```
+
+### Client Plugin Type Safety
+
+Client plugins MUST reference their server plugin via `$InferServerPlugin`:
+
+```typescript
+// ❌ Breaks type inference
+export function myPluginClient<TSchema>() {
+  return {
+    id: "my-plugin",
+    // Missing $InferServerPlugin
+  };
+}
+
+// ✅ Enables type safety
+export function myPluginClient<TSchema>() {
+  return {
+    id: "my-plugin",
+    $InferServerPlugin: {} as ReturnType<typeof myPlugin<TSchema>>,
+  };
+}
+```
+
+This enables server-to-client type flow for endpoints, schemas, and inference types.
 
 ## Implementation Checklist
 
@@ -72,15 +103,39 @@ When creating or refactoring a plugin:
    import { createAuthEndpoint } from "better-auth/plugins";
    ```
 
-4. **Apply `definePlugin` wrapper**
+4. **Apply `definePlugin` wrapper with `$Infer` exports**
 
    ```typescript
-   export function myPlugin(): BetterAuthPlugin & { endpoints: MyEndpoints } {
-     return definePlugin<MyEndpoints>(createMyPlugin());
+   export function myPlugin<TSchema>() {
+     const plugin = definePlugin<MyEndpoints>(createMyPlugin());
+     return {
+       ...plugin,
+       $Infer: { MyType: {} as MyType },
+     } satisfies BetterAuthPlugin;
    }
    ```
 
-5. **Create plugin-specific type spec**
+5. **Create corresponding client plugin with `$InferServerPlugin`**
+
+   ```typescript
+   // plugins/{name}/src/client.ts
+   export function myPluginClient<
+     TSchema extends Record<string, any> = Record<string, any>,
+   >(options: MyPluginClientOptions<TSchema> = {}) {
+     return {
+       id: "my-plugin",
+       $InferServerPlugin: {} as ReturnType<typeof myPlugin<TSchema>>,
+       pathMethods: {
+         /* ... */
+       },
+       getActions: (fetch) => ({
+         /* ... */
+       }),
+     } satisfies BetterAuthClientPlugin;
+   }
+   ```
+
+6. **Create plugin-specific type spec**
    ```
    plugins/{name}/specs/types-spec.md
    ```
@@ -127,6 +182,44 @@ Don't over-engineer simple plugins that:
 2. Monitor complexity as development progresses
 3. Apply patterns when hitting type depth limits
 4. Use this guide as reference throughout development
+
+## Complete Example
+
+Server and client type flow:
+
+```typescript
+// Server Plugin
+export function myPlugin<
+  TSchema extends Record<string, any> = Record<string, any>,
+>(options: MyPluginOptions = {}) {
+  const plugin = definePlugin<MyEndpoints>(createMyPlugin(options));
+  return {
+    ...plugin,
+    $Infer: { MyEntity: {} as MyEntity },
+  } satisfies BetterAuthPlugin;
+}
+
+// Client Plugin
+export function myPluginClient<
+  TSchema extends Record<string, any> = Record<string, any>,
+>(options: MyPluginClientOptions<TSchema> = {}) {
+  return {
+    id: "my-plugin",
+    $InferServerPlugin: {} as ReturnType<typeof myPlugin<TSchema>>,
+    getActions: (fetch) => ({
+      myPlugin: {
+        async doAction(data: MyEntity) {
+          // TypeScript infers MyEntity from server
+          return await fetch("/my-plugin/action", {
+            method: "POST",
+            body: data,
+          });
+        },
+      },
+    }),
+  } satisfies BetterAuthClientPlugin;
+}
+```
 
 ## Examples
 

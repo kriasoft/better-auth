@@ -8,7 +8,16 @@ import type { BetterAuthPlugin } from "better-auth";
 import type { FlagEndpoints } from "./endpoints";
 import { definePlugin } from "./internal/define-plugin";
 import { createFeatureFlagsPlugin } from "./plugin";
-import type { FeatureFlagsOptions } from "./types";
+import type {
+  EvaluationContext,
+  EvaluationReason,
+  FeatureFlag,
+  FlagAudit,
+  FlagEvaluation,
+  FlagOverride,
+  FlagRule,
+} from "./schema";
+import type { FeatureFlagsOptions, ValidateFlagSchema } from "./types";
 
 /**
  * Better Auth Feature Flags Plugin
@@ -38,11 +47,39 @@ import type { FeatureFlagsOptions } from "./types";
  * });
  * ```
  */
-export function featureFlags(
+export function featureFlags<
+  TSchema extends Record<string, any> = Record<string, any>,
+>(
   options: FeatureFlagsOptions = {},
-): BetterAuthPlugin & { endpoints: FlagEndpoints } {
+): BetterAuthPlugin & {
+  endpoints: FlagEndpoints;
+  $Infer: {
+    FeatureFlag: FeatureFlag;
+    FlagEvaluation: FlagEvaluation;
+    FlagOverride: FlagOverride;
+    FlagRule: FlagRule;
+    FlagAudit: FlagAudit;
+    EvaluationContext: EvaluationContext;
+    EvaluationReason: EvaluationReason;
+    FlagSchema: ValidateFlagSchema<TSchema>;
+  };
+} {
   // Hide complex internal types while preserving endpoint keys for API typing
-  return definePlugin<FlagEndpoints>(createFeatureFlagsPlugin(options));
+  const plugin = definePlugin<FlagEndpoints>(createFeatureFlagsPlugin(options));
+
+  return {
+    ...plugin,
+    $Infer: {
+      FeatureFlag: {} as FeatureFlag,
+      FlagEvaluation: {} as FlagEvaluation,
+      FlagOverride: {} as FlagOverride,
+      FlagRule: {} as FlagRule,
+      FlagAudit: {} as FlagAudit,
+      EvaluationContext: {} as EvaluationContext,
+      EvaluationReason: {} as EvaluationReason,
+      FlagSchema: {} as ValidateFlagSchema<TSchema>,
+    },
+  };
 }
 
 export default featureFlags;
