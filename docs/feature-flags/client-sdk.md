@@ -9,22 +9,21 @@ Install the client SDK with your package manager:
 ::: code-group
 
 ```bash [bun]
-bun add better-auth better-call better-auth-feature-flags
+bun add better-auth better-auth-feature-flags
 ```
 
 ```bash [npm]
-npm install better-auth better-call better-auth-feature-flags
+npm install better-auth better-auth-feature-flags
 ```
 
 ```bash [pnpm]
-pnpm add better-auth better-call better-auth-feature-flags
+pnpm add better-auth better-auth-feature-flags
 ```
 
 > Note
 >
-> - `better-auth` and `better-call` are peer dependencies of this package.
-> - `better-call` is the transport/middleware layer Better Auth uses under the hood and this plugin’s middleware relies on it as well.
-> - Use compatible versions (e.g., `better-auth@^1.3.11`, `better-call@^1.0.19`) to ensure type and runtime alignment.
+> - `better-auth` is a peer dependency of this package.
+> - Use a compatible version (e.g., `better-auth@^1.3.11`) to ensure type and runtime alignment.
 
 :::
 
@@ -1055,8 +1054,8 @@ interface MyFlags {
 }
 
 // Create typed client
-const client = createAuthClient<MyFlags>({
-  plugins: [featureFlagsClient()],
+const client = createAuthClient({
+  plugins: [featureFlagsClient<MyFlags>()],
 });
 
 // Now fully typed

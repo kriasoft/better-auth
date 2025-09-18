@@ -4,11 +4,11 @@
 // Type augmentations only - no runtime imports to preserve tree-shaking
 import type {} from "./augmentation";
 
-import { createFeatureFlagsPlugin } from "./plugin";
 import type { BetterAuthPlugin } from "better-auth";
-import type { FeatureFlagsOptions } from "./types";
 import type { FlagEndpoints } from "./endpoints";
 import { definePlugin } from "./internal/define-plugin";
+import { createFeatureFlagsPlugin } from "./plugin";
+import type { FeatureFlagsOptions } from "./types";
 
 /**
  * Better Auth Feature Flags Plugin
@@ -70,3 +70,11 @@ export { DEFAULT_HEADER_CONFIG } from "./middleware/validation";
 export type { HeaderConfig, ValidationConfig } from "./middleware/validation";
 // Main plugin configuration interface
 export type { FeatureFlagsOptions } from "./types";
+
+// Client types for application developers
+export type {
+  FeatureFlagResult,
+  FeatureFlagsClient,
+  FeatureFlagsClientOptions,
+  FeatureFlagVariant,
+} from "./client";

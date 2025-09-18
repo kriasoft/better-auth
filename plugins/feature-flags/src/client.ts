@@ -7,6 +7,7 @@ import { ContextSanitizer } from "./context-sanitizer";
 import { SecureOverrideManager, type OverrideConfig } from "./override-manager";
 import type { FeatureFlagsServerPlugin } from "./plugin";
 import { SmartPoller } from "./polling";
+import type { BooleanFlags } from "./types";
 
 export type { EvaluationContext } from "./schema/types";
 export type { BooleanFlags, InferFlagValue, ValidateFlagSchema } from "./types";
@@ -117,8 +118,8 @@ export interface FeatureFlagsClient<
 > {
   featureFlags: {
     /** Check if boolean flag is enabled */
-    isEnabled: <K extends keyof Schema>(
-      flag: K & { [P in K]: Schema[P] extends boolean ? K : never }[K],
+    isEnabled: <K extends BooleanFlags<Schema>>(
+      flag: K,
       defaultValue?: boolean,
     ) => Promise<boolean>;
     /** Get typed flag value with fallback */
@@ -566,8 +567,8 @@ export function featureFlagsClient<
 
       const actions = {
         featureFlags: {
-          async isEnabled<K extends keyof Schema>(
-            flag: K & { [P in K]: Schema[P] extends boolean ? K : never }[K],
+          async isEnabled<K extends BooleanFlags<Schema>>(
+            flag: K,
             defaultValue = false,
           ): Promise<boolean> {
             const result = await evaluateFlag(flag);
