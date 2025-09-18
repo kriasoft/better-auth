@@ -206,7 +206,7 @@ export interface FeatureFlagsOptions {
   flags?: {
     [key: string]: {
       enabled?: boolean;
-      default?: boolean;
+      default?: any; // Allow any type for flag default values
       rolloutPercentage?: number; // Percentage 0-100
       targeting?: {
         roles?: string[];
