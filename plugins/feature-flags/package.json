@@ -1,6 +1,6 @@
 {
   "name": "better-auth-feature-flags",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Ship features safely with feature flags, A/B testing, and progressive rollouts - Better Auth plugin for modern release management",
   "keywords": [
     "better-auth",

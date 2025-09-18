@@ -76,6 +76,13 @@ const auth = betterAuth({
     featureFlags({
       storage: "database", // "memory" | "database" | "redis"
 
+      // Define flags with automatic type inference
+      flags: {
+        "ui.dark-mode": { default: false },
+        "experiment.new-checkout": { default: "control" },
+        "config.max-items": { default: 10 },
+      },
+
       // Analytics configuration
       analytics: {
         trackUsage: true,
@@ -117,7 +124,7 @@ const auth = betterAuth({
 import { createAuthClient } from "better-auth/client";
 import { featureFlagsClient } from "better-auth-feature-flags/client";
 
-// Public client (for end users)
+// Public client (for end users) - automatically inherits server schema types
 const authClient = createAuthClient({
   plugins: [
     featureFlagsClient({
@@ -143,6 +150,18 @@ const authClient = createAuthClient({
     }),
   ],
 });
+
+// TypeScript now provides full type safety based on server flag definitions
+const isDarkMode = await authClient.featureFlags.isEnabled("ui.dark-mode");
+//    ^? boolean (inferred from server default: false)
+
+const checkoutVariant = await authClient.featureFlags.getValue(
+  "experiment.new-checkout",
+);
+//    ^? string (inferred from server default: "control")
+
+const maxItems = await authClient.featureFlags.getValue("config.max-items");
+//    ^? number (inferred from server default: 10)
 ```
 
 #### Admin Client Setup
@@ -699,8 +718,47 @@ const allFlags = await client.featureFlags.bootstrap();
 
 ### TypeScript Integration
 
+The plugin provides two approaches for type safety: **automatic inference** and **explicit schemas**.
+
+#### Option 1: Automatic Type Inference (Recommended)
+
 ```typescript
-// Define your flag schema for type safety
+// Server setup with automatic schema inference from flag definitions
+const auth = betterAuth({
+  plugins: [
+    featureFlags({
+      storage: "database",
+      flags: {
+        "ui.dark-mode": { default: false }, // inferred as boolean
+        "experiment.homepage": { default: "control" }, // inferred as string
+        "config.max-items": { default: 10 }, // inferred as number
+        "feature.premium-checkout": { default: false }, // inferred as boolean
+      },
+    }),
+  ],
+});
+//     ^? Types are automatically inferred from default values
+
+// Client automatically inherits server schema types
+const client = createAuthClient({
+  plugins: [featureFlagsClient()], // No manual schema needed!
+});
+
+// TypeScript provides full type safety with zero configuration
+const isDark = await client.featureFlags.isEnabled("ui.dark-mode");
+//    ^? boolean (inferred from server default: false)
+
+const variant = await client.featureFlags.getValue("experiment.homepage");
+//    ^? string (inferred from server default: "control")
+
+const maxItems = await client.featureFlags.getValue("config.max-items");
+//    ^? number (inferred from server default: 10)
+```
+
+#### Option 2: Explicit Schema Definition
+
+```typescript
+// Define your flag schema for complex types
 interface AppFlags {
   "ui.dark-mode": boolean;
   "experiment.homepage": "control" | "variant-a" | "variant-b";
@@ -708,33 +766,55 @@ interface AppFlags {
   "feature.premium-checkout": boolean;
 }
 
-// Server setup with typed schema
+// Server setup with explicit typed schema
 const auth = betterAuth({
   plugins: [
     featureFlags<AppFlags>({
-      // Schema type flows to client via $Infer
       storage: "database",
+      // Optional: define static flags (will be type-checked against AppFlags)
+      flags: {
+        "ui.dark-mode": { default: false },
+      },
     }),
   ],
 });
 
-// Type-safe client with schema inference
+// Type-safe client with explicit schema
 const client = createAuthClient({
   plugins: [featureFlagsClient<AppFlags>()],
 });
 
-// TypeScript ensures correct types
-const isDark = await client.featureFlags.isEnabled("ui.dark-mode");
-//    ^? boolean
-
+// TypeScript ensures exact type matching
 const variant = await client.featureFlags.getValue(
   "experiment.homepage",
   "control",
 );
-//    ^? "control" | "variant-a" | "variant-b"
+//    ^? "control" | "variant-a" | "variant-b" (from AppFlags interface)
+```
 
-const maxItems = await client.featureFlags.getValue("config.max-items", 10);
-//    ^? number
+#### Mixed Approach: Best of Both Worlds
+
+```typescript
+// Define base schema for complex types
+interface AppFlags {
+  "experiment.homepage": "control" | "variant-a" | "variant-b";
+}
+
+// Server combines explicit schema with inferred flags
+const auth = betterAuth({
+  plugins: [
+    featureFlags<AppFlags>({
+      storage: "database",
+      flags: {
+        // Explicit schema type (union)
+        "experiment.homepage": { default: "control" },
+        // Auto-inferred types
+        "ui.dark-mode": { default: false }, // → boolean
+        "config.max-items": { default: 10 }, // → number
+      },
+    }),
+  ],
+});
 ```
 
 ## Performance & Security

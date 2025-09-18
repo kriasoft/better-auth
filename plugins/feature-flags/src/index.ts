@@ -36,21 +36,34 @@ import type { FeatureFlagsOptions, ValidateFlagSchema } from "./types";
  * import { betterAuth } from "better-auth";
  * import { featureFlags } from "better-auth-feature-flags";
  *
+ * // Infer schema from options.flags
  * export const auth = betterAuth({
  *   plugins: [
  *     featureFlags({
  *       storage: "database",
- *       caching: { enabled: true, ttl: 60 },
- *       analytics: { trackUsage: true },
+ *       flags: {
+ *         "dark-mode": { default: false },
+ *         "theme": { default: "light" }
+ *       }
  *     })
  *   ]
  * });
+ *
+ * // Or provide explicit schema
+ * interface MyFlags {
+ *   "feature-a": boolean;
+ *   "theme": "light" | "dark";
+ * }
+ *
+ * export const authTyped = betterAuth({
+ *   plugins: [featureFlags<MyFlags>({ storage: "database" })]
+ * });
  * ```
  */
-export function featureFlags<
-  TSchema extends Record<string, any> = Record<string, any>,
->(
-  options: FeatureFlagsOptions = {},
+
+// Overload for explicit schema type
+export function featureFlags<TSchema extends Record<string, any>>(
+  options?: FeatureFlagsOptions,
 ): BetterAuthPlugin & {
   endpoints: FlagEndpoints;
   $Infer: {
@@ -63,6 +76,39 @@ export function featureFlags<
     EvaluationReason: EvaluationReason;
     FlagSchema: ValidateFlagSchema<TSchema>;
   };
+};
+
+// Overload for schema inference from options.flags
+export function featureFlags<
+  TOptions extends FeatureFlagsOptions = FeatureFlagsOptions,
+>(
+  options: TOptions,
+): BetterAuthPlugin & {
+  endpoints: FlagEndpoints;
+  $Infer: {
+    FeatureFlag: FeatureFlag;
+    FlagEvaluation: FlagEvaluation;
+    FlagOverride: FlagOverride;
+    FlagRule: FlagRule;
+    FlagAudit: FlagAudit;
+    EvaluationContext: EvaluationContext;
+    EvaluationReason: EvaluationReason;
+    FlagSchema: TOptions extends { flags: infer F }
+      ? F extends Record<string, any>
+        ? {
+            [K in keyof F]: F[K] extends { default: infer D } ? D : any;
+          }
+        : Record<string, any>
+      : Record<string, any>;
+  };
+};
+
+// Implementation
+export function featureFlags(
+  options: FeatureFlagsOptions = {},
+): BetterAuthPlugin & {
+  endpoints: FlagEndpoints;
+  $Infer: any;
 } {
   // Hide complex internal types while preserving endpoint keys for API typing
   const plugin = definePlugin<FlagEndpoints>(createFeatureFlagsPlugin(options));
@@ -77,7 +123,7 @@ export function featureFlags<
       FlagAudit: {} as FlagAudit,
       EvaluationContext: {} as EvaluationContext,
       EvaluationReason: {} as EvaluationReason,
-      FlagSchema: {} as ValidateFlagSchema<TSchema>,
+      FlagSchema: {} as any,
     },
   };
 }
