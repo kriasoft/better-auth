@@ -11,7 +11,7 @@
  * @see ./validation.ts for secure attribute validation
  */
 
-import { createMiddleware } from "better-call";
+import { createAuthMiddleware } from "better-auth/plugins";
 import type { EvaluationContext } from "../schema";
 import type { PluginContext } from "../types";
 import {
@@ -75,7 +75,7 @@ export interface EvaluationResult {
  * @see buildEvaluationContext for full context collection
  */
 export function createFeatureFlagsMiddleware(pc: PluginContext) {
-  return createMiddleware(async (ctx) => {
+  return createAuthMiddleware(async (ctx) => {
     // Minimal context by default; use buildEvaluationContext() for full collection
     const evaluationContext = await buildMinimalContext(ctx, pc);
 

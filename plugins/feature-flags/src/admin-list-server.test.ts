@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import { beforeEach, describe, expect, it } from "bun:test";
-import { createAdminFlagsEndpoints } from "./endpoints/admin/flags";
+import { createAdminFlagsEndpointsForTest } from "./endpoints/admin/flags.test-helper";
 import { LRUCache } from "./lru-cache";
 import { createStorageAdapter } from "./storage";
 import type { PluginContext } from "./types";
@@ -28,10 +28,21 @@ function makePluginContext(): PluginContext {
 }
 
 function mkCtx(query: any = {}) {
+  const session = {
+    id: "s1",
+    user: { id: "test", roles: ["admin"] },
+    expiresAt: new Date(Date.now() + 3600_000),
+  } as any;
   return {
     query,
     params: {},
-    context: { session: { user: { id: "test" } } },
+    path: "/feature-flags/admin/flags",
+    method: "GET",
+    context: { session },
+    session,
+    auth: { getSession: async () => session },
+    getSession: async () => session,
+    headers: { get: () => null, entries: () => [] } as any,
     json: (data: any) => data,
   } as any;
 }
@@ -42,7 +53,7 @@ describe("admin list flags server-side", () => {
 
   beforeEach(async () => {
     pc = makePluginContext();
-    endpoints = createAdminFlagsEndpoints(pc as any);
+    endpoints = createAdminFlagsEndpointsForTest(pc as any);
     // Seed flags
     const keys = ["alpha", "beta-1", "beta-2", "gamma", "delta"];
     for (const key of keys) {

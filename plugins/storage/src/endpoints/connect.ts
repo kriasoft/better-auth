@@ -3,6 +3,8 @@
 
 import { z } from "zod";
 import { createAuthEndpoint } from "better-auth/plugins";
+import { getSessionFromCtx } from "better-auth/api";
+import type { ConnectedAccount, VerificationToken } from "../types";
 import type { ConnectPluginOptions } from "../plugin";
 
 export function createConnectEndpoints(options: ConnectPluginOptions) {
@@ -48,7 +50,7 @@ export function createConnectEndpoints(options: ConnectPluginOptions) {
           });
         }
 
-        const session = await ctx.getSession();
+        const session = await getSessionFromCtx(ctx);
         if (!session) {
           throw ctx.error("UNAUTHORIZED");
         }
@@ -113,10 +115,10 @@ export function createConnectEndpoints(options: ConnectPluginOptions) {
         const { code, state, error, error_description } = ctx.query || {};
 
         // Retrieve state from database
-        const stateRecord = await ctx.context.adapter.findOne({
+        const stateRecord = (await ctx.context.adapter.findOne({
           model: "verificationToken",
           where: [{ field: "identifier", value: state }],
-        });
+        })) as VerificationToken | null;
 
         if (!stateRecord) {
           throw ctx.error("BAD_REQUEST", {
@@ -124,7 +126,12 @@ export function createConnectEndpoints(options: ConnectPluginOptions) {
           });
         }
 
-        const stateData = JSON.parse(stateRecord.token);
+        const stateData = JSON.parse(stateRecord.token) as {
+          providerId: string;
+          callbackURL?: string;
+          errorCallbackURL?: string;
+          userId: string;
+        };
 
         // Delete state to prevent reuse
         await ctx.context.adapter.delete({
@@ -202,7 +209,7 @@ export function createConnectEndpoints(options: ConnectPluginOptions) {
         }
 
         // Store connection in database
-        const existingConnection = await ctx.context.adapter.findOne({
+        const existingConnection = (await ctx.context.adapter.findOne({
           model: "connectedAccount",
           where: [
             { field: "userId", value: stateData.userId },
@@ -212,14 +219,14 @@ export function createConnectEndpoints(options: ConnectPluginOptions) {
               value: userInfo.id || userInfo.sub || "default",
             },
           ],
-        });
+        })) as ConnectedAccount | null;
 
         if (existingConnection) {
           // Update existing connection
           await ctx.context.adapter.update({
             model: "connectedAccount",
             where: [{ field: "id", value: existingConnection.id }],
-            data: {
+            update: {
               accessToken: tokens.access_token,
               refreshToken: tokens.refresh_token,
               expiresAt: tokens.expires_in
@@ -269,7 +276,7 @@ export function createConnectEndpoints(options: ConnectPluginOptions) {
         method: "GET",
       },
       async (ctx) => {
-        const session = await ctx.getSession();
+        const session = await getSessionFromCtx(ctx);
         if (!session) {
           throw ctx.error("UNAUTHORIZED");
         }
@@ -300,7 +307,7 @@ export function createConnectEndpoints(options: ConnectPluginOptions) {
         method: "DELETE",
       },
       async (ctx) => {
-        const session = await ctx.getSession();
+        const session = await getSessionFromCtx(ctx);
         if (!session) {
           throw ctx.error("UNAUTHORIZED");
         }

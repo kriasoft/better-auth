@@ -12,8 +12,8 @@ Enterprise-grade feature flag management integrated with Better Auth. Control fe
 
 > Version status
 >
-> - Current (dev branch): v0.2.0 — pending publish
-> - Previous (main): v0.1.3
+> - Current: v0.2.1
+> - Previous: v0.2.0
 
 ## Features
 
@@ -181,7 +181,8 @@ const adminClient = createAuthClient({
 
 - **POST** `/feature-flags/bootstrap`
   - Body: `{ context?: object, include?: string[], prefix?: string, select?: 'value'|'full'|Array<'value'|'variant'|'reason'|'metadata'>, environment?: string, track?: boolean, debug?: boolean }`
-  - Returns all enabled flags for the context with shaping via `select`
+  - Server response: `{ flags: Record<string, EvaluationResult>|Record<string, any>, evaluatedAt: string, context: object }`
+  - Client helper `featureFlags.bootstrap()` returns a plain key→value map for convenience
 
 - **POST** `/feature-flags/events`
   - Body: `{ flagKey: string, event: string, properties?: number|object, timestamp?: string (RFC3339), sampleRate?: number }`
@@ -191,6 +192,7 @@ const adminClient = createAuthClient({
 Note
 
 - Environment can also be supplied via `x-deployment-ring` header; header takes precedence over body `environment`.
+- Client `bootstrap()` extracts values; use server API with `select` if you need full result shapes.
 
 ### Admin Endpoints
 
@@ -488,7 +490,7 @@ await adminClient.featureFlags.admin.rules.create({
 });
 
 // Analytics with enhanced projection
-const stats = await adminClient.featureFlags.admin.analytics.getStats(
+const stats = await adminClient.featureFlags.admin.analytics.stats.get(
   newFlag.id,
   {
     start: "2025-01-01",
@@ -498,7 +500,7 @@ const stats = await adminClient.featureFlags.admin.analytics.getStats(
   },
 );
 
-const usage = await adminClient.featureFlags.admin.analytics.getUsage({
+const usage = await adminClient.featureFlags.admin.analytics.usage.get({
   start: "2025-01-01",
   end: "2025-01-31",
   metrics: ["errorRate", "avgLatency"], // Only get performance metrics
@@ -817,7 +819,7 @@ src/endpoints/admin/
 ## Support
 
 - **GitHub Issues:** [Report bugs](https://github.com/kriasoft/better-auth/issues)
-- **Documentation:** [Full docs](https://docs.better-auth.com/docs/feature-flags/overview)
+- **Better Auth Docs:** https://docs.better-auth.com/
 - **Discord:** [Community support](https://discord.gg/SBwX6VeqCY)
 
 ## Contributing

@@ -567,20 +567,35 @@ All endpoints are prefixed with your Better Auth API path (default: `/api/auth`)
 
 Evaluate a single flag.
 
-**Headers:**
+Body fields (canonical):
 
 ```
-Authorization: Bearer <token>
-x-organization-id: <org-id> (optional)
-```
-
-**Response:**
-
-```json
 {
-  "value": true,
-  "variant": "control",
-  "reason": "rule_match"
+  flagKey: string,
+  context?: object,
+  default?: any,
+  select?: 'value'|'full'|Array<'value'|'variant'|'reason'|'metadata'>,
+  environment?: string,
+  track?: boolean,
+  debug?: boolean,
+  contextInResponse?: boolean
+}
+```
+
+Headers:
+
+- `x-deployment-ring: <env>` Optional; takes precedence over body `environment`.
+
+Response (default):
+
+```
+{
+  value: any,
+  variant?: string,
+  reason: string,
+  metadata?: object,
+  evaluatedAt: string,
+  context?: object // when contextInResponse=true
 }
 ```
 
@@ -588,43 +603,66 @@ x-organization-id: <org-id> (optional)
 
 Evaluate multiple flags.
 
-**Request Body:**
+Body fields (canonical):
 
-```json
+```
 {
-  "flagKeys": ["flag-1", "flag-2"],
-  "defaults": {
-    "flag-1": false
-  }
+  flagKeys: string[],
+  defaults?: Record<string, any>,
+  context?: object,
+  select?: 'value'|'full'|Array<'value'|'variant'|'reason'|'metadata'>,
+  environment?: string,
+  track?: boolean,
+  debug?: boolean,
+  contextInResponse?: boolean
 }
 ```
 
-**Response:**
+Headers:
 
-```json
+- `x-deployment-ring: <env>` Optional; takes precedence over body `environment`.
+
+Response:
+
+```
 {
-  "flag-1": {
-    "value": true,
-    "reason": "percentage_rollout"
-  },
-  "flag-2": {
-    "value": "blue",
-    "reason": "default"
-  }
+  flags: Record<string, { value: any; variant?: string; reason: string; metadata?: any }> | Record<string, any>,
+  evaluatedAt: string,
+  context?: object // when contextInResponse=true
 }
 ```
+
+Note: `contextInResponse` defaults to `true` for batch evaluation and to `false` for single evaluation.
 
 #### `POST /feature-flags/bootstrap`
 
-Get all enabled flags for bootstrap.
+Get all enabled flags for bootstrap/initialization. Supports server-side filtering.
 
-**Response:**
+Body fields (canonical):
 
-```json
+```
 {
-  "feature-1": true,
-  "feature-2": "value",
-  "feature-3": { "nested": "data" }
+  context?: object,
+  include?: string[], // only include specific keys
+  prefix?: string,    // only include keys starting with prefix
+  select?: 'value'|'full'|Array<'value'|'variant'|'reason'|'metadata'>,
+  environment?: string,
+  track?: boolean,
+  debug?: boolean
+}
+```
+
+Headers:
+
+- `x-deployment-ring: <env>` Optional; takes precedence over body `environment`.
+
+Response:
+
+```
+{
+  flags: Record<string, { value: any; variant?: string; reason: string; metadata?: any }> | Record<string, any>,
+  evaluatedAt: string,
+  context: object
 }
 ```
 
@@ -650,14 +688,32 @@ Admin endpoints are under `/feature-flags/admin/...`.
 
 #### `GET /feature-flags/admin/flags`
 
-List all flags.
+List flags with unified query parameters and cursor pagination.
 
-**Query Parameters:**
+Query parameters:
 
-- `page` (number): Page number
-- `limit` (number): Items per page
-- `enabled` (boolean): Filter by status
-- `search` (string): Search term
+```
+{
+  organizationId?: string,
+  cursor?: string,
+  limit?: number,
+  q?: string,
+  sort?: string,                  // e.g., "-updatedAt", "key"
+  type?: 'boolean'|'string'|'number'|'json',
+  enabled?: boolean,
+  prefix?: string,
+  include?: 'stats'
+}
+```
+
+Response:
+
+```
+{
+  flags: FeatureFlag[],
+  page: { nextCursor?: string, limit: number, hasMore: boolean }
+}
+```
 
 #### `POST /feature-flags/admin/flags`
 

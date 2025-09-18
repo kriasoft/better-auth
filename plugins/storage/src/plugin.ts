@@ -3,9 +3,7 @@
 
 import type { BetterAuthPlugin } from "better-auth";
 import { connectSchema } from "./schema";
-import { createConnectEndpoints } from "./endpoints/connect";
-import { createSyncEndpoints } from "./endpoints/sync";
-import { createWebhookEndpoints } from "./endpoints/webhook";
+import { createStorageEndpoints } from "./endpoints";
 
 export interface CloudProvider {
   id: string;
@@ -71,22 +69,22 @@ export interface ConnectPluginOptions {
 /**
  * Better Auth plugin for connecting cloud storage providers
  */
-export function storagePlugin(options: ConnectPluginOptions): BetterAuthPlugin {
+export function createStoragePlugin(
+  options: ConnectPluginOptions,
+): BetterAuthPlugin {
   const syncInterval = options.sync?.interval ?? 300;
   const batchSize = options.sync?.batchSize ?? 100;
   const maxSizePerUser = options.storage?.maxSizePerUser ?? 1073741824;
   const maxFileSize = options.storage?.maxFileSize ?? 104857600;
+
+  const endpoints = createStorageEndpoints(options);
 
   return {
     id: "connect",
 
     schema: connectSchema,
 
-    endpoints: {
-      ...createConnectEndpoints(options),
-      ...createSyncEndpoints(options),
-      ...createWebhookEndpoints(options),
-    },
+    endpoints,
 
     hooks: {
       after: [

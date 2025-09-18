@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2025-present Kriasoft
 // SPDX-License-Identifier: MIT
 
-import { createMiddleware } from "better-call";
+import { createAuthMiddleware } from "better-auth/plugins";
 import type { EvaluationContext } from "../schema";
 import type { PluginContext } from "../types";
 
@@ -86,7 +86,7 @@ export function createUnifiedMiddleware(
   pluginContext: PluginContext,
   options: UnifiedMiddlewareOptions = {},
 ) {
-  return createMiddleware(async (ctx: any) => {
+  return createAuthMiddleware(async (ctx: any) => {
     const mode = options.mode || "minimal";
 
     const evaluationContext = await buildContextForMode(

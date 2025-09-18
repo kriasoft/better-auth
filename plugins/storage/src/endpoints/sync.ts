@@ -3,6 +3,8 @@
 
 import { z } from "zod";
 import { createAuthEndpoint } from "better-auth/plugins";
+import { getSessionFromCtx } from "better-auth/api";
+import type { ConnectedAccount, SyncedFile, SyncStatus } from "../types";
 import type { ConnectPluginOptions } from "../plugin";
 
 export function createSyncEndpoints(options: ConnectPluginOptions) {
@@ -16,7 +18,7 @@ export function createSyncEndpoints(options: ConnectPluginOptions) {
         method: "POST",
       },
       async (ctx) => {
-        const session = await ctx.getSession();
+        const session = await getSessionFromCtx(ctx);
         if (!session) {
           throw ctx.error("UNAUTHORIZED");
         }
@@ -36,13 +38,13 @@ export function createSyncEndpoints(options: ConnectPluginOptions) {
         }
 
         // Check if sync is already in progress
-        const existingSync = await ctx.context.adapter.findOne({
+        const existingSync = (await ctx.context.adapter.findOne({
           model: "syncStatus",
           where: [
             { field: "connectedAccountId", value: ctx.params?.accountId },
             { field: "status", value: "in_progress" },
           ],
-        });
+        })) as SyncStatus | null;
 
         if (existingSync) {
           return ctx.json({
@@ -69,7 +71,7 @@ export function createSyncEndpoints(options: ConnectPluginOptions) {
           await ctx.context.adapter.update({
             model: "syncStatus",
             where: [{ field: "id", value: syncId }],
-            data: {
+            update: {
               status: "completed",
               completedAt: new Date(),
               filesProcessed: 0,
@@ -94,7 +96,7 @@ export function createSyncEndpoints(options: ConnectPluginOptions) {
         method: "GET",
       },
       async (ctx) => {
-        const session = await ctx.getSession();
+        const session = await getSessionFromCtx(ctx);
         if (!session) {
           throw ctx.error("UNAUTHORIZED");
         }
@@ -114,23 +116,23 @@ export function createSyncEndpoints(options: ConnectPluginOptions) {
         }
 
         // Get latest sync status
-        const syncStatus = await ctx.context.adapter.findMany({
+        const syncStatus = (await ctx.context.adapter.findMany({
           model: "syncStatus",
           where: [
             { field: "connectedAccountId", value: ctx.params?.accountId },
           ],
-          orderBy: [{ field: "startedAt", direction: "desc" }],
+          sortBy: { field: "startedAt", direction: "desc" },
           limit: 1,
-        });
+        })) as SyncStatus[];
 
         if (!syncStatus || syncStatus.length === 0) {
           return ctx.json({
             status: "no_sync",
-            lastSyncedAt: account.lastSyncedAt,
+            lastSyncedAt: (account as any).lastSyncedAt,
           });
         }
 
-        const latestSync = syncStatus[0];
+        const latestSync = syncStatus[0] as SyncStatus;
         return ctx.json({
           syncId: latestSync.id,
           status: latestSync.status,
@@ -139,7 +141,7 @@ export function createSyncEndpoints(options: ConnectPluginOptions) {
           error: latestSync.error,
           startedAt: latestSync.startedAt,
           completedAt: latestSync.completedAt,
-          lastSyncedAt: account.lastSyncedAt,
+          lastSyncedAt: (account as any).lastSyncedAt,
         });
       },
     ),
@@ -160,7 +162,7 @@ export function createSyncEndpoints(options: ConnectPluginOptions) {
         }),
       },
       async (ctx) => {
-        const session = await ctx.getSession();
+        const session = await getSessionFromCtx(ctx);
         if (!session) {
           throw ctx.error("UNAUTHORIZED");
         }
@@ -215,13 +217,13 @@ export function createSyncEndpoints(options: ConnectPluginOptions) {
         }
 
         // Get files
-        const files = await ctx.context.adapter.findMany({
+        const files = (await ctx.context.adapter.findMany({
           model: "syncedFile",
           where,
           limit,
           offset,
-          orderBy: [{ field: "modifiedTime", direction: "desc" }],
-        });
+          sortBy: { field: "modifiedTime", direction: "desc" },
+        })) as SyncedFile[];
 
         // Get total count
         const countResult = await ctx.context.adapter.count({
@@ -257,15 +259,15 @@ export function createSyncEndpoints(options: ConnectPluginOptions) {
         method: "GET",
       },
       async (ctx) => {
-        const session = await ctx.getSession();
+        const session = await getSessionFromCtx(ctx);
         if (!session) {
           throw ctx.error("UNAUTHORIZED");
         }
 
-        const file = await ctx.context.adapter.findOne({
+        const file = (await ctx.context.adapter.findOne({
           model: "syncedFile",
           where: [{ field: "id", value: ctx.params?.fileId }],
-        });
+        })) as SyncedFile | null;
 
         if (!file) {
           throw ctx.error("NOT_FOUND", {
@@ -274,13 +276,13 @@ export function createSyncEndpoints(options: ConnectPluginOptions) {
         }
 
         // Verify user owns the account this file belongs to
-        const account = await ctx.context.adapter.findOne({
+        const account = (await ctx.context.adapter.findOne({
           model: "connectedAccount",
           where: [
             { field: "id", value: file.connectedAccountId },
             { field: "userId", value: session.user.id },
           ],
-        });
+        })) as ConnectedAccount | null;
 
         if (!account) {
           throw ctx.error("NOT_FOUND", {
@@ -301,7 +303,7 @@ export function createSyncEndpoints(options: ConnectPluginOptions) {
             thumbnailUrl: file.thumbnailUrl,
             modifiedTime: file.modifiedTime,
             syncedAt: file.syncedAt,
-            provider: account.provider,
+            provider: (account as ConnectedAccount).provider,
             providerFileId: file.providerFileId,
             metadata: file.metadata,
           },

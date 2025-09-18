@@ -5,7 +5,10 @@
 import type {} from "./augmentation";
 
 import { createFeatureFlagsPlugin } from "./plugin";
+import type { BetterAuthPlugin } from "better-auth";
 import type { FeatureFlagsOptions } from "./types";
+import type { FlagEndpoints } from "./endpoints";
+import { definePlugin } from "./internal/define-plugin";
 
 /**
  * Better Auth Feature Flags Plugin
@@ -35,8 +38,11 @@ import type { FeatureFlagsOptions } from "./types";
  * });
  * ```
  */
-export function featureFlags(options: FeatureFlagsOptions = {}) {
-  return createFeatureFlagsPlugin(options);
+export function featureFlags(
+  options: FeatureFlagsOptions = {},
+): BetterAuthPlugin & { endpoints: FlagEndpoints } {
+  // Hide complex internal types while preserving endpoint keys for API typing
+  return definePlugin<FlagEndpoints>(createFeatureFlagsPlugin(options));
 }
 
 export default featureFlags;

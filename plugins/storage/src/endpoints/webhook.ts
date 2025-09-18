@@ -3,6 +3,7 @@
 
 import { z } from "zod";
 import { createAuthEndpoint } from "better-auth/plugins";
+import { getSessionFromCtx } from "better-auth/api";
 import type { ConnectPluginOptions } from "../plugin";
 
 export function createWebhookEndpoints(options: ConnectPluginOptions) {
@@ -106,18 +107,18 @@ export function createWebhookEndpoints(options: ConnectPluginOptions) {
         }),
       },
       async (ctx) => {
-        const session = await ctx.getSession();
+        const session = await getSessionFromCtx(ctx);
         if (!session) {
           throw ctx.error("UNAUTHORIZED");
         }
 
-        const account = await ctx.context.adapter.findOne({
+        const account = (await ctx.context.adapter.findOne({
           model: "connectedAccount",
           where: [
             { field: "id", value: ctx.body.accountId },
             { field: "userId", value: session.user.id },
           ],
-        });
+        })) as any;
 
         if (!account) {
           throw ctx.error("NOT_FOUND", {
@@ -126,7 +127,7 @@ export function createWebhookEndpoints(options: ConnectPluginOptions) {
         }
 
         const provider = options.providers.find(
-          (p) => p.id === account.provider,
+          (p) => p.id === (account as any).provider,
         );
         if (!provider) {
           throw ctx.error("BAD_REQUEST", {
@@ -145,7 +146,7 @@ export function createWebhookEndpoints(options: ConnectPluginOptions) {
             {
               method: "POST",
               headers: {
-                Authorization: `Bearer ${account.accessToken}`,
+                Authorization: `Bearer ${(account as any).accessToken}`,
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
@@ -182,7 +183,7 @@ export function createWebhookEndpoints(options: ConnectPluginOptions) {
           const response = await fetch(subscriptionUrl, {
             method: "POST",
             headers: {
-              Authorization: `Bearer ${account.accessToken}`,
+              Authorization: `Bearer ${(account as any).accessToken}`,
               "Content-Type": "application/json",
             },
             body: JSON.stringify({

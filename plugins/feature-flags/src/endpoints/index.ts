@@ -1,7 +1,6 @@
 // SPDX-FileCopyrightText: 2025-present Kriasoft
 // SPDX-License-Identifier: MIT
 
-import type { BetterAuthPlugin } from "better-auth";
 import type { PluginContext } from "../types";
 import { createAdminEndpoints } from "./admin";
 import { createPublicEndpoints } from "./public";
@@ -32,7 +31,9 @@ import { createPublicEndpoints } from "./public";
  * @see plugins/feature-flags/src/endpoints/public/
  * @see plugins/feature-flags/src/endpoints/admin/
  */
-export type FlagEndpoints = NonNullable<BetterAuthPlugin["endpoints"]>;
+// Compose a precise endpoints type from the concrete endpoint groups
+export type FlagEndpoints = ReturnType<typeof createPublicEndpoints> &
+  ReturnType<typeof createAdminEndpoints>;
 
 export function createFlagEndpoints(
   pluginContext: PluginContext,
@@ -43,5 +44,5 @@ export function createFlagEndpoints(
   return {
     ...publicEndpoints,
     ...adminEndpoints,
-  } as unknown as FlagEndpoints;
+  };
 }
