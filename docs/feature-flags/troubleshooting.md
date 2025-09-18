@@ -262,7 +262,11 @@ Flags bleeding across organizations.
 
 3. **Verify flag ownership**
    ```typescript
-   const flag = await getFlag("flag-key", "org-123");
+   const result = await authClient.featureFlags.evaluate("flag-key", {
+     context: { organizationId: "org-123" }
+   });
+   // For admin operations, use the admin client
+   const flag = await adminClient.featureFlags.admin.flags.get("flag-id");
    if (flag.organizationId !== "org-123") {
      throw new Error("Flag belongs to different org");
    }

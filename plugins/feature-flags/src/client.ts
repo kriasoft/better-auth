@@ -4,8 +4,8 @@
 import type { BetterAuthClientPlugin } from "better-auth/client";
 import { FlagCache } from "./client/cache";
 import { ContextSanitizer } from "./context-sanitizer";
+import { featureFlags } from "./index";
 import { SecureOverrideManager, type OverrideConfig } from "./override-manager";
-import type { FeatureFlagsServerPlugin } from "./plugin";
 import { SmartPoller } from "./polling";
 import type { BooleanFlags } from "./types";
 
@@ -42,7 +42,7 @@ export interface FeatureFlagResult {
  * @template Schema - Optional flag schema for type safety
  */
 export interface FeatureFlagsClientOptions<
-  Schema extends Record<string, any> = Record<string, any>,
+  TSchema extends Record<string, any> = Record<string, any>,
 > {
   /** Client-side flag caching for performance and offline support */
   cache?: {
@@ -69,7 +69,7 @@ export interface FeatureFlagsClientOptions<
   };
 
   /** Default flag values for fallback */
-  defaults?: Partial<Schema>;
+  defaults?: Partial<TSchema>;
 
   /** Enable debug logging */
   debug?: boolean;
@@ -114,28 +114,28 @@ import type { EvaluationContext } from "./schema/types";
  * const client: FeatureFlagsClient<MyFlags> = createAuthClient();
  */
 export interface FeatureFlagsClient<
-  Schema extends Record<string, any> = Record<string, any>,
+  TSchema extends Record<string, any> = Record<string, any>,
 > {
   featureFlags: {
     /** Check if boolean flag is enabled */
-    isEnabled: <K extends BooleanFlags<Schema>>(
+    isEnabled: <K extends BooleanFlags<TSchema>>(
       flag: K,
       defaultValue?: boolean,
     ) => Promise<boolean>;
     /** Get typed flag value with fallback */
-    getValue: <K extends keyof Schema>(
+    getValue: <K extends keyof TSchema>(
       flag: K,
-      defaultValue?: Schema[K],
-    ) => Promise<Schema[K]>;
+      defaultValue?: TSchema[K],
+    ) => Promise<TSchema[K]>;
     /** Get variant key for A/B tests */
-    getVariant: <K extends keyof Schema>(flag: K) => Promise<string | null>;
+    getVariant: <K extends keyof TSchema>(flag: K) => Promise<string | null>;
 
     // === CANONICAL PUBLIC API ===
     /** Evaluate single flag */
-    evaluate: <K extends keyof Schema>(
+    evaluate: <K extends keyof TSchema>(
       flag: K,
       options?: {
-        default?: Schema[K];
+        default?: TSchema[K];
         context?: EvaluationContext;
         environment?: string;
         select?:
@@ -146,10 +146,10 @@ export interface FeatureFlagsClient<
       },
     ) => Promise<FeatureFlagResult>;
     /** Evaluate multiple flags efficiently */
-    evaluateMany: <K extends keyof Schema>(
+    evaluateMany: <K extends keyof TSchema>(
       flags: K[],
       options?: {
-        defaults?: Partial<Record<K, Schema[K]>>;
+        defaults?: Partial<Record<K, TSchema[K]>>;
         context?: EvaluationContext;
         environment?: string;
         select?:
@@ -170,9 +170,9 @@ export interface FeatureFlagsClient<
         | "full"
         | Array<"value" | "variant" | "reason" | "metadata">;
       contextInResponse?: boolean;
-    }) => Promise<Partial<Schema>>;
+    }) => Promise<Partial<TSchema>>;
     /** Track flag events for analytics */
-    track: <K extends keyof Schema>(
+    track: <K extends keyof TSchema>(
       flag: K,
       event: string,
       value?: number | Record<string, any>,
@@ -184,7 +184,7 @@ export interface FeatureFlagsClient<
       },
     ) => Promise<{ success: boolean; eventId: string; sampled?: boolean }>;
     /** Track multiple flag events in a single batch for efficiency */
-    trackBatch: <K extends keyof Schema>(
+    trackBatch: <K extends keyof TSchema>(
       events: Array<{
         flag: K;
         event: string;
@@ -206,19 +206,19 @@ export interface FeatureFlagsClient<
     getContext: () => EvaluationContext;
 
     /** Warm cache for known flags */
-    prefetch: <K extends keyof Schema>(flags: K[]) => Promise<void>;
+    prefetch: <K extends keyof TSchema>(flags: K[]) => Promise<void>;
     /** Clear all cached flags */
     clearCache: () => void;
 
     /** Override flag value for local testing */
-    setOverride: <K extends keyof Schema>(flag: K, value: Schema[K]) => void;
+    setOverride: <K extends keyof TSchema>(flag: K, value: TSchema[K]) => void;
     /** Clear all local overrides */
     clearOverrides: () => void;
 
     /** Force refresh all flags from server */
     refresh: () => Promise<void>;
     /** Subscribe to flag changes */
-    subscribe: (callback: (flags: Partial<Schema>) => void) => () => void;
+    subscribe: (callback: (flags: Partial<TSchema>) => void) => () => void;
 
     /** Cleanup resources and stop polling */
     dispose?: () => void;
@@ -371,13 +371,13 @@ export interface FeatureFlagsClient<
  * @see src/endpoints/ for server implementation
  */
 export function featureFlagsClient<
-  Schema extends Record<string, any> = Record<string, any>,
->(options: FeatureFlagsClientOptions<Schema> = {}) {
+  TSchema extends Record<string, any> = Record<string, any>,
+>(options: FeatureFlagsClientOptions<TSchema> = {}) {
   const cache = new FlagCache(options.cache);
   const overrideManager = new SecureOverrideManager(options.overrides);
-  const subscribers = new Set<(flags: Partial<Schema>) => void>();
+  const subscribers = new Set<(flags: Partial<TSchema>) => void>();
   let context: EvaluationContext = {};
-  let cachedFlags: Partial<Schema> = {};
+  let cachedFlags: Partial<TSchema> = {};
   let smartPoller: SmartPoller | null = null;
   let sessionUnsubscribe: (() => void) | null = null;
   let lastSessionId: string | undefined = undefined;
@@ -394,14 +394,14 @@ export function featureFlagsClient<
   });
   const sanitizationEnabled = options.contextSanitization?.enabled ?? true;
 
-  const notifySubscribers = (flags: Partial<Schema>) => {
+  const notifySubscribers = (flags: Partial<TSchema>) => {
     cachedFlags = flags;
     subscribers.forEach((callback) => callback(flags));
   };
 
   return {
     id: "feature-flags",
-    $InferServerPlugin: {} as FeatureFlagsServerPlugin,
+    $InferServerPlugin: {} as ReturnType<typeof featureFlags<TSchema>>,
 
     // HTTP methods for feature-flags endpoints - canonical only
     pathMethods: {
@@ -481,7 +481,7 @@ export function featureFlagsClient<
       };
 
       const evaluateFlag = async (
-        key: keyof Schema | string,
+        key: keyof TSchema | string,
         evaluateOptions?: {
           track?: boolean;
           select?:
@@ -519,7 +519,7 @@ export function featureFlagsClient<
                   ? sanitizer.sanitizeForBody(context)
                   : context
                 : undefined,
-            default: options.defaults?.[key as keyof Schema],
+            default: options.defaults?.[key as keyof TSchema],
           };
 
           // Add optional parameters if provided
@@ -551,9 +551,9 @@ export function featureFlagsClient<
           handleError(error as Error);
 
           // Graceful degradation during server outages
-          if (options.defaults?.[key as keyof Schema] !== undefined) {
+          if (options.defaults?.[key as keyof TSchema] !== undefined) {
             return {
-              value: options.defaults[key as keyof Schema],
+              value: options.defaults[key as keyof TSchema],
               reason: "default",
             };
           }
@@ -567,7 +567,7 @@ export function featureFlagsClient<
 
       const actions = {
         featureFlags: {
-          async isEnabled<K extends BooleanFlags<Schema>>(
+          async isEnabled<K extends BooleanFlags<TSchema>>(
             flag: K,
             defaultValue = false,
           ): Promise<boolean> {
@@ -576,15 +576,15 @@ export function featureFlagsClient<
             return Boolean(value);
           },
 
-          async getValue<K extends keyof Schema>(
+          async getValue<K extends keyof TSchema>(
             flag: K,
-            defaultValue?: Schema[K],
-          ): Promise<Schema[K]> {
+            defaultValue?: TSchema[K],
+          ): Promise<TSchema[K]> {
             const result = await evaluateFlag(flag);
             return result.value ?? defaultValue;
           },
 
-          async getVariant<K extends keyof Schema>(
+          async getVariant<K extends keyof TSchema>(
             flag: K,
           ): Promise<string | null> {
             const result = await evaluateFlag(flag);
@@ -593,10 +593,10 @@ export function featureFlagsClient<
 
           // Core evaluation methods
 
-          async evaluate<K extends keyof Schema>(
+          async evaluate<K extends keyof TSchema>(
             flag: K,
             opts?: {
-              default?: Schema[K];
+              default?: TSchema[K];
               context?: EvaluationContext;
               environment?: string;
               select?:
@@ -645,10 +645,10 @@ export function featureFlagsClient<
             }
           },
 
-          async evaluateMany<K extends keyof Schema>(
+          async evaluateMany<K extends keyof TSchema>(
             keys: K[],
             opts?: {
-              defaults?: Partial<Record<K, Schema[K]>>;
+              defaults?: Partial<Record<K, TSchema[K]>>;
               context?: EvaluationContext;
               environment?: string;
               select?:
@@ -777,8 +777,8 @@ export function featureFlagsClient<
             contextInResponse?: boolean;
             track?: boolean;
             debug?: boolean;
-            defaults?: Partial<Schema>;
-          }): Promise<Partial<Schema>> {
+            defaults?: Partial<TSchema>;
+          }): Promise<Partial<TSchema>> {
             try {
               const bootstrapRequestBody: any = {
                 include: options?.include,
@@ -816,7 +816,7 @@ export function featureFlagsClient<
                 flags: Record<string, FeatureFlagResult>;
               };
 
-              const flags: Partial<Schema> = {};
+              const flags: Partial<TSchema> = {};
               for (const [key, result] of Object.entries(data.flags)) {
                 (flags as any)[key] = result.value;
                 // Cache bootstrap results individually
@@ -831,7 +831,7 @@ export function featureFlagsClient<
             }
           },
 
-          async track<K extends keyof Schema>(
+          async track<K extends keyof TSchema>(
             flag: K,
             event: string,
             value?: number | Record<string, any>,
@@ -890,7 +890,7 @@ export function featureFlagsClient<
             }
           },
 
-          async trackBatch<K extends keyof Schema>(
+          async trackBatch<K extends keyof TSchema>(
             events: Array<{
               flag: K;
               event: string;
@@ -1000,7 +1000,7 @@ export function featureFlagsClient<
             return { ...context };
           },
 
-          async prefetch<K extends keyof Schema>(flags: K[]): Promise<void> {
+          async prefetch<K extends keyof TSchema>(flags: K[]): Promise<void> {
             // Warm cache for route changes
             const uncached = flags.filter(
               (key) => cache.get(String(key)) === undefined,
@@ -1014,7 +1014,10 @@ export function featureFlagsClient<
             cache.clear();
           },
 
-          setOverride<K extends keyof Schema>(flag: K, value: Schema[K]): void {
+          setOverride<K extends keyof TSchema>(
+            flag: K,
+            value: TSchema[K],
+          ): void {
             const success = overrideManager.set(String(flag), value);
             if (success) {
               // Notify subscribers of local override
@@ -1034,7 +1037,7 @@ export function featureFlagsClient<
             notifySubscribers(flags);
           },
 
-          subscribe(callback: (flags: Partial<Schema>) => void): () => void {
+          subscribe(callback: (flags: Partial<TSchema>) => void): () => void {
             subscribers.add(callback);
             // Immediate callback with current flags
             callback(cachedFlags);

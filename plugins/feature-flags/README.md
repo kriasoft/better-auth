@@ -708,7 +708,17 @@ interface AppFlags {
   "feature.premium-checkout": boolean;
 }
 
-// Type-safe client
+// Server setup with typed schema
+const auth = betterAuth({
+  plugins: [
+    featureFlags<AppFlags>({
+      // Schema type flows to client via $Infer
+      storage: "database",
+    }),
+  ],
+});
+
+// Type-safe client with schema inference
 const client = createAuthClient({
   plugins: [featureFlagsClient<AppFlags>()],
 });
