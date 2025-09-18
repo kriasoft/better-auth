@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2025-present Kriasoft
 // SPDX-License-Identifier: MIT
 
-import { createMiddleware } from "better-call";
+import { createAuthMiddleware } from "better-auth/plugins";
 import type {} from "../augmentation"; // Import type augmentations (types-only)
 import type { EvaluationContext } from "../schema";
 import type { PluginContext } from "../types";
@@ -16,7 +16,7 @@ import { buildEvaluationContext } from "./context";
 export function createSessionEnhancementMiddleware(
   pluginContext: PluginContext,
 ) {
-  return createMiddleware(async (ctx: any) => {
+  return createAuthMiddleware(async (ctx: any) => {
     const session = ctx.session || (await ctx.auth?.getSession?.());
 
     if (!session?.user) {
@@ -176,7 +176,7 @@ async function evaluateUserFlags(
  * @see createSessionEnhancementMiddleware for cached session flags
  */
 export function createRequestFlagsMiddleware(pluginContext: PluginContext) {
-  return createMiddleware(async (ctx: any) => {
+  return createAuthMiddleware(async (ctx: any) => {
     const session = ctx.session || (await ctx.auth?.getSession?.());
 
     const evaluationContext = await buildEvaluationContext(

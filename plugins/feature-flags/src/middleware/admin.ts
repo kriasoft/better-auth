@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2025-present Kriasoft
 // SPDX-License-Identifier: MIT
 
-import { createMiddleware } from "better-call";
+import { createAuthMiddleware } from "better-auth/plugins";
 import type {} from "../augmentation"; // Import type augmentations for Better Auth context extensions (types-only)
 import type { PluginContext } from "../types";
 
@@ -14,7 +14,7 @@ import type { PluginContext } from "../types";
  * @see src/types.ts for admin access configuration
  */
 export function createAdminProtectionMiddleware(pluginContext: PluginContext) {
-  return createMiddleware(async (ctx: any) => {
+  return createAuthMiddleware(async (ctx: any) => {
     const { config } = pluginContext;
 
     // SECURITY: Global admin access toggle - first line of defense
@@ -79,7 +79,7 @@ export function createAdminProtectionMiddleware(pluginContext: PluginContext) {
  * @see src/schema/tables.ts for audit table schema
  */
 export function createAuditMiddleware(pluginContext: PluginContext) {
-  return createMiddleware(async (ctx: any) => {
+  return createAuthMiddleware(async (ctx: any) => {
     const { config, storage } = pluginContext;
 
     // Early exit if audit disabled - reduces performance overhead
@@ -160,7 +160,7 @@ export function createAuditMiddleware(pluginContext: PluginContext) {
 export function createCacheInvalidationMiddleware(
   pluginContext: PluginContext,
 ) {
-  return createMiddleware(async (ctx: any) => {
+  return createAuthMiddleware(async (ctx: any) => {
     const { cache, config } = pluginContext;
 
     // Early exit if caching disabled or unavailable (serverless environments)

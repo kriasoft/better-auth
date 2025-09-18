@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import { beforeEach, describe, expect, it } from "bun:test";
-import { createAdminAnalyticsEndpoints } from "./endpoints/admin/analytics";
+import { createAdminAnalyticsEndpointsForTest } from "./endpoints/admin/analytics.test-helper";
 import { LRUCache } from "./lru-cache";
 import { createStorageAdapter } from "./storage";
 import type { PluginContext } from "./types";
@@ -27,10 +27,22 @@ function makePluginContext(): PluginContext {
 }
 
 function mkCtx(query: any = {}) {
+  const session = {
+    id: "s1",
+    user: { id: "test", roles: ["admin"] },
+    expiresAt: new Date(Date.now() + 3600_000),
+  } as any;
   return {
     query,
     params: {},
-    context: { session: { user: { id: "test" } } },
+    path: "/feature-flags/admin/flags/:flagId/stats",
+    method: "GET",
+    // Provide session in multiple places to satisfy sessionMiddleware variants
+    context: { session },
+    session,
+    auth: { getSession: async () => session },
+    getSession: async () => session,
+    headers: { get: () => null, entries: () => [] } as any,
     json: (data: any) => data,
   } as any;
 }
@@ -41,7 +53,7 @@ describe("admin analytics server-side", () => {
 
   beforeEach(async () => {
     pc = makePluginContext();
-    endpoints = createAdminAnalyticsEndpoints(pc as any);
+    endpoints = createAdminAnalyticsEndpointsForTest(pc as any);
   });
 
   it("parses start/end to Date in stats", async () => {

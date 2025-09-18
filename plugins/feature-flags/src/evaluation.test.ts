@@ -214,4 +214,78 @@ describe("evaluation engine", () => {
     expect(results["test-flag"].metadata.debug.flagId).toBe(flag.id);
     expect(results["test-flag"].metadata.debug.environment).toBe("test-env");
   });
+
+  it("includes debug metadata for override path", async () => {
+    const flag = makeFlag({ defaultValue: false, enabled: true });
+    const ctx = makeCtx({ userId: "user-42" });
+    const pc = makePluginContext({
+      getOverride: async () =>
+        ({
+          id: "ov1",
+          flagId: flag.id,
+          userId: ctx.userId!,
+          value: true,
+          enabled: true,
+          createdAt: new Date(),
+        }) as any,
+    });
+
+    const result = await evaluateFlags(flag, ctx, pc, true, "canary");
+
+    expect(result.reason).toBe("override");
+    expect(result.value).toBe(true);
+    expect(result.metadata?.debug).toBeDefined();
+    expect(result.metadata!.debug.evaluationPath).toContain("override");
+    expect(result.metadata!.debug.flagId).toBe(flag.id);
+    expect(result.metadata!.debug.environment).toBe("canary");
+  });
+
+  it("includes debug metadata for rule path", async () => {
+    const flag = makeFlag({ defaultValue: false, enabled: true });
+    const ctx = makeCtx({ attributes: { plan: "pro" } });
+    const rule: FlagRule = {
+      id: "r2",
+      flagId: flag.id,
+      name: "Pro users",
+      priority: 0,
+      enabled: true,
+      conditions: {
+        all: [
+          { attribute: "attributes.plan", operator: "equals", value: "pro" },
+        ],
+      } as any,
+      value: true,
+      createdAt: new Date(),
+    };
+    const pc = makePluginContext({ getRulesForFlag: async () => [rule] });
+
+    const result = await evaluateFlags(flag, ctx, pc, true, "staging");
+
+    expect(result.reason).toBe("rule_match");
+    expect(result.value).toBe(true);
+    expect(result.metadata?.debug).toBeDefined();
+    expect(result.metadata!.debug.evaluationPath).toContain("rule");
+    expect(result.metadata!.debug.flagId).toBe(flag.id);
+    expect(result.metadata!.debug.environment).toBe("staging");
+  });
+
+  it("includes debug metadata for rollout path (0% boundary)", async () => {
+    const flag = makeFlag({
+      defaultValue: false,
+      enabled: true,
+      rolloutPercentage: 0,
+    });
+    const ctx = makeCtx({ userId: "user-any" });
+    const pc = makePluginContext();
+
+    const result = await evaluateFlags(flag, ctx, pc, true, "prod");
+
+    expect(result.reason).toBe("percentage_rollout");
+    expect(result.metadata?.debug).toBeDefined();
+    expect(result.metadata!.debug.evaluationPath).toContain("rollout");
+    expect(result.metadata!.debug.flagId).toBe(flag.id);
+    expect(result.metadata!.debug.environment).toBe("prod");
+    expect(result.metadata!.percentage).toBe(0);
+    expect(result.metadata!.included).toBe(false);
+  });
 });
