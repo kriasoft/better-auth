@@ -42,7 +42,7 @@
     <link rel="modulepreload" href="/better-auth/assets/chunks/architectureDiagram-W76B3OCA.CTIRoJBo.js">
     <link rel="modulepreload" href="/better-auth/assets/chunks/diagram-N5W7TBWH.BOAMl1eU.js">
     <link rel="modulepreload" href="/better-auth/assets/chunks/virtual_mermaid-config.DDnGl6nM.js">
-    <link rel="modulepreload" href="/better-auth/assets/feature-flags_api-reference.md.P_WaTelF.lean.js">
+    <link rel="modulepreload" href="/better-auth/assets/feature-flags_api-reference.md.D3Ah2Aoi.lean.js">
     <script id="check-dark-mode">(()=>{const e=localStorage.getItem("vitepress-theme-appearance")||"auto",a=window.matchMedia("(prefers-color-scheme: dark)").matches;(!e||e==="auto"?a:e==="dark")&&document.documentElement.classList.add("dark")})();</script>
     <script id="check-mac-os">document.documentElement.classList.toggle("mac",/Mac|iPhone|iPod|iPad/i.test(navigator.platform));</script>
   </head>
@@ -475,20 +475,35 @@
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Evaluate a single flag.</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Headers</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Body </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">fields</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (canonical):</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">Authorization: Bearer &lt;token&gt;</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">x-organization-id: &lt;org-id&gt; (optional)</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
-<span class="line"></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Response</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span></span>
-<span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```json</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">{</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;value&quot;: true,</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;variant&quot;: &quot;control&quot;,</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;reason&quot;: &quot;rule_match&quot;</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  flagKey: string,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  context?: object,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  default?: any,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  select?: &#39;value&#39;|&#39;full&#39;|Array&lt;&#39;value&#39;|&#39;variant&#39;|&#39;reason&#39;|&#39;metadata&#39;&gt;,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  environment?: string,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  track?: boolean,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  debug?: boolean,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  contextInResponse?: boolean</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">}</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Headers</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> `x-deployment-ring: &lt;env&gt;`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Optional; takes precedence over body </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`environment`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Response</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (default):</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">{</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  value: any,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  variant?: string,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  reason: string,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  metadata?: object,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  evaluatedAt: string,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  context?: object // when contextInResponse=true</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">}</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
 <span class="line"></span>
@@ -496,43 +511,66 @@
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Evaluate multiple flags.</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Request </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Body</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Body </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">fields</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (canonical):</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```json</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">{</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;flagKeys&quot;: [&quot;flag-1&quot;, &quot;flag-2&quot;],</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;defaults&quot;: {</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;flag-1&quot;: false</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  }</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  flagKeys: string[],</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  defaults?: Record&lt;string, any&gt;,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  context?: object,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  select?: &#39;value&#39;|&#39;full&#39;|Array&lt;&#39;value&#39;|&#39;variant&#39;|&#39;reason&#39;|&#39;metadata&#39;&gt;,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  environment?: string,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  track?: boolean,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  debug?: boolean,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  contextInResponse?: boolean</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">}</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Response</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Headers</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```json</span></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> `x-deployment-ring: &lt;env&gt;`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Optional; takes precedence over body </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`environment`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Response</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">{</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;flag-1&quot;: {</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;value&quot;: true,</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;reason&quot;: &quot;percentage_rollout&quot;</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  },</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;flag-2&quot;: {</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;value&quot;: &quot;blue&quot;,</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;reason&quot;: &quot;default&quot;</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  }</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  flags: Record&lt;string, { value: any; variant?: string; reason: string; metadata?: any }&gt; | Record&lt;string, any&gt;,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  evaluatedAt: string,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  context?: object // when contextInResponse=true</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">}</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Note</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`contextInResponse`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> defaults to </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`true`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> for batch evaluation and to </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`false`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> for single evaluation.</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`POST /feature-flags/bootstrap`</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Get all enabled flags for bootstrap.</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Get all enabled flags for bootstrap</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">/</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">initialization. Supports server</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">side filtering.</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Response</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Body </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">fields</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (canonical):</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```json</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">{</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;feature-1&quot;: true,</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;feature-2&quot;: &quot;value&quot;,</span></span>
-<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  &quot;feature-3&quot;: { &quot;nested&quot;: &quot;data&quot; }</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  context?: object,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  include?: string[], // only include specific keys</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  prefix?: string,    // only include keys starting with prefix</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  select?: &#39;value&#39;|&#39;full&#39;|Array&lt;&#39;value&#39;|&#39;variant&#39;|&#39;reason&#39;|&#39;metadata&#39;&gt;,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  environment?: string,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  track?: boolean,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  debug?: boolean</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">}</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Headers</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> `x-deployment-ring: &lt;env&gt;`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Optional; takes precedence over body </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`environment`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">.</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Response</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">{</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  flags: Record&lt;string, { value: any; variant?: string; reason: string; metadata?: any }&gt; | Record&lt;string, any&gt;,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  evaluatedAt: string,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  context: object</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">}</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
 <span class="line"></span>
@@ -558,14 +596,32 @@
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`GET /feature-flags/admin/flags`</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">List all flags.</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">List flags </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">with</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> unified query parameters and cursor pagination.</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Query </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Parameters</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">**</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Query </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">parameters</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> `page`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (number): Page number</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> `limit`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (number): Items per page</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> `enabled`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (boolean): Filter by status</span></span>
-<span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">-</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> `search`</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (string): Search term</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">{</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  organizationId?: string,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  cursor?: string,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  limit?: number,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  q?: string,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  sort?: string,                  // e.g., &quot;-updatedAt&quot;, &quot;key&quot;</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  type?: &#39;boolean&#39;|&#39;string&#39;|&#39;number&#39;|&#39;json&#39;,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  enabled?: boolean,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  prefix?: string,</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  include?: &#39;stats&#39;</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">}</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">Response</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">:</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">{</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  flags: FeatureFlag[],</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">  page: { nextCursor?: string, limit: number, hasMore: boolean }</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">}</span></span>
+<span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">#### </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">`POST /feature-flags/admin/flags`</span></span>
 <span class="line"></span>
@@ -888,7 +944,7 @@
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">// Admin runtime</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">createAuthClient({ plugins: [featureFlagsClient(), featureFlagsAdminClient()] });</span></span>
 <span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">```</span></span></code></pre></div></div></div></main><footer class="VPDocFooter" data-v-39a288b8 data-v-e257564d><!--[--><!--]--><!----><nav class="prev-next" aria-labelledby="doc-footer-aria-label" data-v-e257564d><span class="visually-hidden" id="doc-footer-aria-label" data-v-e257564d>Pager</span><div class="pager" data-v-e257564d><a class="VPLink link pager-link prev" href="/better-auth/feature-flags/configuration.html" data-v-e257564d><!--[--><span class="desc" data-v-e257564d>Previous page</span><span class="title" data-v-e257564d>Configuration</span><!--]--></a></div><div class="pager" data-v-e257564d><a class="VPLink link pager-link next" href="/better-auth/feature-flags/client-sdk.html" data-v-e257564d><!--[--><span class="desc" data-v-e257564d>Next page</span><span class="title" data-v-e257564d>Client SDK</span><!--]--></a></div></nav></footer><!--[--><!--]--></div></div></div><!--[--><!--]--></div></div><!----><!--[--><!--]--></div></div>
-    <script>window.__VP_HASH_MAP__=JSON.parse("{\"feature-flags_adrs_01-device-detection.md\":\"CkBb3s4e\",\"feature-flags_api-reference.md\":\"P_WaTelF\",\"feature-flags_client-sdk.md\":\"C_t9DiWw\",\"feature-flags_configuration.md\":\"CxYaq8X1\",\"feature-flags_device-detection.md\":\"B1IeWgCq\",\"feature-flags_overview.md\":\"BWxmBavL\",\"feature-flags_quickstart.md\":\"DNgvBnLA\",\"feature-flags_troubleshooting.md\":\"B4EK6o6V\",\"getting-started.md\":\"_qd8M11D\",\"index.md\":\"C6Vymeaz\"}");window.__VP_SITE_DATA__=JSON.parse("{\"lang\":\"en-US\",\"dir\":\"ltr\",\"title\":\"🧩  Better Auth Plugins\",\"description\":\"Better Auth Plugins\",\"base\":\"/better-auth/\",\"head\":[],\"router\":{\"prefetchLinks\":true},\"appearance\":true,\"themeConfig\":{\"nav\":[{\"text\":\"Guide\",\"link\":\"/getting-started\"}],\"sidebar\":[{\"text\":\"Guide\",\"items\":[{\"text\":\"Getting Started\",\"link\":\"/getting-started\"}]},{\"text\":\"Feature Flags\",\"collapsed\":false,\"items\":[{\"text\":\"Overview\",\"link\":\"/feature-flags/overview\"},{\"text\":\"Quickstart\",\"link\":\"/feature-flags/quickstart\"},{\"text\":\"Configuration\",\"link\":\"/feature-flags/configuration\"},{\"text\":\"API Reference\",\"link\":\"/feature-flags/api-reference\"},{\"text\":\"Client SDK\",\"link\":\"/feature-flags/client-sdk\"},{\"text\":\"Device Detection\",\"link\":\"/feature-flags/device-detection\"},{\"text\":\"Troubleshooting\",\"link\":\"/feature-flags/troubleshooting\"}]}],\"socialLinks\":[{\"icon\":\"github\",\"link\":\"https://github.com/kriasoft/better-auth\"},{\"icon\":\"discord\",\"link\":\"https://discord.gg/SBwX6VeqCY\"},{\"icon\":\"x\",\"link\":\"https://x.com/kriasoft\"}]},\"locales\":{},\"scrollOffset\":134,\"cleanUrls\":false}");</script>
+    <script>window.__VP_HASH_MAP__=JSON.parse("{\"feature-flags_adrs_01-device-detection.md\":\"CkBb3s4e\",\"feature-flags_api-reference.md\":\"D3Ah2Aoi\",\"feature-flags_client-sdk.md\":\"B17SEHHV\",\"feature-flags_configuration.md\":\"CxYaq8X1\",\"feature-flags_device-detection.md\":\"B1IeWgCq\",\"feature-flags_overview.md\":\"BWxmBavL\",\"feature-flags_quickstart.md\":\"DU1zGqT4\",\"feature-flags_troubleshooting.md\":\"B4EK6o6V\",\"getting-started.md\":\"_qd8M11D\",\"index.md\":\"C6Vymeaz\"}");window.__VP_SITE_DATA__=JSON.parse("{\"lang\":\"en-US\",\"dir\":\"ltr\",\"title\":\"🧩  Better Auth Plugins\",\"description\":\"Better Auth Plugins\",\"base\":\"/better-auth/\",\"head\":[],\"router\":{\"prefetchLinks\":true},\"appearance\":true,\"themeConfig\":{\"nav\":[{\"text\":\"Guide\",\"link\":\"/getting-started\"}],\"sidebar\":[{\"text\":\"Guide\",\"items\":[{\"text\":\"Getting Started\",\"link\":\"/getting-started\"}]},{\"text\":\"Feature Flags\",\"collapsed\":false,\"items\":[{\"text\":\"Overview\",\"link\":\"/feature-flags/overview\"},{\"text\":\"Quickstart\",\"link\":\"/feature-flags/quickstart\"},{\"text\":\"Configuration\",\"link\":\"/feature-flags/configuration\"},{\"text\":\"API Reference\",\"link\":\"/feature-flags/api-reference\"},{\"text\":\"Client SDK\",\"link\":\"/feature-flags/client-sdk\"},{\"text\":\"Device Detection\",\"link\":\"/feature-flags/device-detection\"},{\"text\":\"Troubleshooting\",\"link\":\"/feature-flags/troubleshooting\"}]}],\"socialLinks\":[{\"icon\":\"github\",\"link\":\"https://github.com/kriasoft/better-auth\"},{\"icon\":\"discord\",\"link\":\"https://discord.gg/SBwX6VeqCY\"},{\"icon\":\"x\",\"link\":\"https://x.com/kriasoft\"}]},\"locales\":{},\"scrollOffset\":134,\"cleanUrls\":false}");</script>
     
   </body>
 </html>
