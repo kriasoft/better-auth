@@ -56,14 +56,14 @@
     "prepublishOnly": "bun run build"
   },
   "peerDependencies": {
-    "better-auth": "^1.3.11"
+    "better-auth": "^1.3.12"
   },
   "dependencies": {
     "zod": "^4.1.9"
   },
   "devDependencies": {
-    "@types/node": "^24.5.1",
-    "better-auth": "^1.3.11",
+    "@types/node": "^24.5.2",
+    "better-auth": "^1.3.12",
     "tsup": "^8.5.0",
     "typescript": "^5.9.2"
   },

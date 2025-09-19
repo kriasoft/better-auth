@@ -19,13 +19,20 @@ Thanks for your interest in contributing to Better Auth Plugins! We welcome all 
    bun install
    ```
 
-3. **Build all packages**
+3. **Setup database**
+
+   ```bash
+   # Initialize database
+   bun run db:push
+   ```
+
+4. **Build all packages**
 
    ```bash
    bun run build
    ```
 
-4. **Run tests**
+5. **Run tests**
 
    ```bash
    bun test
@@ -55,6 +62,9 @@ Thanks for your interest in contributing to Better Auth Plugins! We welcome all 
 
    # Build to ensure everything compiles
    bun run build
+
+   # Database operations (if schema changes)
+   bun run db:push
    ```
 
 4. **Commit and push**
@@ -69,6 +79,20 @@ Thanks for your interest in contributing to Better Auth Plugins! We welcome all 
    - Use a descriptive title
    - Explain what changes you made and why
    - Reference any related issues
+
+## Database Commands Reference
+
+For contributors working with database schemas:
+
+```bash
+# Development workflow
+bun run db:push           # Push schema changes directly (fastest)
+bun run db:studio         # Open Drizzle Studio for inspection
+
+# Migration workflow (production)
+bun run db:generate       # Generate migration files
+bun run db:migrate        # Apply migrations to database
+```
 
 ## Plugin Development Guidelines
 

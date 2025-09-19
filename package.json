@@ -13,15 +13,29 @@
     "dev": "bun run --filter '*' dev",
     "typecheck": "bun run --filter '*' typecheck",
     "test": "bun run --filter '*' test",
+    "generate:schema": "bun run scripts/generate-auth-schema.ts",
+    "db:generate": "bun run --cwd=db generate",
+    "db:push": "bun run --cwd=db push",
+    "db:migrate": "bun run --cwd=db migrate",
+    "db:studio": "bun run --cwd=db studio",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
-    "docs:deploy": "gh-pages -d docs/.vitepress/dist"
+    "docs:deploy": "gh-pages -d docs/.vitepress/dist",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,md,yml,yaml}": [
+      "prettier --write --ignore-unknown"
+    ],
+    "*.ts": "bun run generate:schema"
   },
   "devDependencies": {
-    "@types/node": "^24.5.1",
+    "@types/node": "^24.5.2",
     "gh-pages": "^6.3.0",
-    "mermaid": "^11.11.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.6",
+    "mermaid": "^11.12.0",
     "prettier": "^3.6.2",
     "typescript": "^5.9.2",
     "vitepress": "^1.6.4",

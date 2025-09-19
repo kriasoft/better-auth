@@ -1,0 +1,923 @@
+{
+  "user": {
+    "fields": {
+      "name": {
+        "type": "string",
+        "required": true,
+        "fieldName": "name",
+        "sortable": true
+      },
+      "email": {
+        "type": "string",
+        "unique": true,
+        "required": true,
+        "fieldName": "email",
+        "sortable": true
+      },
+      "emailVerified": {
+        "type": "boolean",
+        "defaultValue": false,
+        "required": true,
+        "fieldName": "emailVerified"
+      },
+      "image": {
+        "type": "string",
+        "required": false,
+        "fieldName": "image"
+      },
+      "createdAt": {
+        "type": "date",
+        "required": true,
+        "fieldName": "createdAt"
+      },
+      "updatedAt": {
+        "type": "date",
+        "required": true,
+        "fieldName": "updatedAt"
+      }
+    },
+    "order": 1
+  },
+  "session": {
+    "fields": {
+      "expiresAt": {
+        "type": "date",
+        "required": true,
+        "fieldName": "expiresAt"
+      },
+      "token": {
+        "type": "string",
+        "required": true,
+        "fieldName": "token",
+        "unique": true
+      },
+      "createdAt": {
+        "type": "date",
+        "required": true,
+        "fieldName": "createdAt"
+      },
+      "updatedAt": {
+        "type": "date",
+        "required": true,
+        "fieldName": "updatedAt"
+      },
+      "ipAddress": {
+        "type": "string",
+        "required": false,
+        "fieldName": "ipAddress"
+      },
+      "userAgent": {
+        "type": "string",
+        "required": false,
+        "fieldName": "userAgent"
+      },
+      "userId": {
+        "type": "string",
+        "fieldName": "userId",
+        "references": {
+          "model": "user",
+          "field": "id"
+        },
+        "required": true
+      },
+      "activeOrganizationId": {
+        "type": "string",
+        "required": false
+      }
+    },
+    "order": 2
+  },
+  "account": {
+    "fields": {
+      "accountId": {
+        "type": "string",
+        "required": true,
+        "fieldName": "accountId"
+      },
+      "providerId": {
+        "type": "string",
+        "required": true,
+        "fieldName": "providerId"
+      },
+      "userId": {
+        "type": "string",
+        "references": {
+          "model": "user",
+          "field": "id"
+        },
+        "required": true,
+        "fieldName": "userId"
+      },
+      "accessToken": {
+        "type": "string",
+        "required": false,
+        "fieldName": "accessToken"
+      },
+      "refreshToken": {
+        "type": "string",
+        "required": false,
+        "fieldName": "refreshToken"
+      },
+      "idToken": {
+        "type": "string",
+        "required": false,
+        "fieldName": "idToken"
+      },
+      "accessTokenExpiresAt": {
+        "type": "date",
+        "required": false,
+        "fieldName": "accessTokenExpiresAt"
+      },
+      "refreshTokenExpiresAt": {
+        "type": "date",
+        "required": false,
+        "fieldName": "refreshTokenExpiresAt"
+      },
+      "scope": {
+        "type": "string",
+        "required": false,
+        "fieldName": "scope"
+      },
+      "password": {
+        "type": "string",
+        "required": false,
+        "fieldName": "password"
+      },
+      "createdAt": {
+        "type": "date",
+        "required": true,
+        "fieldName": "createdAt"
+      },
+      "updatedAt": {
+        "type": "date",
+        "required": true,
+        "fieldName": "updatedAt"
+      }
+    },
+    "order": 3
+  },
+  "verification": {
+    "fields": {
+      "identifier": {
+        "type": "string",
+        "required": true,
+        "fieldName": "identifier"
+      },
+      "value": {
+        "type": "string",
+        "required": true,
+        "fieldName": "value"
+      },
+      "expiresAt": {
+        "type": "date",
+        "required": true,
+        "fieldName": "expiresAt"
+      },
+      "createdAt": {
+        "type": "date",
+        "required": true,
+        "fieldName": "createdAt"
+      },
+      "updatedAt": {
+        "type": "date",
+        "required": true,
+        "fieldName": "updatedAt"
+      }
+    },
+    "order": 4
+  },
+  "organization": {
+    "fields": {
+      "name": {
+        "type": "string",
+        "required": true,
+        "sortable": true
+      },
+      "slug": {
+        "type": "string",
+        "unique": true,
+        "sortable": true
+      },
+      "logo": {
+        "type": "string",
+        "required": false
+      },
+      "createdAt": {
+        "type": "date",
+        "required": true
+      },
+      "metadata": {
+        "type": "string",
+        "required": false
+      }
+    },
+    "order": null
+  },
+  "member": {
+    "fields": {
+      "organizationId": {
+        "type": "string",
+        "required": true,
+        "references": {
+          "model": "organization",
+          "field": "id"
+        }
+      },
+      "userId": {
+        "type": "string",
+        "required": true,
+        "references": {
+          "model": "user",
+          "field": "id"
+        }
+      },
+      "role": {
+        "type": "string",
+        "required": true,
+        "sortable": true,
+        "defaultValue": "member"
+      },
+      "createdAt": {
+        "type": "date",
+        "required": true
+      }
+    },
+    "order": null
+  },
+  "invitation": {
+    "fields": {
+      "organizationId": {
+        "type": "string",
+        "required": true,
+        "references": {
+          "model": "organization",
+          "field": "id"
+        }
+      },
+      "email": {
+        "type": "string",
+        "required": true,
+        "sortable": true
+      },
+      "role": {
+        "type": "string",
+        "required": false,
+        "sortable": true
+      },
+      "status": {
+        "type": "string",
+        "required": true,
+        "sortable": true,
+        "defaultValue": "pending"
+      },
+      "expiresAt": {
+        "type": "date",
+        "required": true
+      },
+      "inviterId": {
+        "type": "string",
+        "references": {
+          "model": "user",
+          "field": "id"
+        },
+        "required": true
+      }
+    },
+    "order": null
+  },
+  "featureFlag": {
+    "fields": {
+      "key": {
+        "type": "string",
+        "required": true,
+        "unique": true
+      },
+      "name": {
+        "type": "string",
+        "required": true
+      },
+      "description": {
+        "type": "string",
+        "required": false
+      },
+      "type": {
+        "type": "string",
+        "defaultValue": "boolean",
+        "validator": {
+          "input": {
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            },
+            "def": {
+              "type": "enum",
+              "entries": {
+                "boolean": "boolean",
+                "string": "string",
+                "number": "number",
+                "json": "json"
+              }
+            },
+            "type": "enum",
+            "enum": {
+              "boolean": "boolean",
+              "string": "string",
+              "number": "number",
+              "json": "json"
+            },
+            "options": ["boolean", "string", "number", "json"]
+          },
+          "output": {
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            },
+            "def": {
+              "type": "enum",
+              "entries": {
+                "boolean": "boolean",
+                "string": "string",
+                "number": "number",
+                "json": "json"
+              }
+            },
+            "type": "enum",
+            "enum": {
+              "boolean": "boolean",
+              "string": "string",
+              "number": "number",
+              "json": "json"
+            },
+            "options": ["boolean", "string", "number", "json"]
+          }
+        }
+      },
+      "enabled": {
+        "type": "boolean",
+        "defaultValue": false
+      },
+      "defaultValue": {
+        "type": "string",
+        "required": false,
+        "transform": {}
+      },
+      "rolloutPercentage": {
+        "type": "number",
+        "defaultValue": 0,
+        "validator": {
+          "input": {
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            },
+            "def": {
+              "type": "number",
+              "checks": [{}, {}]
+            },
+            "type": "number",
+            "minValue": 0,
+            "maxValue": 100,
+            "isInt": false,
+            "isFinite": true,
+            "format": null
+          },
+          "output": {
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            },
+            "def": {
+              "type": "number",
+              "checks": [{}, {}]
+            },
+            "type": "number",
+            "minValue": 0,
+            "maxValue": 100,
+            "isInt": false,
+            "isFinite": true,
+            "format": null
+          }
+        }
+      },
+      "organizationId": {
+        "type": "string",
+        "references": {
+          "model": "organization",
+          "field": "id"
+        },
+        "required": false
+      },
+      "createdAt": {
+        "type": "date",
+        "required": true
+      },
+      "updatedAt": {
+        "type": "date",
+        "required": true
+      },
+      "variants": {
+        "type": "string",
+        "required": false,
+        "transform": {}
+      },
+      "metadata": {
+        "type": "string",
+        "required": false,
+        "transform": {}
+      }
+    },
+    "order": null
+  },
+  "flagRule": {
+    "fields": {
+      "flagId": {
+        "type": "string",
+        "references": {
+          "model": "featureFlag",
+          "field": "id"
+        },
+        "required": true
+      },
+      "priority": {
+        "type": "number",
+        "defaultValue": 0,
+        "validator": {
+          "input": {
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            },
+            "def": {
+              "type": "number",
+              "checks": [
+                {
+                  "~standard": {
+                    "vendor": "zod",
+                    "version": 1
+                  },
+                  "def": {
+                    "type": "number",
+                    "check": "number_format",
+                    "abort": false,
+                    "format": "safeint"
+                  },
+                  "type": "number",
+                  "minValue": -9007199254740991,
+                  "maxValue": 9007199254740991,
+                  "isInt": true,
+                  "isFinite": true,
+                  "format": "safeint"
+                },
+                {},
+                {}
+              ]
+            },
+            "type": "number",
+            "minValue": -1000,
+            "maxValue": 1000,
+            "isInt": true,
+            "isFinite": true,
+            "format": "safeint"
+          },
+          "output": {
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            },
+            "def": {
+              "type": "number",
+              "checks": [
+                {
+                  "~standard": {
+                    "vendor": "zod",
+                    "version": 1
+                  },
+                  "def": {
+                    "type": "number",
+                    "check": "number_format",
+                    "abort": false,
+                    "format": "safeint"
+                  },
+                  "type": "number",
+                  "minValue": -9007199254740991,
+                  "maxValue": 9007199254740991,
+                  "isInt": true,
+                  "isFinite": true,
+                  "format": "safeint"
+                }
+              ]
+            },
+            "type": "number",
+            "minValue": -9007199254740991,
+            "maxValue": 9007199254740991,
+            "isInt": true,
+            "isFinite": true,
+            "format": "safeint"
+          }
+        }
+      },
+      "name": {
+        "type": "string",
+        "required": false
+      },
+      "conditions": {
+        "type": "string",
+        "required": true,
+        "transform": {}
+      },
+      "value": {
+        "type": "string",
+        "required": true,
+        "transform": {}
+      },
+      "percentage": {
+        "type": "number",
+        "required": false,
+        "validator": {
+          "input": {
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            },
+            "def": {
+              "type": "optional",
+              "innerType": {
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                },
+                "def": {
+                  "type": "number",
+                  "checks": [{}, {}]
+                },
+                "type": "number",
+                "minValue": 0,
+                "maxValue": 100,
+                "isInt": false,
+                "isFinite": true,
+                "format": null
+              }
+            },
+            "type": "optional"
+          },
+          "output": {
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            },
+            "def": {
+              "type": "optional",
+              "innerType": {
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                },
+                "def": {
+                  "type": "number",
+                  "checks": [{}, {}]
+                },
+                "type": "number",
+                "minValue": 0,
+                "maxValue": 100,
+                "isInt": false,
+                "isFinite": true,
+                "format": null
+              }
+            },
+            "type": "optional"
+          }
+        }
+      },
+      "enabled": {
+        "type": "boolean",
+        "defaultValue": true
+      },
+      "createdAt": {
+        "type": "date",
+        "required": true
+      }
+    },
+    "order": null
+  },
+  "flagOverride": {
+    "fields": {
+      "flagId": {
+        "type": "string",
+        "references": {
+          "model": "featureFlag",
+          "field": "id"
+        },
+        "required": true
+      },
+      "userId": {
+        "type": "string",
+        "references": {
+          "model": "user",
+          "field": "id"
+        },
+        "required": true
+      },
+      "value": {
+        "type": "string",
+        "required": true,
+        "transform": {}
+      },
+      "enabled": {
+        "type": "boolean",
+        "defaultValue": true
+      },
+      "variant": {
+        "type": "string",
+        "required": false
+      },
+      "reason": {
+        "type": "string",
+        "required": false
+      },
+      "expiresAt": {
+        "type": "date",
+        "required": false
+      },
+      "createdAt": {
+        "type": "date",
+        "required": true
+      }
+    },
+    "order": null
+  },
+  "flagEvaluation": {
+    "fields": {
+      "flagId": {
+        "type": "string",
+        "references": {
+          "model": "featureFlag",
+          "field": "id"
+        },
+        "required": true
+      },
+      "userId": {
+        "type": "string",
+        "references": {
+          "model": "user",
+          "field": "id"
+        },
+        "required": false
+      },
+      "sessionId": {
+        "type": "string",
+        "required": false
+      },
+      "value": {
+        "type": "string",
+        "required": true,
+        "transform": {}
+      },
+      "variant": {
+        "type": "string",
+        "required": false
+      },
+      "reason": {
+        "type": "string",
+        "required": false,
+        "validator": {
+          "input": {
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            },
+            "def": {
+              "type": "optional",
+              "innerType": {
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                },
+                "def": {
+                  "type": "enum",
+                  "entries": {
+                    "rule_match": "rule_match",
+                    "override": "override",
+                    "percentage_rollout": "percentage_rollout",
+                    "default": "default",
+                    "disabled": "disabled",
+                    "not_found": "not_found"
+                  }
+                },
+                "type": "enum",
+                "enum": {
+                  "rule_match": "rule_match",
+                  "override": "override",
+                  "percentage_rollout": "percentage_rollout",
+                  "default": "default",
+                  "disabled": "disabled",
+                  "not_found": "not_found"
+                },
+                "options": [
+                  "rule_match",
+                  "override",
+                  "percentage_rollout",
+                  "default",
+                  "disabled",
+                  "not_found"
+                ]
+              }
+            },
+            "type": "optional"
+          },
+          "output": {
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            },
+            "def": {
+              "type": "optional",
+              "innerType": {
+                "~standard": {
+                  "vendor": "zod",
+                  "version": 1
+                },
+                "def": {
+                  "type": "enum",
+                  "entries": {
+                    "rule_match": "rule_match",
+                    "override": "override",
+                    "percentage_rollout": "percentage_rollout",
+                    "default": "default",
+                    "disabled": "disabled",
+                    "not_found": "not_found"
+                  }
+                },
+                "type": "enum",
+                "enum": {
+                  "rule_match": "rule_match",
+                  "override": "override",
+                  "percentage_rollout": "percentage_rollout",
+                  "default": "default",
+                  "disabled": "disabled",
+                  "not_found": "not_found"
+                },
+                "options": [
+                  "rule_match",
+                  "override",
+                  "percentage_rollout",
+                  "default",
+                  "disabled",
+                  "not_found"
+                ]
+              }
+            },
+            "type": "optional"
+          }
+        }
+      },
+      "context": {
+        "type": "string",
+        "required": false,
+        "transform": {}
+      },
+      "evaluatedAt": {
+        "type": "date",
+        "required": true
+      }
+    },
+    "order": null
+  },
+  "flagAudit": {
+    "fields": {
+      "flagId": {
+        "type": "string",
+        "references": {
+          "model": "featureFlag",
+          "field": "id"
+        },
+        "required": true
+      },
+      "userId": {
+        "type": "string",
+        "references": {
+          "model": "user",
+          "field": "id"
+        },
+        "required": false
+      },
+      "action": {
+        "type": "string",
+        "required": true,
+        "validator": {
+          "input": {
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            },
+            "def": {
+              "type": "enum",
+              "entries": {
+                "created": "created",
+                "updated": "updated",
+                "deleted": "deleted",
+                "enabled": "enabled",
+                "disabled": "disabled",
+                "rule_added": "rule_added",
+                "rule_updated": "rule_updated",
+                "rule_deleted": "rule_deleted",
+                "override_added": "override_added",
+                "override_removed": "override_removed"
+              }
+            },
+            "type": "enum",
+            "enum": {
+              "created": "created",
+              "updated": "updated",
+              "deleted": "deleted",
+              "enabled": "enabled",
+              "disabled": "disabled",
+              "rule_added": "rule_added",
+              "rule_updated": "rule_updated",
+              "rule_deleted": "rule_deleted",
+              "override_added": "override_added",
+              "override_removed": "override_removed"
+            },
+            "options": [
+              "created",
+              "updated",
+              "deleted",
+              "enabled",
+              "disabled",
+              "rule_added",
+              "rule_updated",
+              "rule_deleted",
+              "override_added",
+              "override_removed"
+            ]
+          },
+          "output": {
+            "~standard": {
+              "vendor": "zod",
+              "version": 1
+            },
+            "def": {
+              "type": "enum",
+              "entries": {
+                "created": "created",
+                "updated": "updated",
+                "deleted": "deleted",
+                "enabled": "enabled",
+                "disabled": "disabled",
+                "rule_added": "rule_added",
+                "rule_updated": "rule_updated",
+                "rule_deleted": "rule_deleted",
+                "override_added": "override_added",
+                "override_removed": "override_removed"
+              }
+            },
+            "type": "enum",
+            "enum": {
+              "created": "created",
+              "updated": "updated",
+              "deleted": "deleted",
+              "enabled": "enabled",
+              "disabled": "disabled",
+              "rule_added": "rule_added",
+              "rule_updated": "rule_updated",
+              "rule_deleted": "rule_deleted",
+              "override_added": "override_added",
+              "override_removed": "override_removed"
+            },
+            "options": [
+              "created",
+              "updated",
+              "deleted",
+              "enabled",
+              "disabled",
+              "rule_added",
+              "rule_updated",
+              "rule_deleted",
+              "override_added",
+              "override_removed"
+            ]
+          }
+        }
+      },
+      "previousValue": {
+        "type": "string",
+        "required": false,
+        "transform": {}
+      },
+      "newValue": {
+        "type": "string",
+        "required": false,
+        "transform": {}
+      },
+      "metadata": {
+        "type": "string",
+        "required": false,
+        "transform": {}
+      },
+      "createdAt": {
+        "type": "date",
+        "required": true
+      }
+    },
+    "order": null
+  }
+}
