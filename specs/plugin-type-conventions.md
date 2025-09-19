@@ -86,59 +86,97 @@ When creating or refactoring a plugin:
 
 1. **Create `definePlugin` utility**
 
-   ```
-   plugins/{name}/src/internal/define-plugin.ts
-   ```
+```
+plugins/{name}/src/internal/define-plugin.ts
+```
 
 2. **Organize endpoints with shallow types**
 
-   ```typescript
-   // plugins/{name}/src/endpoints/index.ts
-   export type MyEndpoints = ReturnType<typeof createMyEndpoints>;
-   ```
+```typescript
+// plugins/{name}/src/endpoints/index.ts
+export type MyEndpoints = ReturnType<typeof createMyEndpoints>;
+```
 
 3. **Use Better Auth endpoint builders**
 
-   ```typescript
-   import { createAuthEndpoint } from "better-auth/plugins";
-   ```
+```typescript
+import { createAuthEndpoint } from "better-auth/plugins";
+```
 
 4. **Apply `definePlugin` wrapper with `$Infer` exports**
 
-   ```typescript
-   export function myPlugin<TSchema>() {
-     const plugin = definePlugin<MyEndpoints>(createMyPlugin());
-     return {
-       ...plugin,
-       $Infer: { MyType: {} as MyType },
-     } satisfies BetterAuthPlugin;
-   }
-   ```
+```typescript
+export function myPlugin<TSchema>() {
+  const plugin = definePlugin<MyEndpoints>(createMyPlugin());
+  return {
+    ...plugin,
+    $Infer: { MyType: {} as MyType },
+  } satisfies BetterAuthPlugin;
+}
+```
 
 5. **Create corresponding client plugin with `$InferServerPlugin`**
 
-   ```typescript
-   // plugins/{name}/src/client.ts
-   export function myPluginClient<
-     TSchema extends Record<string, any> = Record<string, any>,
-   >(options: MyPluginClientOptions<TSchema> = {}) {
-     return {
-       id: "my-plugin",
-       $InferServerPlugin: {} as ReturnType<typeof myPlugin<TSchema>>,
-       pathMethods: {
-         /* ... */
-       },
-       getActions: (fetch) => ({
-         /* ... */
-       }),
-     } satisfies BetterAuthClientPlugin;
-   }
-   ```
+```typescript
+// plugins/{name}/src/client.ts
+export function myPluginClient<
+  TSchema extends Record<string, any> = Record<string, any>,
+>(options: MyPluginClientOptions<TSchema> = {}) {
+  return {
+    id: "my-plugin",
+    $InferServerPlugin: {} as ReturnType<typeof myPlugin<TSchema>>,
+    pathMethods: {
+      /* ... */
+    },
+    getActions: (fetch) => ({
+      /* ... */
+    }),
+  } satisfies BetterAuthClientPlugin;
+}
+```
 
 6. **Create plugin-specific type spec**
-   ```
-   plugins/{name}/specs/types-spec.md
-   ```
+
+```
+plugins/{name}/specs/types-spec.md
+```
+
+7. **Add a Compositional Type Test**
+
+To prevent regressions that break `better-auth`'s type inference, add a dedicated type test file that simulates plugin composition. This is the _only_ reliable way to catch "excessively deep type instantiation" errors.
+
+- Create a test file (e.g., `src/type-regression.test.ts`).
+- In this file, initialize `betterAuth` with your plugin _and_ at least one other complex plugin (e.g., `organization`).
+- Write a test that asserts that the core `auth.api` methods and the methods from both plugins are present and correctly typed.
+- This test serves as a canary; if it compiles and passes, type composition is healthy.
+
+**Example (`type-regression.test.ts`):**
+
+```typescript
+import { test, expect } from "bun:test";
+import { betterAuth } from "better-auth";
+import { organization } from "better-auth/plugins";
+import { myPlugin } from "./index";
+
+test("Plugin composition does not break type inference", () => {
+  const auth = betterAuth({
+    plugins: [
+      organization(),
+      myPlugin({
+        /* options */
+      }),
+    ],
+  });
+
+  // Verify methods from all sources are available
+  expect(typeof auth.api.getSession).toBe("function"); // Core
+  expect(typeof auth.api.createOrganization).toBe("function"); // Other plugin
+  expect(typeof auth.api.myPluginMethod).toBe("function"); // Your plugin
+
+  // A high method count indicates successful type merging
+  expect(Object.keys(auth.api).length).toBeGreaterThan(50);
+});
+```
 
 ### ⚠️ Conditional Application
 

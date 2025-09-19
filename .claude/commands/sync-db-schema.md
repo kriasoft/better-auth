@@ -27,7 +27,7 @@ Synchronize Drizzle ORM schema files with Better Auth schema definitions and gen
 
 - **Source**: `@packages/auth/schema.json` (Better Auth schema definitions)
 - **Target**: `@db/schema/*.ts` (Drizzle ORM schema files)
-- **Stack**: PostgreSQL + Drizzle ORM v0.44.5+ + Better Auth v1.3.12+
+- **Stack**: PostgreSQL + Drizzle ORM v0.44.5+ + Better Auth v1.3.13+
 
 ## Success Criteria
 

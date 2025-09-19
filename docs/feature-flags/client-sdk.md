@@ -23,7 +23,7 @@ pnpm add better-auth better-auth-feature-flags
 > Note
 >
 > - `better-auth` is a peer dependency of this package.
-> - Use a compatible version (e.g., `better-auth@^1.3.11`) to ensure type and runtime alignment.
+> - Use a compatible version (e.g., `better-auth@^1.3.13`) to ensure type and runtime alignment.
 
 :::
 

@@ -2,16 +2,15 @@
 // SPDX-License-Identifier: MIT
 
 import { beforeEach, describe, expect, it } from "bun:test";
-import { createAdminFlagsEndpointsForTest } from "./endpoints/admin/flags.test-helper";
-import { LRUCache } from "./lru-cache";
-import { createStorageAdapter } from "./storage";
-import type { PluginContext } from "./types";
+import { createAdminFlagsEndpointsForTest } from "../../src/endpoints/admin/flags.test-helper";
+import { LRUCache } from "../../src/lru-cache";
+import { createStorageAdapter } from "../../src/storage";
+import type { PluginContext } from "../../src/types";
 
 function makePluginContext(): PluginContext {
   const storage = createStorageAdapter("memory", {
     caching: { enabled: false, ttl: 60 },
   });
-  // minimal config consistent with plugin defaults
   const config = {
     storage: "memory" as const,
     debug: false,
@@ -47,15 +46,16 @@ function mkCtx(query: any = {}) {
   } as any;
 }
 
-describe("admin list flags server-side", () => {
+describe("admin list flags sorting", () => {
   let pc: PluginContext;
   let endpoints: any;
 
   beforeEach(async () => {
     pc = makePluginContext();
     endpoints = createAdminFlagsEndpointsForTest(pc as any);
-    // Seed flags
-    const keys = ["alpha", "beta-1", "beta-2", "gamma", "delta"];
+
+    // Seed flags with different keys
+    const keys = ["charlie", "alpha", "bravo", "echo", "delta"];
     for (const key of keys) {
       await pc.storage.createFlag({
         key,
@@ -70,49 +70,21 @@ describe("admin list flags server-side", () => {
     }
   });
 
-  it("paginates with cursor", async () => {
-    // Page 1
-    const res1 = await endpoints.listFeatureFlags(mkCtx({ limit: 2 }));
-    expect(res1.flags.length).toBe(2);
-    expect(
-      typeof res1.nextCursor === "string" || res1.nextCursor === undefined,
-    ).toBeTrue();
-    const cursor1 = res1.nextCursor;
-
-    // Page 2
-    const res2 = await endpoints.listFeatureFlags(
-      mkCtx({ limit: 2, cursor: cursor1 }),
+  it("sort=key orders flags alphabetically", async () => {
+    const res = await endpoints.listFeatureFlags(
+      mkCtx({ sort: "key", limit: 10 }),
     );
-    expect(res2.flags.length).toBe(2);
-    const cursor2 = res2.nextCursor;
-
-    // Page 3
-    const res3 = await endpoints.listFeatureFlags(
-      mkCtx({ limit: 2, cursor: cursor2 }),
-    );
-    expect(res3.flags.length).toBe(1);
-    expect(res3.nextCursor).toBeUndefined();
+    const got = res.flags.map((f: any) => f.key);
+    const sorted = [...got].sort();
+    expect(got).toEqual(sorted);
   });
 
-  it("include=stats returns stats per flag", async () => {
+  it("sort=-key orders flags reverse-alphabetically", async () => {
     const res = await endpoints.listFeatureFlags(
-      mkCtx({ limit: 2, include: "stats" }),
+      mkCtx({ sort: "-key", limit: 10 }),
     );
-    expect(res.flags.length).toBe(2);
-    for (const f of res.flags) {
-      expect(f).toHaveProperty("stats");
-      expect(f.stats).toHaveProperty("totalEvaluations");
-    }
-  });
-
-  it("q filters by key or name (case-insensitive)", async () => {
-    const res = await endpoints.listFeatureFlags(
-      mkCtx({ q: "beta", limit: 10 }),
-    );
-    expect(res.flags.length).toBe(2);
-    for (const f of res.flags) {
-      const text = ((f.key || "") + " " + (f.name || "")).toLowerCase();
-      expect(text.includes("beta")).toBeTrue();
-    }
+    const got = res.flags.map((f: any) => f.key);
+    const sorted = [...got].sort().reverse();
+    expect(got).toEqual(sorted);
   });
 });

@@ -8,16 +8,15 @@ import type { BetterAuthPlugin } from "better-auth";
 import type { FlagEndpoints } from "./endpoints";
 import { definePlugin } from "./internal/define-plugin";
 import { createFeatureFlagsPlugin } from "./plugin";
-import type {
-  EvaluationContext,
-  EvaluationReason,
-  FeatureFlag,
-  FlagAudit,
-  FlagEvaluation,
-  FlagOverride,
-  FlagRule,
-} from "./schema";
 import type { FeatureFlagsOptions, ValidateFlagSchema } from "./types";
+
+/** Infers a schema from the `flags` option */
+export type InferFlagSchemaFromOptions<TOptions extends FeatureFlagsOptions> =
+  TOptions extends { flags: infer F }
+    ? F extends Record<string, any>
+      ? { [K in keyof F]: F[K] extends { default: infer D } ? D : any }
+      : Record<string, any>
+    : Record<string, any>;
 
 /**
  * Better Auth Feature Flags Plugin
@@ -67,13 +66,6 @@ export function featureFlags<TSchema extends Record<string, any>>(
 ): BetterAuthPlugin & {
   endpoints: FlagEndpoints;
   $Infer: {
-    FeatureFlag: FeatureFlag;
-    FlagEvaluation: FlagEvaluation;
-    FlagOverride: FlagOverride;
-    FlagRule: FlagRule;
-    FlagAudit: FlagAudit;
-    EvaluationContext: EvaluationContext;
-    EvaluationReason: EvaluationReason;
     FlagSchema: ValidateFlagSchema<TSchema>;
   };
 };
@@ -86,20 +78,7 @@ export function featureFlags<
 ): BetterAuthPlugin & {
   endpoints: FlagEndpoints;
   $Infer: {
-    FeatureFlag: FeatureFlag;
-    FlagEvaluation: FlagEvaluation;
-    FlagOverride: FlagOverride;
-    FlagRule: FlagRule;
-    FlagAudit: FlagAudit;
-    EvaluationContext: EvaluationContext;
-    EvaluationReason: EvaluationReason;
-    FlagSchema: TOptions extends { flags: infer F }
-      ? F extends Record<string, any>
-        ? {
-            [K in keyof F]: F[K] extends { default: infer D } ? D : any;
-          }
-        : Record<string, any>
-      : Record<string, any>;
+    FlagSchema: InferFlagSchemaFromOptions<TOptions>;
   };
 };
 
@@ -113,18 +92,21 @@ export function featureFlags(
   // Hide complex internal types while preserving endpoint keys for API typing
   const plugin = definePlugin<FlagEndpoints>(createFeatureFlagsPlugin(options));
 
-  return {
-    ...plugin,
-    $Infer: {
-      FeatureFlag: {} as FeatureFlag,
-      FlagEvaluation: {} as FlagEvaluation,
-      FlagOverride: {} as FlagOverride,
-      FlagRule: {} as FlagRule,
-      FlagAudit: {} as FlagAudit,
-      EvaluationContext: {} as EvaluationContext,
-      EvaluationReason: {} as EvaluationReason,
+  // CRITICAL: DO NOT use spread operator as it converts getters to static properties!
+  // We must preserve the original plugin object with its live getters (especially 'hooks').
+  // Instead, attach $Infer directly to the plugin instance.
+  Object.defineProperty(plugin, "$Infer", {
+    value: {
       FlagSchema: {} as any,
     },
+    enumerable: true,
+    configurable: true,
+    writable: true,
+  });
+
+  return plugin as BetterAuthPlugin & {
+    endpoints: FlagEndpoints;
+    $Infer: any;
   };
 }
 
