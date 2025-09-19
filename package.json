@@ -20,6 +20,13 @@
     "docs:deploy": "gh-pages -d docs/.vitepress/dist",
     "prepare": "husky"
   },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,md,yml,yaml}": [
+      "prettier --check --ignore-unknown"
+    ],
+    "*.{ts,tsx}": "bun run typecheck",
+    "*.ts": "bun run generate:schema"
+  },
   "devDependencies": {
     "@types/node": "^24.5.2",
     "gh-pages": "^6.3.0",
