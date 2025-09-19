@@ -33,6 +33,10 @@ export function definePlugin<E extends Record<string, unknown>>(
 ): BetterAuthPlugin & { endpoints: E } {
   // NOTE: Type assertion is intentional - we're creating a controlled boundary
   // to prevent TypeScript's UnionToIntersection from exploring plugin internals
+
+  // CRITICAL: We MUST return the original plugin object to preserve getters like 'hooks'.
+  // DO NOT destructure or copy properties as that will eagerly evaluate getters
+  // before initialization, breaking the plugin's lazy initialization pattern.
   return plugin as BetterAuthPlugin & { endpoints: E };
 }
 

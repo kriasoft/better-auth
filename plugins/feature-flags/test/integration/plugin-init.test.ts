@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import { describe, expect, it } from "bun:test";
-import { featureFlags } from "./index";
+import { featureFlags } from "../../src/index";
 
 describe("feature-flags plugin — endpoints exposure and lazy context", () => {
   it("exposes endpoints before init (no race with init)", () => {

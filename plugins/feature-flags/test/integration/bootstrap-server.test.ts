@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: MIT
 
 import { describe, expect, it, beforeEach } from "bun:test";
-import { createPublicBootstrapEndpoints } from "./public/bootstrap";
-import { createStorageAdapter } from "../storage";
-import type { PluginContext } from "../types";
+import { createPublicBootstrapEndpoints } from "../../src/endpoints/public/bootstrap";
+import { createStorageAdapter } from "../../src/storage";
+import type { PluginContext } from "../../src/types";
 
 function makePluginContext(): PluginContext {
   const storage = createStorageAdapter("memory", {

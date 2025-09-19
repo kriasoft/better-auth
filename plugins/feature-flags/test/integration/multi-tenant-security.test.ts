@@ -4,12 +4,12 @@
 /** Multi-tenant security tests for shared security functions */
 
 import { describe, expect, test } from "bun:test";
-import type { PluginContext } from "../types";
+import type { PluginContext } from "../../src/types";
 import {
   ensureFlagOwnership,
   jsonError,
   resolveEffectiveOrgId,
-} from "./shared";
+} from "../../src/endpoints/shared";
 
 // Mock plugin context with multi-tenant enabled
 const createMockContext = (multiTenant = true): PluginContext => ({

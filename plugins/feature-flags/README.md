@@ -56,7 +56,7 @@ yarn add better-auth better-auth-feature-flags
 ### Peer Dependencies
 
 - This plugin requires `better-auth` as a peer dependency.
-- Install a compatible version (e.g., `better-auth@^1.3.11`) to ensure proper type and runtime alignment.
+- Install a compatible version (e.g., `better-auth@^1.3.13`) to ensure proper type and runtime alignment.
 
 ## Quick Start
 

@@ -23,13 +23,13 @@
   },
   "peerDependencies": {
     "better-auth-feature-flags": "*",
-    "better-auth": "1.3.12",
+    "better-auth": "1.3.13",
     "postgres": "*"
   },
   "devDependencies": {
     "@types/bun": "^1.2.22",
     "better-auth-feature-flags": "workspace:*",
-    "better-auth": "^1.3.12",
+    "better-auth": "^1.3.13",
     "drizzle-kit": "^0.31.4",
     "postgres": "^3.4.7",
     "typescript": "^5.9.2"

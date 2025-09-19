@@ -5,6 +5,7 @@ import { createAuthOptions } from "@repo/auth";
 import { db } from "@repo/db";
 import { getSchema } from "better-auth/db";
 import { join, relative } from "node:path";
+import { format } from "prettier";
 
 async function generateSchema() {
   const options = createAuthOptions(db);
@@ -12,7 +13,8 @@ async function generateSchema() {
   let schemaFile = join(__dirname, "../packages/auth/schema.json");
   schemaFile = relative(process.cwd(), schemaFile);
 
-  await Bun.write(schemaFile, schema);
+  const formattedSchema = await format(schema, { parser: "json" });
+  await Bun.write(schemaFile, formattedSchema);
   console.log(`✅ Schema generated: ${schemaFile}`);
 }
 

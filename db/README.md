@@ -1,156 +1,121 @@
-# @better-auth/db
+# @repo/db
 
-Database schema and migrations for Better Auth plugins using Drizzle ORM.
+Internal database package providing shared schema and migrations for the Better Auth plugins monorepo. Uses Drizzle ORM with PostgreSQL for development, integration testing, and the playground app.
 
-## Features
+> **Note:** This is a workspace-only package not published to npm.
 
-- 📊 **Complete Schema** - User, session, organization, and plugin-specific tables
-- 🔄 **Migrations** - Automated schema migrations with Drizzle Kit
-- 🗄️ **Multi-Database** - Support for PostgreSQL, MySQL, and SQLite
-- 🔗 **Relations** - Properly defined table relationships
-- 📘 **Type Safety** - Full TypeScript support with inferred types
-
-## Installation
+## Project Structure
 
 ```bash
-bun add @better-auth/db drizzle-orm
-
-# Database drivers (install the one you need)
-bun add postgres     # For PostgreSQL (serverless)
-bun add pg           # For PostgreSQL (traditional)
-bun add better-sqlite3  # For SQLite
+db/
+├── schema/                # Database table definitions
+│   ├── index.ts           # Main export
+│   ├── auth.ts            # Authentication tables
+│   ├── organization.ts    # Multi-tenancy
+│   └── feature-flag.ts    # Feature flags
+├── migrations/            # Generated migration files
+├── drizzle.config.ts      # Drizzle configuration
+├── index.ts               # Database connection
+└── package.json           # Package config
 ```
+
+## Setup
+
+Update the `DATABASE_URL` in the `.env` file (if needed) and run:
+
+```bash
+bun run push
+```
+
+This applies the current schema to the database.
 
 ## Usage
 
-### Create Database Connection
-
 ```typescript
-import { createDb } from "@better-auth/db";
+import { db } from "@repo/db";
+import { eq } from "drizzle-orm";
+import { users, sessions, featureFlags } from "@repo/db/schema";
 
-// PostgreSQL (recommended for production)
-const db = createDb({
-  provider: "postgres",
-  url: process.env.DATABASE_URL,
+// Query
+const user = await db.select().from(users).where(eq(users.id, userId));
+
+// Insert
+await db.insert(users).values({ email: "user@example.com" });
+
+// Update
+await db.update(users).set({ name: "Jane" }).where(eq(users.id, userId));
+
+// Transaction
+await db.transaction(async (tx) => {
+  const [user] = await tx.insert(users).values({ email }).returning();
+  await tx.insert(sessions).values({ userId: user.id, token });
 });
+```
 
-// SQLite (for development/testing)
-const db = createDb({
-  provider: "sqlite",
-  url: "./data/better-auth.db", // or use memory: true
+## Better Auth Integration
+
+```typescript
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { db } from "@repo/db";
+
+export const auth = betterAuth({
+  database: drizzleAdapter(db, { provider: "pg" }),
 });
 ```
 
-### Run Migrations
-
-```typescript
-import { migrate } from "@better-auth/db";
-
-// Run migrations
-await migrate(db);
-
-// Check if migrations are needed
-const needsMigration = await checkMigrations(db);
-```
-
-### Use Schemas
-
-```typescript
-import { users, sessions, featureFlags } from "@better-auth/db/schema";
-import { eq } from "@better-auth/db";
-
-// Query examples
-const allUsers = await db.select().from(users);
-const userSessions = await db
-  .select()
-  .from(sessions)
-  .where(eq(sessions.userId, userId));
-```
-
-## Database Commands
+## Commands
 
 ```bash
-# Generate migrations from schema changes
-bun run db:generate
-
-# Apply migrations to database
-bun run db:migrate
-
-# Push schema directly (development)
-bun run db:push
-
-# Open Drizzle Studio (database viewer)
-bun run db:studio
-
-# Check migration status
-bun run db:check
+bun run push       # Push schema changes (dev)
+bun run migrate    # Run migrations (prod)
+bun run generate   # Generate migration files
+bun run studio     # Open Drizzle Studio
+bun run typecheck  # Type checking
 ```
 
-## Schema Overview
+## Schema Files
 
-### Core Tables
+- `schema/auth.ts` - Authentication tables (users, sessions, accounts)
+- `schema/organization.ts` - Multi-tenancy (organizations, members)
+- `schema/feature-flag.ts` - Feature flags (flags, rules, overrides)
 
-- `users` - User accounts
-- `sessions` - Active sessions
-- `organizations` - Multi-tenant organizations
-- `organization_members` - User-org relationships
-- `accounts` - OAuth provider accounts
-- `verification_tokens` - Email/phone verification
-- `password_reset_tokens` - Password recovery
+## Syncing Schema with Better Auth
 
-### Feature Flags
+When Better Auth updates require schema changes:
 
-- `feature_flags` - Flag definitions
-- `feature_flag_rules` - Targeting rules
-- `feature_flag_variants` - A/B test variants
-- `feature_flag_overrides` - User overrides
-- `feature_flag_evaluations` - Usage tracking
-
-### Audit & Analytics
-
-- `audit_logs` - Security audit trail
-- `analytics_events` - Event tracking
-- `analytics_metrics` - Aggregated metrics
-
-### Subscriptions & Billing
-
-- `subscription_plans` - Plan definitions
-- `subscriptions` - Active subscriptions
-- `payments` - Payment history
-- `usage_records` - Metered usage
-
-### Notifications
-
-- `notification_templates` - Message templates
-- `notifications` - Sent notifications
-- `notification_preferences` - User preferences
-
-## Environment Variables
-
-```env
-# PostgreSQL
-DATABASE_URL=postgresql://user:pass@localhost:5432/dbname
-
-# SQLite
-DATABASE_URL=file:./data/better-auth.db
-
-# Optional: Table prefix for multi-tenancy
-TABLE_PREFIX=tenant1_
+```bash
+# From repository root
+bun generate:schema                          # Generate schema from Better Auth
+cat .claude/commands/sync-db-schema.md | claude  # Review and apply changes
+bun db:push                                   # Push to database
 ```
 
-## Type Exports
+## Adding Tables
 
-All table types are automatically inferred and exported:
+### 1. Create schema file in `db/schema/`
 
 ```typescript
-import type {
-  User,
-  NewUser,
-  Session,
-  FeatureFlag,
-  Subscription,
-  // ... etc
-} from "@better-auth/db/schema";
+// db/schema/my-feature.ts
+import { pgTable, text, uuid } from "drizzle-orm/pg-core";
+
+export const myTable = pgTable("my_table", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  name: text("name").notNull(),
+});
+```
+
+### 2. Export from `schema/index.ts`
+
+```typescript
+export * from "./my-feature";
+```
+
+### 3. Apply changes
+
+```bash
+bun run generate  # Generate migration
+bun run push      # Apply to database
 ```
 
 ## License

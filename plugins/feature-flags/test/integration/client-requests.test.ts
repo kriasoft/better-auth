@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import { describe, expect, it } from "bun:test";
-import { featureFlagsClient } from "./client";
+import { featureFlagsClient } from "../../src/client";
 
 type FetchCall = { url: string; options: any };
 

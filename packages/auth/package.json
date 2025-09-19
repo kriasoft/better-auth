@@ -14,7 +14,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "better-auth": "^1.3.12",
+    "better-auth": "^1.3.13",
     "better-auth-feature-flags": "workspace:*",
     "drizzle-orm": "^0.44.5"
   },

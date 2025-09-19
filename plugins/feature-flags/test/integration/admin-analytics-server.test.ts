@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: MIT
 
 import { beforeEach, describe, expect, it } from "bun:test";
-import { createAdminAnalyticsEndpointsForTest } from "./endpoints/admin/analytics.test-helper";
-import { LRUCache } from "./lru-cache";
-import { createStorageAdapter } from "./storage";
-import type { PluginContext } from "./types";
+import { createAdminAnalyticsEndpointsForTest } from "../../src/endpoints/admin/analytics.test-helper";
+import { LRUCache } from "../../src/lru-cache";
+import { createStorageAdapter } from "../../src/storage";
+import type { PluginContext } from "../../src/types";
 
 function makePluginContext(): PluginContext {
   const storage = createStorageAdapter("memory", {

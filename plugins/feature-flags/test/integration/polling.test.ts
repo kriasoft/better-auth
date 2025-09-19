@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import { afterEach, describe, expect, it, mock } from "bun:test";
-import { SmartPoller } from "./polling";
+import { SmartPoller } from "../../src/polling";
 
 describe("SmartPoller", () => {
   let poller: SmartPoller | null = null;

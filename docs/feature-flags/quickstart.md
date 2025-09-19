@@ -27,7 +27,7 @@ yarn add better-auth better-auth-feature-flags
 > Note
 >
 > - `better-auth` is a peer dependency of the feature flags plugin.
-> - Install a matching version (e.g., `better-auth@^1.3.11`) to avoid package resolution issues.
+> - Install a matching version (e.g., `better-auth@^1.3.13`) to avoid package resolution issues.
 
 :::
 

@@ -3,7 +3,7 @@
 
 import { describe, expect, it } from "bun:test";
 import { z } from "zod";
-import { flagOverrideInputSchema } from "./schema/validation";
+import { flagOverrideInputSchema } from "../../src/schema/validation";
 
 describe("Admin: override expiresAt RFC3339 validation", () => {
   const createSchema = flagOverrideInputSchema

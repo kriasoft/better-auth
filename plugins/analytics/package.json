@@ -31,15 +31,15 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@better-auth/cli": "^1.3.12",
+    "@better-auth/cli": "^1.3.13",
     "@types/bun": "^1.2.22",
     "@types/node": "^24.5.2",
-    "better-auth": "^1.3.12",
+    "better-auth": "^1.3.13",
     "tsup": "^8.5.0",
     "typescript": "^5.9.2"
   },
   "peerDependencies": {
-    "better-auth": "^1.3.12"
+    "better-auth": "^1.3.13"
   },
   "keywords": [
     "better-auth",

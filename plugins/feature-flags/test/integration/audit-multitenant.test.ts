@@ -4,8 +4,8 @@
 /** Tests audit logging with multi-tenant flag ID resolution - prevents schema violations */
 
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
-import { DatabaseStorage } from "./storage/database";
-import type { AuditLogEntry, EvaluationTracking } from "./types";
+import { DatabaseStorage } from "../../src/storage/database";
+import type { AuditLogEntry, EvaluationTracking } from "../../src/types";
 
 // Minimal database mock - tracks inserts and queries for verification
 const mockDb = {
