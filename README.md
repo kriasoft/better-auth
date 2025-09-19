@@ -1,5 +1,11 @@
 # Better Auth Plugins
 
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/kriasoft/better-auth/pulls)
+[![Discord](https://img.shields.io/discord/643523529131950086?label=Discord&logo=discord)](https://discord.gg/SBwX6VeqCY)
+[![Sponsor](https://img.shields.io/github/sponsors/koistya?label=Sponsor&logo=github)](https://github.com/sponsors/koistya)
+
 A collection of modular plugins extending [Better Auth](https://better-auth.com) with specialized authentication features for modern TypeScript applications. Each plugin is designed to be lightweight, type-safe, and production-ready.
 
 ## Available Plugins
@@ -133,6 +139,9 @@ cd better-auth-plugins
 # Install dependencies
 bun install
 
+# Migrate the database
+bun run db:push
+
 # Build all packages
 bun run build
 
@@ -141,6 +150,15 @@ bun run dev
 
 # Type check all packages
 bun run typecheck
+```
+
+### Database Commands
+
+```bash
+bun run db:studio         # Open Drizzle Studio (database GUI)
+bun run db:generate       # Generate migrations from schema changes
+bun run db:push           # Push schema changes (development)
+bun run db:migrate        # Run migrations (production)
 ```
 
 ### Project Structure

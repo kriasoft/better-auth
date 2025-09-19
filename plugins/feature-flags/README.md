@@ -5,15 +5,10 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/kriasoft/better-auth/pulls)
-[![Discord](https://img.shields.io/discord/better-auth?label=Discord&logo=discord)](https://discord.gg/SBwX6VeqCY)
+[![Discord](https://img.shields.io/discord/643523529131950086?label=Discord&logo=discord)](https://discord.gg/SBwX6VeqCY)
 [![Sponsor](https://img.shields.io/github/sponsors/koistya?label=Sponsor&logo=github)](https://github.com/sponsors/koistya)
 
 Enterprise-grade feature flag management integrated with Better Auth. Control feature rollouts, run A/B tests, and manage user experiences with powerful targeting rules and real-time evaluation.
-
-> Version status
->
-> - Current: v0.2.1
-> - Previous: v0.2.0
 
 ## Features
 
@@ -907,9 +902,10 @@ src/endpoints/admin/
 
 ## Support
 
-- **GitHub Issues:** [Report bugs](https://github.com/kriasoft/better-auth/issues)
-- **Better Auth Docs:** https://docs.better-auth.com/
-- **Discord:** [Community support](https://discord.gg/SBwX6VeqCY)
+- 🎮 Discord: [Join our community](https://discord.gg/SBwX6VeqCY)
+- 💬 Discussions: [GitHub Discussions](https://github.com/kriasoft/better-auth/discussions)
+- 🐛 Issues: [GitHub Issues](https://github.com/kriasoft/better-auth/issues)
+- 💖 Sponsor: [GitHub Sponsors](https://github.com/sponsors/koistya)
 
 ## Contributing
 

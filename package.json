@@ -14,6 +14,10 @@
     "typecheck": "bun run --filter '*' typecheck",
     "test": "bun run --filter '*' test",
     "generate:schema": "bun run scripts/generate-auth-schema.ts",
+    "db:generate": "bun run --cwd=db generate",
+    "db:push": "bun run --cwd=db push",
+    "db:migrate": "bun run --cwd=db migrate",
+    "db:studio": "bun run --cwd=db studio",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
@@ -22,9 +26,8 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,md,yml,yaml}": [
-      "prettier --check --ignore-unknown"
+      "prettier --write --ignore-unknown"
     ],
-    "*.{ts,tsx}": "bun run typecheck",
     "*.ts": "bun run generate:schema"
   },
   "devDependencies": {

@@ -51,6 +51,7 @@ console.log("Reason:", result.reason);
    ```
 
 3. **Rule conditions not matching**
+
    ```typescript
    // Debug rule evaluation
    const { rules } = await auth.api.listFeatureFlagRules({
@@ -92,6 +93,7 @@ console.log("Reason:", result.reason);
    ```
 
 3. **Run migrations**
+
    ```bash
    npx better-auth migrate
    ```
@@ -142,6 +144,7 @@ console.log(`Evaluation took ${duration}ms`);
    ```
 
 3. **Add database indexes**
+
    ```sql
    -- Add indexes for common queries
    CREATE INDEX idx_flags_key_org ON featureFlag(key, organizationId);
@@ -176,6 +179,7 @@ TypeScript errors when using flags.
    ```
 
 3. **Update type definitions**
+
    ```typescript
    declare module "better-auth-feature-flags" {
      interface FeatureFlags {
@@ -224,6 +228,7 @@ console.log("Client:", clientValue);
    ```
 
 3. **Check authentication**
+
    ```typescript
    // Verify session exists
    const session = await auth.api.getSession();
@@ -261,9 +266,10 @@ Flags bleeding across organizations.
    ```
 
 3. **Verify flag ownership**
+
    ```typescript
    const result = await authClient.featureFlags.evaluate("flag-key", {
-     context: { organizationId: "org-123" }
+     context: { organizationId: "org-123" },
    });
    // For admin operations, use the admin client
    const flag = await adminClient.featureFlags.admin.flags.get("flag-id");
@@ -449,6 +455,7 @@ render(
    ```
 
 3. **Clear state between tests**
+
    ```typescript
    beforeEach(() => {
      clearAllMocks();
